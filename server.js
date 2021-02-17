@@ -57,6 +57,6 @@ io.on('connection', (socket) => {
 });
 
 /*listens to PORT set on top*/
-http.listen(PORT, () => {
+http.listen(process.env.port || PORT, () => {
   console.log(`Welcome to Akvario @ *:${PORT}`);
 });

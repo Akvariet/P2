@@ -1,2 +1,0 @@
-Server sided scripts /scripts/
-Client sided scripts /public/js/

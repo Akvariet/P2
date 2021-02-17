@@ -1,5 +1,2 @@
-lav package.json
-
-npm install i express
-
-npm install socket.io
+Server sided scripts /scripts/
+Client sided scripts /public/js/

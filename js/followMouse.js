@@ -2,7 +2,7 @@
 
 function move(user) {
   let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-  let myPos;
+
 
   user.onmousedown = dragMouseDown;
 
@@ -27,12 +27,24 @@ function move(user) {
 
     user.style.top = users[0].pos[0] + "px";
     user.style.left = users[0].pos[1] + "px";
-    myPos = JSON.stringify(users[0].pos);
-    console.log(myPos)
+    sendUserData();
+
   }
 
   function closeDragUser() {
     document.onmouseup = null;
     document.onmousemove = null;
   }
+}
+
+
+function changePos(id, x, y,){
+  const user = document.getElementById(id);
+  user.style.top = x + "px"
+  user.style.left = y + "px"
+}
+
+
+function sendUserData(){
+  socket.emit('userData', users[userID].id, users[userID].rad, users[userID].pos);
 }

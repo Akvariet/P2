@@ -47,3 +47,11 @@ body{
   left: 24px;
   transform:rotate(-90deg)
 }
+
+.name{
+  position: relative;
+  text-align:center;
+  color: white;
+  user-select: none;
+  top: 2%;
+}

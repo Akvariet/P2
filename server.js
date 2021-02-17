@@ -17,7 +17,7 @@ function newID(){
 
 
 //path som som useren kan få filer fra 
-app.use(express.static(path.join(__dirname, '/node_modules/socket.io/client-dist/')));
+app.use('/clientjs', express.static(path.join(__dirname, '/node_modules/socket.io/client-dist')));
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.static(path.join(__dirname, '/public/js')));
 app.use(express.static(path.join(__dirname, '/public/css')));

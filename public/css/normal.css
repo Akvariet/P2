@@ -1,0 +1,57 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-family: Calibri, sans-serif;
+}
+
+body{
+  background-color: rgb(255, 221, 203);
+}
+
+.floatleft {
+  float: left;
+}
+
+.floatright {
+  float: right;
+}
+
+.clearboth {
+  clear: both;
+}
+
+#space{
+  background-color: rgb(251, 235, 226);
+  width: 1500px;
+  height: 1000px;
+  border-radius: 20px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  margin: auto;
+}
+
+.user{
+  border-radius: 100%;
+  width: 70px;
+  height: 70px;
+  position: absolute;
+  font-weight: bold;
+}
+
+.arrow {
+  position: relative;
+  top: -35%;
+  left: 24px;
+  transform:rotate(-90deg)
+}
+
+.name{
+  position: relative;
+  text-align:center;
+  color: white;
+  user-select: none;
+  top: 2%;
+}

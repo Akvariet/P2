@@ -1,0 +1,5 @@
+lav package.json
+
+npm install i express
+
+npm install socket.io

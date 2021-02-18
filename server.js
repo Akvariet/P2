@@ -1,23 +1,15 @@
 /*express and node stuff */
 const express = require('express');
 const app = express();
-var path = require('path');
+const path = require('path');
 const http = require('http').createServer(app);
 const PORT = 3000;
 
 /*for doing io stuff*/
 const io = require('socket.io')(http);
 
-
-/*App Data - this should be moved to seperate file*/
-let users = [];
-
-function newID(){
-  let id = users.length + 1;
-  users.push(id);
-  return id;
-}
-
+/*our modules*/
+const user = require("./scripts/user");
 
 /*path that clients can use, this means it cant access core server files*/
 app.use('/clientjs', express.static(path.join(__dirname, '/node_modules/socket.io/client-dist')));
@@ -31,32 +23,27 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html');
 });
 
+
+/*App code*/
+user.showAll();
+
 /*io.on is the server listening*/
 io.on('connection', (socket) => {
-  /*when new user connects do this */
-  const id = newID();
-  console.log('a user connected');
-  socket.emit('connection', id);
+  socket.id = user.createUser(user.newID());
+  user.showAll();
+  console.log(`user ${socket.id} connected`);
+  user.showNewProp(user.findIndexID(user.users, socket.id));
+  socket.emit('connection', socket.id);
+
   socket.on('disconnect', () => {
     /*when user disconnects do this*/
-    console.log('user disconnected')
-    for(let i = 0; i < users.length; i++){
-      if(users[i].id == id)
-        users[i] = 0;
-      
-    }
-  })
-});
-
-io.on('connection', (socket) => {
-  /*receive message from client logs to console and sends back to users*/
-  socket.on('msg', (msg, name) => {
-    console.log(name + ": " + msg);
-    io.emit('msg', msg, name);
+    console.log(`user ${socket.id} disconnected`);
+    user.deleteID(socket.id);
+    user.showAll();
   });
 });
 
 /*listens to PORT set on top*/
-http.listen(PORT, () => {
+http.listen(process.env.PORT || PORT, () => {
   console.log(`Welcome to Akvario @ *:${PORT}`);
 });

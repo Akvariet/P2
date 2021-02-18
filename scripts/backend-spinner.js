@@ -1,22 +1,16 @@
 
-//The current positions of users in px (Use these for debugging and test.
-const userpos = [
-    {top: 266, left: 216},
-    {top: 218, left: 581},
-    {top: 559, left: 627},
-    {top: 469, left: 249}
-];
-
 //The position of the spinner.
 const s_pos = {top: 336, left: 312};
 
-export function spin(userPos){
+function spin(userPos){
 
     // Pass this to the front end to run the spinner locally.
     const rot = Math.random() * 360;
 
-    //return the result of the spin.
-    return closestUser(userPos, rot);
+    const result = closestUser(userPos, rot);
+
+    //return the result of the spin and the rotation of the spinner. Players should not move before the game is done.
+    return {result: result, rot: rot};
 
     //--- Helper functions ---\\
     //Find the user which is closest to being pointed at. Pass this function so the front end can play along.
@@ -43,15 +37,18 @@ export function spin(userPos){
         function getRelUserPos() {
             const res = [];
 
-            userpos.forEach(value => res.push({
+            userPositions.forEach(value => res.push({
                 top:  value.top  - s_pos.top,
                 left: value.left - s_pos.left
             }));
 
             return res;
         }
-
     }
+}
+
+module.exports = {
+    spin
 }
 
 

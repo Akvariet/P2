@@ -1,5 +1,3 @@
-let users = [];
-let names =["Liam", "Jan", "Olivia", "Oliver", "Hanne", "Juliet", "Lars", "Bot69"];
 
 function initUser(id){
   this.name = "";
@@ -7,18 +5,17 @@ function initUser(id){
   this.color = [0, 0, 0];
   this.pos = [0, 0];
   this.rad = 0;
-  this.generateColors = function(){
+  this.generateColors = ()=>{
     for(let i = 0; i < this.color.length; i++)
       this.color[i] = Math.floor(Math.random() * 256);
   }
 }
 
-function createUser(name){
+function createUser(){
   const id = users.length;
-  const randomName = Math.floor(Math.random() * names.length);
   
   users.push(new initUser(id));
-  users[id].name = name;
+  users[id].name = "name";
   users[id].generateColors();
 
   generateBody(id);

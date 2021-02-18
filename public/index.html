@@ -1,14 +1,17 @@
 <html>
   <head>
-    <title>Hello World!</title>
+    <link href="css/normal.css" type="text/css" rel="stylesheet">
+    <title>Akvario</title>
+    <link rel="icon" href="resources/favicon.png">
   </head>
   <body>
-    <input type="text" placeholder="Message" id="textbox" value="">
-    <input type="button" value="Send" id="button" onclick="send()">
-    <p id="msg">Message</p>
+        <div id="space"></div>
 
-    <!--put js scripts here, do not delete 'clientjs'-->
-    <script type="text/javascript" src="clientjs/socket.io.js"></script>
-    <script type="text/javascript" src="js/script.js"></script>
+        <script src="clientjs/socket.io.js"></script>
+
+        <script src="js/lib.js"></script>
+        <script src="js/user.js"></script>
+        <script src="js/followMouse.js"></script>
+        <script src="js/main.js"></script>
   </body>
 </html>

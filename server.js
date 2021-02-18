@@ -43,14 +43,6 @@ io.on('connection', (socket) => {
   });
 });
 
-/*io.on('connection', (socket) => {
-  receive message from client logs to console and sends back to users
-  socket.on('msg', (msg, name) => {
-    console.log(name + ": " + msg);
-    io.emit('msg', msg, name);
-  });
-});/*
-
 /*listens to PORT set on top*/
 http.listen(PORT, () => {
   console.log(`Welcome to Akvario @ *:${PORT}`);

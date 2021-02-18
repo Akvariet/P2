@@ -1,22 +1,25 @@
-
-
+const socket = io();
 
 //Sends a request to the backend to start the game
 function requestGameStart() {
-    let jsonData = {}
-    jsonData.name = name;
-    jsonData.userId = id;
-    jsonData.startGame = true;
+    /*let gameData = {}
+    gameData.name = name;
+    gameData.userId = id;
+    gameData.startGame = true;
+    */
 
-
-
-
+    socket.emit('start game');
 }
+
+socket.on('game', (msg, rotAngle) => {
+    console.log(msg);
+    spinBottle(rotAngle);
+});
 
 
 //Starts the game when a user clicks on the bottle
-function spinBottle() {
-    let rotationAngle = 300;
+function spinBottle(rotationAngle) {
+    //let rotationAngle = 300;
     let rotationTime = 5;
     let timeBeforeReset = 2;
 

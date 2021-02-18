@@ -8,7 +8,6 @@ const PORT = 3000;
 /*for doing io stuff*/
 const io = require('socket.io')(http);
 
-
 /*App Data - this should be moved to seperate file*/
 let users = [];
 
@@ -25,10 +24,18 @@ app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.static(path.join(__dirname, '/public/js')));
 app.use(express.static(path.join(__dirname, '/public/css')));
 app.use(express.static(path.join(__dirname, '/public/resources')));
+app.use(express.static(path.join(__dirname, '/spinner/js')));
+app.use(express.static(path.join(__dirname, '/spinner/css')));
+app.use(express.static(path.join(__dirname, '/spinner')));
 
 /*sends index.html to client browser*/
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html');
+});
+
+/* Sends the html to the spinner game when user writes /spinner */
+app.get('/spinner', (req, res) => {
+  res.sendFile(__dirname + '/spinner/frontend-spinner.html');
 });
 
 /*io.on is the server listening*/
@@ -53,6 +60,13 @@ io.on('connection', (socket) => {
   socket.on('msg', (msg, name) => {
     console.log(name + ": " + msg);
     io.emit('msg', msg, name);
+  });
+});
+
+io.on('connection', (socket) => {
+  socket.on('start game', () => {
+    console.log('A request to start the game has been received');
+    io.emit('game', '*game starts*', 600);
   });
 });
 

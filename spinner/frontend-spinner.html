@@ -1,13 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>Flaskehalsen peger på</title>
-    <link href="frontend-spinner.css" type="text/css" rel="stylesheet">
+    <link href="css/frontend-spinner.css" type="text/css" rel="stylesheet">
 </head>
 <body>
     <div id="space">
-        <div class="bottle" id="0" onclick="spinBottle()">
+        <div class="bottle" id="0" onclick="requestGameStart()">
             <svg class="arrow"
                  xmlns="http://www.w3.org/2000/svg"
                  viewBox="0 0 11.328031 13.449599"
@@ -27,5 +26,6 @@
 
     </div>
 </body>
-<script src="frontend-spinner.js"></script>
+<script type="text/javascript" src="clientjs/socket.io.js"></script>
+<script src="js/frontend-spinner.js"></script>
 </html>

@@ -19,30 +19,40 @@ app.use(express.static(path.join(__dirname, '/public/js')));
 app.use(express.static(path.join(__dirname, '/public/css')));
 app.use(express.static(path.join(__dirname, '/public/resources')));
 
+
+
 /*sends index.html to client browser*/
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html');
 });
 
-/* Sends the html to the spinner game when user goes to the dir /spinner */
+// Sends the html to the spinner game when user goes to the dir /spinner
 app.get('/spinner', (req, res) => {
   res.sendFile(__dirname + '/public/frontend-spinner.html');
 });
 
-/*App code*/
-user.showAll();
-
 /*io.on is the server listening*/
 io.on('connection', (socket) => {
+
+  //sets the socket id to the user id
   socket.id = user.createUser(user.newID());
+
+  //index where this user is in users array
+  const i = user.findIndexID(user.users, socket.id);
+
+  //shows all active ids and free ids
   user.showAll();
   console.log(`user ${socket.id} connected`);
-  user.showNewProp(user.findIndexID(user.users, socket.id));
-  socket.emit('connection', socket.id);
+  user.showNewProp(i);
+
+  //sends the correct user object to client
+  socket.emit('connection', user.users[i]);
 
   socket.on('disconnect', () => {
-    /*when user disconnects do this*/
+    //when user disconnects do this
     console.log(`user ${socket.id} disconnected`);
+
+    //deletes user when client disconnets
     user.deleteID(socket.id);
     user.showAll();
   });

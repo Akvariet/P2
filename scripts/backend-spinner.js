@@ -5,7 +5,7 @@ const s_pos = {top: 336, left: 312};
 function spin(userPos){
 
     // Pass this to the front end to run the spinner locally.
-    const rot = Math.random() * 360;
+    const rot = Math.random() * 360*5;
 
     const result = closestUser(userPos, rot);
 
@@ -27,7 +27,7 @@ function spin(userPos){
                 a = 180 + a
 
             //add the difference in degrees to rots.
-            rots.push(Math.abs(a-rotDeg));
+            rots.push(Math.abs(a-(rotDeg%360)));
         });
 
         //Return the index of the lowest angle.

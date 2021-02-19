@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>INSERT GAME NAME</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <div class = "loginbox">
+      <h1>Welcome to the Akvarie!</h1>
+        <form action="game.html" method="GET">
+          <p>Name</p>
+          <input type="text" id="name" class="center-block" placeholder="Enter Username" required>
+          <p>Room number</p>
+          <input type="text" id="roomid" class="center-block" placeholder="Enter Room number" required>
+          <input type="submit" value="Go" onclick="passValues()"> <!-- formaction="https://google.com" --> 
+        </form>
+    </div>
+    <script>
+      function passValues(){
+        var name = document.getElementById("name").value;
+        sessionStorage.setItem("textvalue", name);
+        console.log(sessionStorage.getItem("textvalue"));
+        return false;
+      }
+    </script>
+  </body>
+</html>

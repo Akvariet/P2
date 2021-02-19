@@ -29,10 +29,8 @@ app.get('/', (req, res) => {
 
 /*io.on is the server listening*/
 io.on('connection', (socket) => {
-
   //sets the socket id to the user id
   socket.id = user.createUser(user.newID());
-
   //index where this user is in users array
   const i = user.findIndexID(user.users, socket.id);
 

@@ -1,10 +1,26 @@
 <html>
   <head>
+    <link href="css/login.css" type="text/css" rel="stylesheet">
     <link href="css/normal.css" type="text/css" rel="stylesheet">
     <title>Akvario</title>
     <link rel="icon" href="resources/favicon.png">
   </head>
   <body>
+    <div id = "fade">
+        <div id = "loginbox">
+            <h1>Welcome to the Akvarie!</h1>
+            <form>
+                <p>Name</p>
+                <input type="text" id="name" class="center-block" placeholder="Enter Username" required>
+                <!--<p>Room number</p>
+                <input type="text" id="roomid" class="center-block" placeholder="Enter Room number"> required-->
+                <input type="submit" value="Go">
+
+            </form>
+        </div>
+      </div>
+
+
         <div id="space"></div>
 
         <script src="clientjs/socket.io.js"></script>

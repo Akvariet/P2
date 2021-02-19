@@ -59,9 +59,6 @@ function createUser(id){
   users.push(new initUser(id));
   const i = users.length - 1;
 
-  //this should be changed
-  users[i].name = "name";
-
   //generates colors
   users[i].generateColors();
 

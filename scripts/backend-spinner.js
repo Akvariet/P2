@@ -2,13 +2,6 @@
 //The position of the spinner.
 const s_pos = {top: 336, left: 312};
 
-const userpos = [
-    {top: 266, left: 216},
-    {top: 218, left: 581},
-    {top: 559, left: 627},
-    {top: 469, left: 249}
-    ];
-
 function spin(userPos){
 
     // Pass this to the front end to run the spinner locally.

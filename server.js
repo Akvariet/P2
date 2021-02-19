@@ -20,7 +20,6 @@ app.use(express.static(path.join(__dirname, '/public/css')));
 app.use(express.static(path.join(__dirname, '/public/resources')));
 
 
-
 /*sends index.html to client browser*/
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/public/index.html');
@@ -61,7 +60,7 @@ io.on('connection', (socket) => {
 // when the server receives the message 'start game' start the spinning game
 io.on('connection', (socket) => {
   socket.on('start game', () => {
-    const spin = spinner.spin(/*user.returnPos()*/ // runs the backend spinner
+    const spin = spinner.spin( // runs the backend spinner
         [
           {top: 266, left: 216},
           {top: 218, left: 581},

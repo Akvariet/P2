@@ -73,6 +73,7 @@ function userRotation(e){
   const name = document.getElementById(myID + '_name');
   const space = document.getElementById("space");
 
+
   /*updates the mouse pos relative to the space div */
   let mouseX = e.clientX - space.offsetLeft;
   let mouseY = e.clientY - space.offsetTop;

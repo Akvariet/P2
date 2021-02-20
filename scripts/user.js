@@ -94,7 +94,6 @@ function showNewProp(i){
     console.log(users[i]);
   else
   console.log("nej");
-  
 }
 
 
@@ -110,7 +109,7 @@ function showAll(){
 }
 
 
-// exports the functions to be used outside this js file
+// exports the functions to be used outside this file
 module.exports = {
   createUser,
   newID,

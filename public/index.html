@@ -1,7 +1,7 @@
 <html>
   <head>
-    <link href="css/login.css" type="text/css" rel="stylesheet">
     <link href="css/normal.css" type="text/css" rel="stylesheet">
+    <link href="css/login.css" type="text/css" rel="stylesheet">
     <title>Akvario</title>
     <link rel="icon" href="resources/favicon.png">
   </head>
@@ -9,12 +9,12 @@
     <div id = "fade">
         <div id = "loginbox">
             <h1>Welcome to the Akvarie!</h1>
-            <form>
+            <form onkeydown="return event.key != 'Enter';">
                 <p>Name</p>
                 <input type="text" id="name" class="center-block" placeholder="Enter Username" required>
                 <!--<p>Room number</p>
                 <input type="text" id="roomid" class="center-block" placeholder="Enter Room number"> required-->
-                <input type="submit" value="Go">
+                <input type="button" id="btn" value="Go" onclick="send()">
 
             </form>
         </div>

@@ -39,8 +39,12 @@ io.on('connection', (socket) => {
   console.log(`user ${socket.id} connected`);
   user.showNewProp(i);
 
+  socket.on('new user',(user)=>{
+    user.users[i].name = user;
+    socket.emit('new user', user.users[i]);
+  });
+
   //sends the correct user object to client
-  socket.emit('connection', user.users[i]);
 
   socket.on('disconnect', () => {
     //when user disconnects do this
@@ -51,7 +55,6 @@ io.on('connection', (socket) => {
     user.showAll();
   });
 });
-
 
 
 /*listens to PORT set on top*/

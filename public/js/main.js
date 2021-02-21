@@ -1,17 +1,34 @@
-const socket = io();
-let myID = null;
+const socket = io({ autoConnect: false });
+const client = prompt('name');
+let myID;
 
-socket.on('connection', function(user){
+socket.open();
 
-  /*sets myID to the users id and generates the body and enables it to move*/
+socket.emit('client-name', client);
+
+socket.on('res-myobject',(user)=>{
+  //sets myID to the users id and generates the body and enables it to move
   myID = user.id;
   generateUser(user);
   userMove(findIndexID(users, myID));
 
-  /*user rotates when the mouse moves */
+  //user rotates when the mouse moves
+  window.addEventListener("mousemove",function(e){userRotation(e);}, false);
+});
+
+
+/*
+socket.on('connection', function(user){
+
+  //sets myID to the users id and generates the body and enables it to move
+  myID = user.id;
+  generateUser(user);
+  userMove(findIndexID(users, myID));
+
+  //user rotates when the mouse moves
   window.addEventListener("mousemove",function(e){userRotation(e);}, false);
 
-});
+});*/
 
 
 

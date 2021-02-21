@@ -26,20 +26,22 @@ app.use('/', indexRouter);
 
 //io.on is the server listening
 io.on('connection', (socket) => {
+  //Creates user with a unique id
+  socket.on('client-name', (client)=>{
+    
+    user.createUser(client, socket.id);
 
-  //sets the socket id to the user id
-  socket.id = user.createUser(user.newID());
+    //index where this user is in users array
+    const i = user.findIndexID(user.users, socket.id);
 
-  //index where this user is in users array
-  const i = user.findIndexID(user.users, socket.id);
+    //shows all active ids and free ids
+    console.log(`user ${socket.id} connected`);
+    user.showNewProp(i);
+    user.showAll();
 
-  //shows all active ids and free ids
-  user.showAll();
-  console.log(`user ${socket.id} connected`);
-  user.showNewProp(i);
-
-  //sends the correct user object to client
-  socket.emit('connection', user.users[i]);
+    //sends the correct user object to client
+    socket.emit('res-myobject', user.users[i]);
+  });
 
   socket.on('disconnect', () => {
     //when user disconnects do this
@@ -55,5 +57,5 @@ io.on('connection', (socket) => {
 
 //listens to PORT set on top
 http.listen(port, () => {
-  console.log(`Welcome to Akvario @ *:${PORT}`);
+  console.log(`Welcome to Akvario @ *:${port}`);
 });

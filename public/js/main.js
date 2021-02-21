@@ -1,38 +1,29 @@
-const socket = io();
-const fade = document.getElementById("fade");
-const loginBox = document.getElementById("loginbox");
-const btn = document.getElementById("btn");
-const nameBox = document.getElementById("name");
+const socket = io({ autoConnect: false });
 
-let myID = null;
-let user = "";
+const overlay = document.getElementById('fade');
+const form = document.getElementById('nameForm');
+const input = document.getElementById('username');
 
-socket.on('connection',(user) =>{
-  //sets myID to the users id and generates the body and enables it to move
-  myID = user.id;
-});
+//when the name has been submitted do this
+form.addEventListener('submit', (e)=>{  
+  //don't do the default things: such as reload the page
+  e.preventDefault();
 
-socket.on('new user', (user)=>{
+  //hide overlay
+  overlay.style.display = "none";
 
-  btn.addEventListener("click", () =>{
+  //connect user to server
+  socket.open();
+
+  //sends client name to server
+  socket.emit('client-name', input.value);
+
+  socket.on('res-myobject',(user)=>{
+    //sets myID to the users id and generates the body and enables it to move
     generateUser(user);
-    userMove(findIndexID(users, myID));
-    
-  //user rotates when the mouse moves 
-  window.addEventListener("mousemove",(e) => {userRotation(e);}, false);
+    userMove(findIndexID(users, socket.id));
+
+    //user rotates when the mouse moves
+    window.addEventListener("mousemove",function(e){userRotation(e);}, false);
   });
-
 });
-
-//setTimeout(() =>{console.log(myID);}, 100);
-
-
-
-
-function send(){
-  user = nameBox.value;
-  socket.emit('new user', user); 
-  fade.style.display = "none";
-  loginBox.style.display = "none";
-}
-

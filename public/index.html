@@ -8,14 +8,13 @@
   <body>
     <div id = "fade">
         <div id = "loginbox">
-            <h1>Welcome to the Akvarie!</h1>
-            <form onkeydown="return event.key != 'Enter';">
+            <h1>Welcome to the Akvario!</h1>
+            <form id="nameForm">
                 <p>Name</p>
-                <input type="text" id="name" class="center-block" placeholder="Enter Username" required>
+                <input type="text" id="username" class="center-block" placeholder="Enter Username" required>
                 <!--<p>Room number</p>
                 <input type="text" id="roomid" class="center-block" placeholder="Enter Room number"> required-->
-                <input type="button" id="btn" value="Go" onclick="send()">
-
+                <input type="submit" value="Go">
             </form>
         </div>
       </div>

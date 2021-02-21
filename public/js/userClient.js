@@ -68,10 +68,11 @@ function findIndexID(arr, id){
 /*enables the user to rotate */
 function userRotation(e){
   /*sets some constants to be used later*/
-  const i = findIndexID(users, myID);
-  const user = document.getElementById(myID);
-  const name = document.getElementById(myID + '_name');
+  const i = findIndexID(users, socket.id);
+  const user = document.getElementById(socket.id);
+  const name = document.getElementById(socket.id + '_name');
   const space = document.getElementById("space");
+
 
   /*updates the mouse pos relative to the space div */
   let mouseX = e.clientX - space.offsetLeft;

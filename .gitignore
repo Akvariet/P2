@@ -106,3 +106,7 @@ dist
 # Editors
 .vscode/
 .idea/
+
+
+# Mac Stuff
+.DS_Store

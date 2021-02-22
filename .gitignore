@@ -1,6 +1,3 @@
-# Stupid mac files
-.DS_Store
-
 # Logs
 logs
 *.log
@@ -110,6 +107,8 @@ dist
 .vscode/
 .idea/
 
-
-# Mac Stuff
+# Stupid mac files
 .DS_Store
+
+#.lock
+package-lock.jason

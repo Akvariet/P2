@@ -21,7 +21,7 @@ form.addEventListener('submit', (e)=>{
   socket.on('res-myobject',(user)=>{
     //sets myID to the users id and generates the body and enables it to move
     generateUser(user);
-    userMove(findIndexID(users, socket.id));
+    userMove(findIndexID(users, socket.id), socket);
 
     //user rotates when the mouse moves
     window.addEventListener("mousemove",function(e){userRotation(e);}, false);

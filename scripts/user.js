@@ -88,7 +88,6 @@ function showAll(){
 // exports the functions to be used outside this file
 module.exports = {
   createUser,
-  newID,
   deleteID,
   showNewProp,
   showAll,

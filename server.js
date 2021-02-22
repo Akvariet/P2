@@ -11,6 +11,7 @@ const io = require('socket.io')(http);
 const user = require("./scripts/user");
 const indexRouter = require('./routes/index');
 const port = process.env.PORT || 3000;
+const spinner = require('./scripts/backend-spinner.js');
 
 //path that clients can use, this means it cant access core server files
 app.use('/clientjs', express.static(path.join(__dirname, '/node_modules/socket.io/client-dist')));
@@ -19,7 +20,10 @@ app.use(express.static('public'));
 //sends index.html to client browser
 app.use('/', indexRouter);
 
-
+// Sends the html to the spinner game when user goes to the dir /spinner
+app.get('/spinner', (req, res) => {
+  res.sendFile(__dirname + '/public/frontend-spinner.html');
+});
 
 //io.on is the server listening
 io.on('connection', (socket) => {
@@ -50,7 +54,21 @@ io.on('connection', (socket) => {
   });
 });
 
-
+// when the server receives the message 'start game' start the spinning game
+io.on('connection', (socket) => {
+  socket.on('start game', () => {
+    const spin = spinner.spin( // runs the backend spinner
+        [
+          {top: 266, left: 216},
+          {top: 218, left: 581},
+          {top: 559, left: 627},
+          {top: 469, left: 249}
+        ]
+    );
+    console.log(spin);
+    io.emit('game', spin.rot, spin.result); // sends back the rotation of the spinner and the result of the game
+  });
+});
 
 //listens to PORT set on top
 http.listen(port, () => {

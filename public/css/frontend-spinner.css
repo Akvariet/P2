@@ -1,0 +1,8 @@
+.arrow {
+    width: 200px;
+    height: 200px;
+    margin: 200px;
+    background-color: red;
+    transition: all 5s ease-in-out;
+}
+

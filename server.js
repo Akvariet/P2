@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 //express and path modules
 const express = require('express');
 const app = express();

@@ -93,7 +93,7 @@ function userRotation(e){
 
 
 /*enables the user to move around */
-function userMove(i) {
+function userMove(i, socket) {
   let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
 
   const user = document.getElementById(users[i].id);
@@ -123,6 +123,7 @@ function userMove(i) {
     user.style.left = users[i].pos[1] + "px";
 
     /*USER COMMUNICATION WITH SERVER SHOULD HAPPEN HERE*/
+    socket.emit('user-pos', users[i].pos);
   }
 
   function closeDragUser() {

@@ -1,18 +1,29 @@
-const socket = io();
-let myID = null;
+const socket = io({ autoConnect: false });
 
-socket.on('connection', function(user){
+const overlay = document.getElementById('fade');
+const form = document.getElementById('nameForm');
+const input = document.getElementById('username');
 
-  /*sets myID to the users id and generates the body and enables it to move*/
-  myID = user.id;
-  generateUser(user);
-  userMove(findIndexID(users, myID));
+//when the name has been submitted do this
+form.addEventListener('submit', (e)=>{  
+  //don't do the default things: such as reload the page
+  e.preventDefault();
 
-  /*user rotates when the mouse moves */
-  window.addEventListener("mousemove",function(e){userRotation(e);}, false);
+  //hide overlay
+  overlay.style.display = "none";
 
+  //connect user to server
+  socket.open();
+
+  //sends client name to server
+  socket.emit('client-name', input.value);
+
+  socket.on('res-myobject',(user)=>{
+    //sets myID to the users id and generates the body and enables it to move
+    generateUser(user);
+    userMove(findIndexID(users, socket.id));
+
+    //user rotates when the mouse moves
+    window.addEventListener("mousemove",function(e){userRotation(e);}, false);
+  });
 });
-
-
-
-//setTimeout(() =>{console.log(myID);}, 100);

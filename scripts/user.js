@@ -1,37 +1,15 @@
-/*
-Here all users are stored and deleted
-freeIDs is ids not being used but has been used.
-*/
+//All users are stored here
 let users = [];
-let freeID = [];
 
 
 
-/*return a new id for new users*/
-function newID(){
-
-  /*if there is ids free then give one to the new user and delete it from freeID*/
-  if(freeID.length != 0){
-    let id = freeID[0];
-    freeID.shift();
-    return id;
-  }
-
-  /*if there is no free IDs give the new user the length of users as id */
-  return users.length;
-}
-
-
-
-/*deletes the user who left*/
+//Deletes users who left
 function deleteID(id){
   const index = findIndexID(users, id);
-  console.log(`---${index}---`);
+  console.log(`Deleted user on index: ${index}`);
 
-  //if there is a index with the id delete it and put it in freeID
   if(index > -1){
     users.splice(index, 1);
-    freeID.push(id);
   }
 }
 
@@ -53,14 +31,14 @@ function initUser(id){
 
 
 //create new user
-function createUser(id){ 
+function createUser(clientName, id){ 
 
   //adds a new user from the user template
   users.push(new initUser(id));
   const i = users.length - 1;
 
   //this should be changed
-  users[i].name = "name";
+  users[i].name = clientName;
 
   //generates colors
   users[i].generateColors();
@@ -94,7 +72,6 @@ function showNewProp(i){
     console.log(users[i]);
   else
   console.log("nej");
-  
 }
 
 
@@ -104,9 +81,6 @@ function showAll(){
   console.log("--Active IDs--")
   for(let i = 0; i < users.length; i++)
     console.log(users[i].id)
-  console.log("--Free IDs--");
-  for(let i = 0; i < freeID.length; i++)
-    console.log(freeID[i]);
 }
 
 //Returns the position of the users as an array of objects
@@ -119,10 +93,10 @@ function returnPos() {
   return userPos;
 }
 
-// exports the functions to be used outside this js file
+
+// exports the functions to be used outside this file
 module.exports = {
   createUser,
-  newID,
   deleteID,
   showNewProp,
   showAll,

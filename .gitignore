@@ -1,3 +1,6 @@
+# Stupid mac files
+.DS_Store
+
 # Logs
 logs
 *.log
@@ -106,3 +109,7 @@ dist
 # Editors
 .vscode/
 .idea/
+
+
+# Mac Stuff
+.DS_Store

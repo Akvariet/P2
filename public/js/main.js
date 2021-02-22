@@ -1,18 +1,29 @@
-let name = "test"; //prompt("Name:");
-const userID = createUser(name);
-const user = document.getElementById(userID);
+const socket = io({ autoConnect: false });
 
-move(user);
+const overlay = document.getElementById('fade');
+const form = document.getElementById('nameForm');
+const input = document.getElementById('username');
 
-window.addEventListener("mousemove", function (e) {
-  const user = document.getElementById(userID);
-  const name = document.getElementById(userID + '_name');
-  const space = document.getElementById("space");
-  let mouseX = e.clientX - space.offsetLeft;
-  let mouseY = e.clientY - space.offsetTop;
-  let userX = user.offsetTop - mouseY + 35;
-  let userY = user.offsetLeft - mouseX + 35;
-  let o = users[userID].rad = -1 * Math.atan2(userY, userX);
-  user.style.transform = "rotate(" + o + "rad)";
-  name.style.transform = "rotate(" + -1*o + "rad)";
-}, false);
+//when the name has been submitted do this
+form.addEventListener('submit', (e)=>{  
+  //don't do the default things: such as reload the page
+  e.preventDefault();
+
+  //hide overlay
+  overlay.style.display = "none";
+
+  //connect user to server
+  socket.open();
+
+  //sends client name to server
+  socket.emit('client-name', input.value);
+
+  socket.on('res-myobject',(user)=>{
+    //sets myID to the users id and generates the body and enables it to move
+    generateUser(user);
+    userMove(findIndexID(users, socket.id));
+
+    //user rotates when the mouse moves
+    window.addEventListener("mousemove",function(e){userRotation(e);}, false);
+  });
+});

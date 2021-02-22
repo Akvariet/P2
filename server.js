@@ -1,62 +1,76 @@
-/*express and node stuff */
+//express and path modules
 const express = require('express');
 const app = express();
-var path = require('path');
-const http = require('http').createServer(app);
-const PORT = 3000;
+const path = require('path');
 
-/*for doing io stuff*/
+//io and http modules
+const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 
+//our modules and consts
+const user = require("./scripts/user");
+const indexRouter = require('./routes/index');
+const port = process.env.PORT || 3000;
+const spinner = require('./scripts/backend-spinner.js');
 
-/*App Data - this should be moved to seperate file*/
-let users = [];
-
-function newID(){
-  let id = users.length + 1;
-  users.push(id);
-  return id;
-}
-
-
-/*path that clients can use, this means it cant access core server files*/
+//path that clients can use, this means it cant access core server files
 app.use('/clientjs', express.static(path.join(__dirname, '/node_modules/socket.io/client-dist')));
-app.use(express.static(path.join(__dirname, '/public')));
-app.use(express.static(path.join(__dirname, '/public/js')));
-app.use(express.static(path.join(__dirname, '/public/css')));
-app.use(express.static(path.join(__dirname, '/public/resources')));
+app.use(express.static('public'));
 
-/*sends index.html to client browser*/
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/public/index.html');
+//sends index.html to client browser
+app.use('/', indexRouter);
+
+// Sends the html to the spinner game when user goes to the dir /spinner
+app.get('/spinner', (req, res) => {
+  res.sendFile(__dirname + '/public/frontend-spinner.html');
 });
 
-/*io.on is the server listening*/
+//io.on is the server listening
 io.on('connection', (socket) => {
-  /*when new user connects do this */
-  const id = newID();
-  console.log('a user connected');
-  socket.emit('connection', id);
+  //Creates user with a unique id
+  socket.on('client-name', (client)=>{
+    
+    user.createUser(client, socket.id);
+
+    //index where this user is in users array
+    const i = user.findIndexID(user.users, socket.id);
+
+    //shows all active ids and free ids
+    console.log(`user ${socket.id} connected`);
+    user.showNewProp(i);
+    user.showAll();
+
+    //sends the correct user object to client
+    socket.emit('res-myobject', user.users[i]);
+  });
+
   socket.on('disconnect', () => {
-    /*when user disconnects do this*/
-    console.log('user disconnected')
-    for(let i = 0; i < users.length; i++){
-      if(users[i].id == id)
-        users[i] = 0;
-      
-    }
-  })
-});
+    //when user disconnects do this
+    console.log(`user ${socket.id} disconnected`);
 
-io.on('connection', (socket) => {
-  /*receive message from client logs to console and sends back to users*/
-  socket.on('msg', (msg, name) => {
-    console.log(name + ": " + msg);
-    io.emit('msg', msg, name);
+    //deletes user when client disconnets
+    user.deleteID(socket.id);
+    user.showAll();
   });
 });
 
-/*listens to PORT set on top*/
-http.listen(PORT, () => {
-  console.log(`Welcome to Akvario @ *:${PORT}`);
+// when the server receives the message 'start game' start the spinning game
+io.on('connection', (socket) => {
+  socket.on('start game', () => {
+    const spin = spinner.spin( // runs the backend spinner
+        [
+          {top: 266, left: 216},
+          {top: 218, left: 581},
+          {top: 559, left: 627},
+          {top: 469, left: 249}
+        ]
+    );
+    console.log(spin);
+    io.emit('game', spin.rot, spin.result); // sends back the rotation of the spinner and the result of the game
+  });
+});
+
+//listens to PORT set on top
+http.listen(port, () => {
+  console.log(`Welcome to Akvario @ *:${port}`);
 });

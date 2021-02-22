@@ -1,29 +1,9 @@
-/*
-Here all users are stored and deleted
-freeIDs is ids not being used but has been used.
-*/
+//All users are stored here
 let users = [];
-let freeID = [];
 
 
 
-/*return a new id for new users*/
-function newID(){
-
-  /*if there is ids free then give one to the new user and delete it from freeID*/
-  if(freeID.length != 0){
-    let id = freeID[0];
-    freeID.shift();
-    return id;
-  }
-
-  /*if there is no free IDs give the new user the length of users as id */
-  return users.length;
-}
-
-
-
-/*deletes the user who left*/
+//Deletes users who left
 function deleteID(id){
   const index = findIndexID(users, id);
   console.log(`Deleted user on index: ${index}`);
@@ -102,6 +82,7 @@ function showAll(){
   for(let i = 0; i < users.length; i++)
     console.log(users[i].id)
 }
+
 
 
 // exports the functions to be used outside this file

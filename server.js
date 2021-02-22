@@ -7,13 +7,10 @@ const path = require('path');
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 
-
 //our modules and consts
 const user = require("./scripts/user");
 const indexRouter = require('./routes/index');
 const port = process.env.PORT || 3000;
-
-
 
 //path that clients can use, this means it cant access core server files
 app.use('/clientjs', express.static(path.join(__dirname, '/node_modules/socket.io/client-dist')));

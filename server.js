@@ -44,6 +44,12 @@ io.on('connection', (socket) => {
     socket.emit('res-myobject', user.users[i]);
   });
 
+  socket.on('user-pos', (pos) => {
+    const i = user.findIndexID(user.users, socket.id);
+    user.users[i].pos[0] = pos[0];
+    user.users[i].pos[1] = pos[1];
+  });
+
   socket.on('disconnect', () => {
     //when user disconnects do this
     console.log(`user ${socket.id} disconnected`);

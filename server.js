@@ -27,7 +27,7 @@ app.get('/spinner', (req, res) => {
 
 //io.on is the server listening
 io.on('connection', (socket) => {
-  //Creates user with a unique id
+
   socket.on('client-name', (client)=>{
     
     user.createUser(client, socket.id);
@@ -41,7 +41,27 @@ io.on('connection', (socket) => {
     user.showAll();
 
     //sends the correct user object to client
-    socket.emit('res-myobject', user.users[i]);
+    socket.emit('res-users', user.users);
+    io.emit('test', user.users[i]);
+    socket.emit('connection', socket.id);
+    socket.emit('res-users', user.users);
+  });
+  
+  //for updating user position
+  socket.on('user-pos', (id, pos) => {
+    const i = user.findIndexID(user.users, id);
+    user.users[i].pos[0] = pos[0];
+    user.users[i].pos[1] = pos[1];
+    
+    socket.broadcast.emit('user-pos', id, pos);
+  });
+
+  //for updating user rotation
+  socket.on('user-rot', (id, rot)=>{
+    const i = user.findIndexID(user.users, id);
+    user.users[i].rad = rot;
+
+    socket.broadcast.emit('user-rot', id, rot);
   });
 
   socket.on('disconnect', () => {
@@ -51,6 +71,7 @@ io.on('connection', (socket) => {
     //deletes user when client disconnets
     user.deleteID(socket.id);
     user.showAll();
+    io.emit('user-delete', socket.id);
   });
 });
 

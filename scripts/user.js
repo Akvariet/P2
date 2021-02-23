@@ -90,7 +90,7 @@ function returnPos() {
 }
 
 
-// exports the functions to be used outside this file
+// exports the functions to gbe used outside this file
 module.exports = {
   createUser,
   deleteID,

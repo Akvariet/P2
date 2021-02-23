@@ -13,8 +13,6 @@ function deleteID(id){
   }
 }
 
-
-
 //user template
 function initUser(id){
   this.name = "";
@@ -27,8 +25,6 @@ function initUser(id){
       this.color[i] = Math.floor(Math.random() * 256);
   }
 }
-
-
 
 //create new user
 function createUser(clientName, id){ 

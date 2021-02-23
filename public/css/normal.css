@@ -33,6 +33,13 @@ body{
   margin: auto;
 }
 
+#menuPopUp{
+  display: none;
+  width: 75px;
+  height: 250px;
+  color: red;
+}
+
 .user{
   border-radius: 100%;
   width: 70px;

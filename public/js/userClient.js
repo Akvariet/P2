@@ -91,7 +91,6 @@ function userRotation(e){
 }
 
 
-
 /*enables the user to move around */
 function userMove(i, socket) {
   let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;

@@ -79,6 +79,15 @@ function showAll(){
     console.log(users[i].id)
 }
 
+//Returns the position of the users as an array of objects
+function returnPos() {
+  let userPos = [{}];
+  for (let i = 0; i < users.length; i++) {
+    userPos[i].left = users[i].pos[0];
+    userPos[i].top = users[i].pos[1];
+  }
+  return userPos;
+}
 
 
 // exports the functions to be used outside this file
@@ -88,5 +97,6 @@ module.exports = {
   showNewProp,
   showAll,
   users,
-  findIndexID
+  findIndexID,
+  returnPos
 }

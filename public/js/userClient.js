@@ -11,67 +11,34 @@ function generateUser(user){
   generateBody(i, user.id);
 }
 
-
-
-/*Generates HTML */
+// Creates the HTML to the user using the template in index.html
 function generateBody(i ,id){
+  //Takes the content of the template, creates a copy of it that is edited
   let userTemp = document.getElementById("userTemplate").content;
   let userHTML = document.importNode(userTemp,true);
-  let userBody = userHTML.querySelector(".user");
-  let userCont = userHTML.querySelector(".user-container");
+  let userBody = userHTML.querySelector(".body");
+  let userContainer = userHTML.querySelector(".user-container");
 
-  /*
-  const container = document.createElement("div");
-  const body = document.createElement("div"); // this is the body of the user
-  const arrow = '<svg class="arrow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 11.328031 13.449599" height="20px" width="20px"><g transform="translate(-91.411618,-71.178162)"><g><path d="m 345.7462,274.54091 c 0.82399,3.92069 1.4126,7.88738 1.7626,11.87874 0.4234,4.82846 0.42341,12.70724 10e-6,17.5357 -0.31671,3.6118 -0.82884,7.20385 -1.53415,10.76031 -0.92943,4.68658 1.30847,6.46831 5.44756,4.07875 l 8.78623,-5.07241 a 226183.95,226183.95 149.99924 0 0 15.78977,-9.11651 l 9.67765,-5.58809 a 5.2634256,5.2634256 89.998346 0 0 -2.6e-4,-9.11639 l -9.91419,-5.7239 a 1153838.2,1153838.2 29.999328 0 0 -15.31587,-8.84238 l -8.94831,-5.16608 c -4.47177,-2.58166 -6.81263,-0.67902 -5.75104,4.37226 z" transform="scale(0.26458333)"/></g></g></svg>';
-  */
+  //Gives the container and the body an id
+  userContainer.setAttribute('id', id);
+  userBody.setAttribute('id', id + '_body');
 
+  // updates initial pos of the user
+  users[i].pos[1] = userContainer.style.top = users[i].pos[1] + "%";
+  users[i].pos[0] = userContainer.style.left = users[i].pos[0] + "%";
 
-  userCont.setAttribute('id', `${users[i].id}`);
-
-  /*
-  sets id and classes for the body element, 
-  and appends the svg arrow to the body.
-  */
-  /*
-  body.setAttribute('id', `${users[i].id}`);
-  body.setAttribute('class', 'user');
-  body.innerHTML = arrow;
-
-
-   */
-  /*updates initial pos of the user*/
-  users[i].pos[1] = userBody.style.top = users[i].pos[1] + "%";
-  users[i].pos[0] = userBody.style.left = users[i].pos[0] + "%";
-
-  /*
-  Sets the color of the user to what is specified in the
-  user object and appends it to the space div. myName appends the name to body
-  */
-
+  //Sets the color of the user to what is specified in the
   userBody.style.backgroundColor = `rgb(${users[i].color[0]},${users[i].color[1]},${users[i].color[2]})`;
   userBody.style.fill = `rgb(${users[i].color[0]},${users[i].color[1]},${users[i].color[2]})`;
 
+  //finds the name of the
   const text = userHTML.querySelector('.name');
-  text.textContent = users[i].name
+  text.textContent = users[i].name;
   text.setAttribute('id', id + '_name');
 
+  //Appends the edited copy of the template to the space
   document.getElementById("space").appendChild(userHTML);
-  //myName(i, id);
 }
-
-
-
-/*generates name element */
-function myName(i, id){
-  const text = document.createElement("h3");
-  text.innerHTML = users[i].name
-  text.setAttribute('class', 'name');
-  text.setAttribute('id', id + '_name');
-  document.getElementById(id).appendChild(text);
-}
-
-
 
 /*finds index of user by id*/
 function findIndexID(arr, id){
@@ -83,14 +50,12 @@ function findIndexID(arr, id){
   return -1;
 }
 
-
-
 /*enables the user to rotate */
 function userRotation(e){
   /*sets some constants to be used later*/
   const i = findIndexID(users, socket.id);
-  const user = document.getElementById(socket.id);
-  const name = document.getElementById(socket.id + '_name');
+  const user = document.getElementById(socket.id + '_body');
+  const container = document.getElementById(socket.id);
   const space = document.getElementById("space");
 
 
@@ -99,15 +64,14 @@ function userRotation(e){
   let mouseY = e.clientY - space.offsetTop;
 
   /*updates user pos from middle*/
-  let userX = user.offsetTop - mouseY + 35;
-  let userY = user.offsetLeft - mouseX + 35;
+  let userX = container.offsetTop - mouseY + (115/2);
+  let userY = container.offsetLeft - mouseX + ((115+98)/2);
 
   /*magic math to make the user rotate correctly */
   let o = users[i].rad = -1 * Math.atan2(userY, userX);
 
-  /*applies the rotation to the user and inverts it for the name*/
+  /*applies the rotation to the user*/
   user.style.transform = "rotate(" + o + "rad)";
-  name.style.transform = "rotate(" + -1*o + "rad)";
 }
 
 
@@ -116,7 +80,8 @@ function userRotation(e){
 function userMove(i, socket) {
   let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
 
-  const user = document.getElementById(users[i].id);
+  const container = document.getElementById(users[i].id);
+  const user = document.getElementById(users[i].id + '_body');
 
   user.onmousedown = dragMouseDown;
 
@@ -136,11 +101,11 @@ function userMove(i, socket) {
     pos2 = pos4 - e.clientY;
     pos3 = e.clientX;
     pos4 = e.clientY;
-    users[i].pos[0] = (user.offsetTop - pos2);
-    users[i].pos[1] = (user.offsetLeft - pos1);
+    users[i].pos[0] = (container.offsetTop - pos2);
+    users[i].pos[1] = (container.offsetLeft - pos1);
 
-    user.style.top = users[i].pos[0] + "px";
-    user.style.left = users[i].pos[1] + "px";
+    container.style.top = users[i].pos[0] + "px";
+    container.style.left = users[i].pos[1] + "px";
 
     /*USER COMMUNICATION WITH SERVER SHOULD HAPPEN HERE*/
     socket.emit('user-pos', users[i].pos);

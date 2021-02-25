@@ -34,24 +34,36 @@ body{
   z-index: 1;
 }
 
-.user{
+.user-container{
+  position: absolute;
+  width: calc(70px + 22.5px + 22.5px + 98px);
+  height: calc(70px + 22.5px + 22.5px + 20px);
+}
+
+.body{
+  top: 22.5px;
+  left: calc(22.5px + 49px);
   border-radius: 100%;
   width: 70px;
   height: 70px;
   position: absolute;
   font-weight: bold;
+  text-align: center;
 }
 
 .arrow {
   position: relative;
   top: -35%;
-  left: 24px;
-  transform:rotate(-90deg)
+  transform:rotate(-90deg);
+  visibility: visible;
 }
 
 .name{
   position: relative;
-  text-align:center;
-  color: white;
+  color: black;
+  top: calc(70px + 22.5px + 22.5px);
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
   user-select: none;
 }

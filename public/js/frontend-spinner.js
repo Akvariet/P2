@@ -1,4 +1,3 @@
-const socket = io();
 
 //Sends a request to the backend to start the game
 function requestGameStart() {

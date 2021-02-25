@@ -2,7 +2,7 @@
 //The position of the spinner.
 const s_pos = {top: 336, left: 312};
 
-function spin(userPos){
+export default function spin(userPos){
 
     // Pass this to the front end to run the spinner locally.
     const rot = Math.random() * 360*5;
@@ -47,9 +47,6 @@ function spin(userPos){
     }
 }
 
-module.exports = {
-    spin
-}
 
 
 

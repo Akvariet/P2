@@ -1,23 +1,23 @@
+import express from 'express';
+import path from 'path';
+import {createServer} from 'http';
+import * as socket_io from 'socket.io';
+import {UserCollection} from './public/js/user.js'
+import indexRouter from './routes/index.js';
+import spinner from './scripts/backend-spinner.js'
+
 //express and path modules
-const express = require('express');
 const app = express();
-const path = require('path');
+const server = createServer(app);
+const io = new socket_io.Server(server);
 
-//io and http modules
-const http = require('http').createServer(app);
-const io = require('socket.io')(http);
-
-//our modules and consts
-const user = require("./scripts/user");
-const indexRouter = require('./routes/index');
 const port = process.env.PORT || 3000;
-const spinner = require('./scripts/backend-spinner.js');
 
-//path that clients can use, this means it cant access core server files
-app.use('/clientjs', express.static(path.join(__dirname, '/node_modules/socket.io/client-dist')));
+// Path that clients can use, this means it can't access core server files-
+app.use('/clientjs', express.static(path.join(path.resolve(), '/node_modules/socket.io/client-dist')));
 app.use(express.static('public'));
 
-//sends index.html to client browser
+// Send index.html to client.
 app.use('/', indexRouter);
 
 // Sends the html to the spinner game when user goes to the dir /spinner
@@ -25,38 +25,57 @@ app.get('/spinner', (req, res) => {
   res.sendFile(__dirname + '/public/frontend-spinner.html');
 });
 
-//io.on is the server listening
-io.on('connection', (socket) => {
-  //Creates user with a unique id
-  socket.on('client-name', (client)=>{
-    
-    user.createUser(client, socket.id);
+const users = new UserCollection();
 
-    //index where this user is in users array
-    const i = user.findIndexID(user.users, socket.id);
+// Socket.io listens for connections.
+io.on('connection', (socket) => {
+
+
+  socket.on('new-client', (client)=>{
+    const id   = socket.id;
+    const user = users.make(id, client);
 
     //shows all active ids and free ids
-    console.log(`user ${socket.id} connected`);
-    user.showNewProp(i);
-    user.showAll();
+    console.log(`${client} with id ${id} connected`);
 
-    //sends the correct user object to client
-    socket.emit('res-myobject', user.users[i]);
+    // Send new user to the other clients.
+    io.emit('new-user-connected', user);
+
+    // Send id and other users to new client.
+    socket.emit('user-created', id);
+    socket.emit('connected-users', users);
+  });
+  
+  //for updating user position
+  socket.on('update-user-pos', (id, pos) => {
+    const user = users.get(id);
+    if(user === undefined)
+      return;
+    user.pos.top  = pos.top;
+    user.pos.left = pos.left;
+    
+    socket.broadcast.emit('update-user-pos', id, pos);
   });
 
-  socket.on('user-pos', (pos) => {
-    const i = user.findIndexID(user.users, socket.id);
-    user.users[i].pos[0] = pos[0];
-    user.users[i].pos[1] = pos[1];
+  //for updating user rotation
+  socket.on('update-user-rot', (id, rot)=>{
+    const user = users.get(id);
+    if(user === undefined)
+      return;
+
+    user.rad = rot;
+
+    socket.broadcast.emit('update-user-rot', id, rot);
   });
 
+  //when user disconnects do this
   socket.on('disconnect', () => {
-    //when user disconnects do this
-    console.log(`user ${socket.id} disconnected`);
+    const id = socket.id;
+    console.log(`user ${id} disconnected`);
+    users.remove(id);
 
     //deletes user when client disconnets
-    user.deleteID(socket.id);
-    user.showAll();
+    io.emit('user-delete', id);
   });
 });
 
@@ -77,6 +96,6 @@ io.on('connection', (socket) => {
 });
 
 //listens to PORT set on top
-http.listen(port, () => {
+server.listen(port, () => {
   console.log(`Welcome to Akvario @ *:${port}`);
 });

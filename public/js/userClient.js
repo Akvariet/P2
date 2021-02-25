@@ -14,10 +14,10 @@ function generateUser(user){
 // Creates the HTML to the user using the template in index.html
 function generateBody(i ,id){
   //Takes the content of the template, creates a copy of it that is edited
-  let userTemp = document.getElementById("userTemplate").content;
-  let userHTML = document.importNode(userTemp,true);
-  let userBody = userHTML.querySelector(".body");
-  let userContainer = userHTML.querySelector(".user-container");
+  const userTemp = document.getElementById("userTemplate").content;
+  const userHTML = document.importNode(userTemp,true);
+  const userBody = userHTML.querySelector(".body");
+  const userContainer = userHTML.querySelector(".user-container");
 
   //Gives the container and the body an id
   userContainer.setAttribute('id', id);
@@ -73,8 +73,6 @@ function userRotation(e){
   /*applies the rotation to the user*/
   user.style.transform = "rotate(" + o + "rad)";
 }
-
-
 
 /*enables the user to move around */
 function userMove(i, socket) {

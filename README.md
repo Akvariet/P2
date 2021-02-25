@@ -1,4 +1,4 @@
-# P2 project
+# P2 project - Akvario chat
 
 This is the P2 project of group B2-18. The project started on February first and ended on [INSERT DATE].
 

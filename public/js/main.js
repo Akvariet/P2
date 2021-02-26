@@ -34,7 +34,7 @@ form.addEventListener('submit', e => {
       userMove(myUser, socket);
 
       // TODO: Spinner element should be replaced by an actual spinner object.
-      const spinner = {id: 'spinner', name: 'spinner', color: 'red', pos: {top: 300, left: 300}, rad: 0};
+      const spinner = {id: 'spinner', name: '', color: 'red', pos: {top: 300, left: 300}, rad: 0};
       const spinnerElement = instantiateUser(spinner);
 
       spinnerElement.addEventListener('click', () => {
@@ -59,7 +59,7 @@ form.addEventListener('submit', e => {
 
       //updating user rotation
       socket.on('update-user-rot', (id, rot)=>{
-        const user = document.getElementById(id);
+        const user = document.getElementById(id + '_body');
         user.style.transform =`rotate(${rot}rad)`;
       });
 

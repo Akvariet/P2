@@ -4,7 +4,7 @@ export function spinBottle(rotationAngle, winner) {
     let rotationTime = 5;
     let timeBeforeReset = 2;
 
-    const spinner = document.querySelector('#spinner');
+    const spinner = document.querySelector('#spinner_body');
     //Sets the time the spinner takes to rotate
     spinner.style.transition = 'all ' + rotationTime + 's ease-in-out';
 
@@ -19,7 +19,7 @@ export function spinBottle(rotationAngle, winner) {
 //Rotates the spinner to its original position.
 function resetBottlePos(rotationAngle, rotationTime) {
     let resetPos = (360 - (rotationAngle % 360)) + rotationAngle;
-    document.querySelector('#spinner').style.transform = 'rotate(' + resetPos + 'deg)';
+    document.querySelector('#spinner_body').style.transform = 'rotate(' + resetPos + 'deg)';
     setTimeout(resetRotation, (rotationTime*1000));
 }
 
@@ -28,7 +28,7 @@ function resetBottlePos(rotationAngle, rotationTime) {
 * It starts with setting the rotation time to 0, and resets the rotation on the spinner.
 * */
 function resetRotation() {
-    const spinner = document.querySelector('#spinner');
+    const spinner = document.querySelector('#spinner_body');
     spinner.style.transition = 'all 0s ease-in-out';
     spinner.style.transform = 'rotate(0deg)';
 }

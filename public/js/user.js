@@ -6,10 +6,7 @@ export class UserCollection{
     // Returns the user with the given id.
     get = id => this.users[`${id}`];
 
-    /* Creates an entirely new user and adds it to the collection.
-       color is css color (rgb or hex).
-       pos is css pos ({top,left}).
-       rad is rotation in radians.                              */
+    //Creates an entirely new user and adds it to the collection.
     make = (id, name, color, pos, rad) =>
         this.add({
             id: id,
@@ -36,5 +33,7 @@ export class UserCollection{
     }
 
     // Removes the user with the given id from collection
-    remove = id => delete this.users[`${id}`];
+    remove = id => {
+        if(this.get(id) !== undefined)
+            delete this.users[`${id}`];}
 }

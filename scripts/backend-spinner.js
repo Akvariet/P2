@@ -1,8 +1,6 @@
 
-//The position of the spinner.
-const s_pos = {top: 336, left: 312};
-
-function spin(userPos){
+// s_pos is the position of the spinner.
+export default function spin(userPos, s_pos){
 
     // Pass this to the front end to run the spinner locally.
     const rot = Math.random() * 360*5;
@@ -10,7 +8,7 @@ function spin(userPos){
     const result = closestUser(userPos, rot);
 
     //return the result of the spin and the rotation of the spinner. Players should not move before the game is done.
-    return {result: result, rot: rot};
+    return {winner: result, rot: rot};
 
     //--- Helper functions ---\\
     //Find the user which is closest to being pointed at. Pass this function so the front end can play along.
@@ -18,12 +16,12 @@ function spin(userPos){
         const relPos = getRelUserPos();
 
         const rots = [];
-
+        const ids  = Object.keys(relPos);
         //Check the angles between all the users in the game.
-        relPos.forEach(value => {
-            let a = Math.atan(value.top / value.left) * 180 / Math.PI;
+        ids.forEach(id => {
+            let a = Math.atan(relPos[id].top / relPos[id].left) * 180 / Math.PI;
 
-            if (value.left < 0)
+            if (relPos[id].left < 0)
                 a = 180 + a
 
             //add the difference in degrees to rots.
@@ -31,15 +29,16 @@ function spin(userPos){
         });
 
         //Return the index of the lowest angle.
-        return rots.indexOf(Math.min(...rots));
+
+        return ids[rots.indexOf(Math.min(...rots))];
 
         //Returns the position of the players in relation to the spinner.
         function getRelUserPos() {
-            const res = [];
+            const res = {};
 
-            userPositions.forEach(value => res.push({
-                top:  value.top  - s_pos.top,
-                left: value.left - s_pos.left
+            Object.keys(userPositions).forEach(id => res[id] = ({
+                top:  userPositions[id].top  - s_pos.top,
+                left: userPositions[id].left - s_pos.left
             }));
 
             return res;
@@ -47,9 +46,6 @@ function spin(userPos){
     }
 }
 
-module.exports = {
-    spin
-}
 
 
 

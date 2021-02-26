@@ -1,11 +1,12 @@
 import {UserCollection} from "./user.js";
+import {spinBottle} from "./frontend-spinner.js";
 
 const socket = io({ autoConnect: false });
 const overlay = document.getElementById('fade');
 const form = document.getElementById('nameForm');
 const input = document.getElementById('username');
 
-let allUsers = new UserCollection();
+const allUsers = new UserCollection();
 
 //when the name has been submitted do this
 form.addEventListener('submit', e => {
@@ -26,33 +27,33 @@ form.addEventListener('submit', e => {
 
     socket.on('connected-users', serverUsers =>{
 
-      for (const id in serverUsers){
-        instantiateUser(allUsers.add(serverUsers[id]));
-      }
+      Object.keys(serverUsers).forEach(id => instantiateUser(allUsers.add(serverUsers[id])));
 
       const myUser = allUsers.get(id);
 
-      //sets myID to the users id and generates the body and enables it to move
+      userMove(myUser, socket);
 
-      userMove(allUsers.get(id), socket);
+      // TODO: Spinner element should be replaced by an actual spinner object.
+      const spinner = {id: 'spinner', name: 'spinner', color: 'red', pos: {top: 300, left: 300}, rad: 0};
+      const spinnerElement = instantiateUser(spinner);
+
+      spinnerElement.addEventListener('click', () => {
+        socket.emit('start-spinner');
+      });
 
       //user rotates when the mouse moves
       window.addEventListener("mousemove",e => userRotation(e, myUser, socket), false);
 
       socket.on('new-user-connected', newUser =>{
-        if(newUser.id !== id){
-          allUsers.add(newUser);
-          instantiateUser(newUser);
-        }
-        else
-          console.warn('Received own user connected!');
+        allUsers.add(newUser);
+        instantiateUser(newUser);
       });
 
       //updating user position
       socket.on('update-user-pos', (id, pos)=>{
         const user = document.getElementById(id);
 
-        user.style.top = pos.top + "px";
+        user.style.top  = pos.top + "px";
         user.style.left = pos.left + "px";
       });
 
@@ -60,6 +61,10 @@ form.addEventListener('submit', e => {
       socket.on('update-user-rot', (id, rot)=>{
         const user = document.getElementById(id);
         user.style.transform =`rotate(${rot}rad)`;
+      });
+
+      socket.on('spinner-result', (rotAngle, winner) => {
+        spinBottle(rotAngle, winner); //Start the game
       });
 
       socket.on('user-delete', id => deleteDisconnectedUser(id));

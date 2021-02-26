@@ -9,7 +9,6 @@ function instantiateUser(user){
 
   /* Sets id and classes for the body element,
   and appends the svg arrow to the body. */
-
   body.setAttribute('id', id);
   body.setAttribute('class', 'user');
   body.innerHTML = arrow;
@@ -25,10 +24,11 @@ function instantiateUser(user){
   document.getElementById("space").appendChild(body);
 
   const nameLabel = document.createElement("h3");
-  nameLabel.innerHTML = user.name
+  nameLabel.innerHTML = user.name;
   nameLabel.setAttribute('class', 'name');
   nameLabel.setAttribute('id', id + '_name');
-  document.getElementById(id).appendChild(nameLabel);
+  body.appendChild(nameLabel);
+  return body;
 }
 
 //enables the user to rotate
@@ -38,7 +38,6 @@ function userRotation(e, user, socket){
   const userElement  = document.getElementById(id);
   const name  = document.getElementById(id + '_name');
   const space = document.getElementById("space");
-
 
   //updates the mouse pos relative to the space div
   let mouseX = e.clientX - space.offsetLeft;

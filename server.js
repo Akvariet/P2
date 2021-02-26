@@ -4,7 +4,7 @@ import {createServer} from 'http';
 import * as socket_io from 'socket.io';
 import {UserCollection} from './public/js/user.js'
 import indexRouter from './routes/index.js';
-import spinner from './scripts/backend-spinner.js'
+import spin from './scripts/backend-spinner.js'
 
 //express and path modules
 const app = express();
@@ -22,7 +22,7 @@ app.use('/', indexRouter);
 
 // Sends the html to the spinner game when user goes to the dir /spinner
 app.get('/spinner', (req, res) => {
-  res.sendFile(__dirname + '/public/frontend-spinner.html');
+  res.sendFile(path.resolve() + '/public/frontend-spinner.html');
 });
 
 const users = new UserCollection();
@@ -43,7 +43,7 @@ io.on('connection', (socket) => {
 
     // Send id and other users to new client.
     socket.emit('user-created', id);
-    socket.emit('connected-users', users);
+    socket.emit('connected-users', users.users);
   });
   
   //for updating user position
@@ -51,8 +51,7 @@ io.on('connection', (socket) => {
     const user = users.get(id);
     if(user === undefined)
       return;
-    user.pos.top  = pos.top;
-    user.pos.left = pos.left;
+    user.pos = pos;
     
     socket.broadcast.emit('update-user-pos', id, pos);
   });
@@ -68,6 +67,13 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('update-user-rot', id, rot);
   });
 
+  socket.on('start-spinner', () => {
+    const result = spin(users.positions(), {top: 300, left: 300});
+    const winner = (users.get(result.winner)).name;
+    console.log(`Winner is ${winner}`);
+    io.emit('spinner-result', result.rot, winner); // sends back the rotation of the spinner and the result of the game
+  });
+
   //when user disconnects do this
   socket.on('disconnect', () => {
     const id = socket.id;
@@ -76,22 +82,6 @@ io.on('connection', (socket) => {
 
     //deletes user when client disconnets
     io.emit('user-delete', id);
-  });
-});
-
-// when the server receives the message 'start game' start the spinning game
-io.on('connection', (socket) => {
-  socket.on('start game', () => {
-    const spin = spinner.spin( // runs the backend spinner
-        [
-          {top: 266, left: 216},
-          {top: 218, left: 581},
-          {top: 559, left: 627},
-          {top: 469, left: 249}
-        ]
-    );
-    console.log(spin);
-    io.emit('game', spin.rot, spin.result); // sends back the rotation of the spinner and the result of the game
   });
 });
 

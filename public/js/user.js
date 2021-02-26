@@ -1,10 +1,12 @@
 export class UserCollection{
+    constructor() {
+        this.users = {};
+    }
 
     // Returns the user with the given id.
-    get = id => this[`${id}`];
+    get = id => this.users[`${id}`];
 
-    /* Creates an entirely new user and adds it to the collection
-
+    /* Creates an entirely new user and adds it to the collection.
        color is css color (rgb or hex).
        pos is css pos ({top,left}).
        rad is rotation in radians.                              */
@@ -17,16 +19,22 @@ export class UserCollection{
             rad : 0 || rad
         });
 
+    // Returns the positions of all users in an object.
+    positions = () =>{
+        const pos = {};
+        Object.keys(this.users).forEach(id => pos[id] = this.get(id).pos);
+        return pos;
+    }
 
     // Adds a user to collection, Returns the user.
     add = user => {
         if(this.get(user) !== undefined)
             console.warn(`user with id ${user.id} already existed! Did you mean to override?`);
 
-        this[`${user.id}`] = user;
+        this.users[`${user.id}`] = user;
         return user;
     }
 
     // Removes the user with the given id from collection
-    remove = id => this[`${id}`] = undefined;
+    remove = id => delete this.users[`${id}`];
 }

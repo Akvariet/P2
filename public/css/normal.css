@@ -70,3 +70,28 @@ body{
   text-align: center;
   user-select: none;
 }
+
+.menuPopUp {
+  position: absolute;
+  z-index: 8;
+  display: none;
+}
+
+#menuBody {
+  display: block;
+  position: absolute;
+  height: 250px;
+  width: 150px;
+  z-index: 1;
+}
+
+#speakers {
+  display: block;
+  position: absolute;
+  width: 50px; 
+  height: 50px; 
+  left: 55px;
+  top: 20px;
+  outline: none;
+  z-index: 2;
+}

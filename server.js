@@ -67,13 +67,6 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('update-user-rot', id, rot);
   });
 
-  socket.on('start-spinner', () => {
-    const result = spin(users.positions(), {top: 300, left: 300});
-    const winner = (users.get(result.winner)).name;
-    console.log(`Winner is ${winner}`);
-    io.emit('spinner-result', result.rot, winner); // sends back the rotation of the spinner and the result of the game
-  });
-
   //when user disconnects do this
   socket.on('disconnect', () => {
     const id = socket.id;

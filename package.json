@@ -10,9 +10,20 @@
   },
   "dependencies": {
     "express": "^4.17.1",
-    "socket.io": "^3.1.1"
+    "moment": "^2.29.1",
+    "socket.io": "^3.1.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Danijula/P2.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Danijula/P2/issues"
+  },
+  "homepage": "https://github.com/Danijula/P2#readme"
 }

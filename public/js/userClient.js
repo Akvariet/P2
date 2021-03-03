@@ -1,4 +1,5 @@
-
+let prev_X, prev_Y;
+let muted;
 // Creates a new HTML user object.
 function instantiateUser(user){
   const userTemp = document.getElementById("userTemplate").content;
@@ -54,6 +55,41 @@ function userRotation(e, user, socket){
   socket.emit('update-user-rot', user.id, user.rad);
 }
 
+function menuPopUp(e){
+  const menu = document.getElementById("popup");
+  e.preventDefault();
+  if (menu.style.display == "none"){
+    menu.style.display = "block";
+    let biased_x = parseInt(e.clientX) - 90;
+    let biased_y = parseInt(e.clientY) - 270;
+    menu.style.left = biased_x.toString() + "px";
+    menu.style.top = biased_y.toString() + "px";
+}
+  else{
+    menu.style.display = "none";
+  }
+}
+
+function muteUser(){
+  let img = document.getElementById("speakers");
+  // Change to server ip address/picture
+  if (muted === true){
+    img.src="./resources/speakerIcon.svg";
+    muted = false;
+  }
+  else{
+    img.src="./resources/speakerIconMuted.svg";
+    muted = true;
+  }
+}
+
+function moveDiff(user){
+  let current_X = user.pos.left;
+  let current_Y = user.pos.top;
+  console.log(`prev: ${prev_X} ${prev_Y} current: ${current_X} ${current_Y}`)
+  return (current_X - prev_X === 0  && current_Y - prev_Y === 0 ? true : false); 
+}
+
 //enables the user to move around.
 function userMove(user, socket) {
   let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
@@ -70,6 +106,17 @@ function userMove(user, socket) {
     pos4 = e.clientY;
     document.onmouseup = closeDragUser;
     document.onmousemove = userDrag; 
+    
+    // Stores the previous users pos
+    
+    prev_X = user.pos.left;
+    prev_Y = user.pos.top;
+
+    // Hides the popUpMenu when the user moves their character.
+    const menu = document.getElementById("popup");
+    if (moveDiff(user) && menu.style.display == "block"){
+        menu.style.display = "none";
+      }
   }
 
   function userDrag(e) {

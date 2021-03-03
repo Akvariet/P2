@@ -33,6 +33,13 @@ form.addEventListener('submit', e => {
 
       userMove(myUser, socket);
 
+      const doUser = document.getElementById(socket.id);
+      doUser.addEventListener('click', (e) =>{
+        if (moveDiff(myUser)){
+          menuPopUp(e);
+        }
+      });
+
       // TODO: Spinner element should be replaced by an actual spinner object.
       const spinner = {id: 'spinner', name: '', color: 'red', pos: {top: 300, left: 300}, rad: 0};
       const spinnerElement = instantiateUser(spinner);

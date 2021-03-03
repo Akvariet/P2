@@ -86,7 +86,6 @@ function muteUser(){
 function moveDiff(user){
   let current_X = user.pos.left;
   let current_Y = user.pos.top;
-  console.log(`prev: ${prev_X} ${prev_Y} current: ${current_X} ${current_Y}`)
   return (current_X - prev_X === 0  && current_Y - prev_Y === 0 ? true : false); 
 }
 

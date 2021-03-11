@@ -6,12 +6,12 @@
   transition: background 2s ease-out;
   z-index: 2;
 }
-
-#loginbox{
-  width: 320px;
-  height: 275px;
+#login-box{
+  display: flex;
+  flex-direction: column;
+  align-content: center;
   border-radius: 20px;
-  background: #355C7D;
+  background: #3c3f41;
   color: #fff;
   top: 50%;
   left: 50%;
@@ -21,15 +21,21 @@
   z-index: 2;
 }
 
-#loginbox h1{
-  margin: 0;
+#login-box h1{
+  margin: 20px;
   padding: 0 0 20px;
   text-align: center;
   font-size: 22px;
   margin-top: 25px;
 }
 
-#loginbox p{
+#user-preview{
+  margin: auto;
+  width: calc(70px + 22.5px + 22.5px + 98px);
+  height: calc(70px + 22.5px + 22.5px + 20px);
+}
+
+#login-box p{
   margin: 0;
   padding: 0;
   font-weight: bold;
@@ -37,13 +43,14 @@
   margin-top: 10px; 
 }
 
-#loginbox input{
+#login-box input{
   width: 100%;
   margin-bottom: 20px;
 }
 
 
-#loginbox input[type="text"]{
+#login-box input[type="text"]{
+  margin: 10px auto auto auto;
   width: 80%;
   border: none;
   border-bottom: 1px solid white;
@@ -53,8 +60,6 @@
   color: white;
   font-size: 16px; 
   display: block;
-  margin-right: auto;
-  margin-left: auto;
 }
 
 ::placeholder {
@@ -62,7 +67,7 @@
   opacity: 0.8;
 }
 
-#loginbox input[type="submit"]{
+#login-box input[type="submit"]{
   border: none;
   outline: none;
   height: 40px;
@@ -77,7 +82,7 @@
   margin-top: 40px;
 }
 
-#loginbox input[type="submit"]:hover{
+#login-box input[type="submit"]:hover{
   cursor:pointer;
   background: #F8B195;
   color: #000;

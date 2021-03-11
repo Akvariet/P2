@@ -1,7 +1,7 @@
 let prev_X, prev_Y;
 let muted;
-// Creates a new HTML user object.
-function instantiateUser(user){
+
+function createUserHTML(user){
   const userTemp = document.getElementById("userTemplate").content;
   const userHTML = document.importNode(userTemp,true);
   const userBody = userHTML.querySelector(".body");
@@ -13,10 +13,6 @@ function instantiateUser(user){
   userContainer.setAttribute('id', id);
   userBody.setAttribute('id', id + '_body');
 
-  // Updates initial pos of the user
-  user.pos.top  = userContainer.style.top  = user.pos.top + "px";
-  user.pos.left = userContainer.style.left = user.pos.left + "px";
-
   userBody.style.backgroundColor = color;
   userBody.style.fill = color;
 
@@ -25,9 +21,17 @@ function instantiateUser(user){
   text.textContent = user.name;
   text.setAttribute('id', id + '_name');
 
-  document.getElementById("space").appendChild(userHTML);
+  return userHTML;
+}
 
-  return userBody;
+// Creates a new HTML user object.
+function instantiateUser(user){
+  const userHTML = createUserHTML(user);
+  const userContainer = userHTML.querySelector('.user-container');
+  user.pos.top  = userContainer.style.top  = user.pos.top + "px";
+  user.pos.left = userContainer.style.left = user.pos.left + "px";
+  document.getElementById("space").appendChild(userHTML);
+  return userHTML;
 }
 
 //enables the user to rotate
@@ -58,7 +62,7 @@ function userRotation(e, user, socket){
 function menuPopUp(e){
   const menu = document.getElementById("popup");
   e.preventDefault();
-  if (menu.style.display == "none"){
+  if (menu.style.display === "none"){
     menu.style.display = "block";
     let biased_x = parseInt(e.clientX) - 90;
     let biased_y = parseInt(e.clientY) - 270;
@@ -87,7 +91,7 @@ function moveDiff(user){
   let current_X = user.pos.left;
   let current_Y = user.pos.top;
   console.log(`prev: ${prev_X} ${prev_Y} current: ${current_X} ${current_Y}`)
-  return (current_X - prev_X === 0  && current_Y - prev_Y === 0 ? true : false); 
+  return (current_X - prev_X === 0 && current_Y - prev_Y === 0);
 }
 
 //enables the user to move around.
@@ -114,7 +118,7 @@ function userMove(user, socket) {
 
     // Hides the popUpMenu when the user moves their character.
     const menu = document.getElementById("popup");
-    if (moveDiff(user) && menu.style.display == "block"){
+    if (moveDiff(user) && menu.style.display === "block"){
         menu.style.display = "none";
       }
   }

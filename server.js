@@ -2,7 +2,7 @@ import express from 'express';
 import path from 'path';
 import {createServer} from 'http';
 import * as socket_io from 'socket.io';
-import {UserCollection} from './public/js/user.js'
+import {UserCollection, colorPicker} from './public/js/user.js'
 import indexRouter from './routes/index.js';
 import spin from './scripts/backend-spinner.js'
 
@@ -30,11 +30,12 @@ const users = new UserCollection();
 // Socket.io listens for connections.
 io.on('connection', (socket) => {
 
+  socket.emit('available-colors', colorPicker.previewColors());
 
-  socket.on('new-client', (client)=>{
+  socket.on('new-client', (client, color)=>{
+    color = colorPicker.selectColor(color);
     const id   = socket.id;
-    const user = users.make(id, client);
-
+    const user = users.add(UserCollection.make(id, client, color));
     //shows all active ids and free ids
     console.log(`${client} with id ${id} connected`);
 
@@ -67,13 +68,6 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('update-user-rot', id, rot);
   });
 
-  socket.on('start-spinner', () => {
-    const result = spin(users.positions(), {top: 300, left: 300});
-    const winner = (users.get(result.winner)).name;
-    console.log(`Winner is ${winner}`);
-    io.emit('spinner-result', result.rot, winner); // sends back the rotation of the spinner and the result of the game
-  });
-
   //when user disconnects do this
   socket.on('disconnect', () => {
     const id = socket.id;
@@ -89,3 +83,4 @@ io.on('connection', (socket) => {
 server.listen(port, () => {
   console.log(`Welcome to Akvario @ *:${port}`);
 });
+

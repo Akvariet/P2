@@ -46,7 +46,11 @@ export class colorPicker{
 
     static nextColor = index => {
         const pattern = /\d+/g;
-        const hsl = colorPicker.hslColors[index].match(pattern);
+        let hsl = [354, 88, 71];
+
+        try {hsl = colorPicker.hslColors[index].match(pattern);}
+        catch (e) {console.error(e);}
+
         hsl[0] = (hsl[0] + 15) % 360; // Rotate hue.
         colorPicker.hslColors[index] = `hsl(${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%)`;
     }

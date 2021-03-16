@@ -104,11 +104,9 @@ form.addEventListener('submit', e => {
       });
 
       socket.on('user-delete', id => {
-        if(peers[userId]) peers[userId].close();
+        if(peers[id]) peers[id].close();
         deleteDisconnectedUser(id)
       });
     });
   });
 });
-
-

@@ -152,16 +152,12 @@ function connectToNewUser(userId, stream, myPeer, peers) {
   const call = myPeer.call(userId, stream);
 
   const audio = document.createElement('audio');
-
+  
   //when recieving new stream add it to audio container
-  call.on('stream', userAudioStream => {
-    addAudioStream(audio, userAudioStream);
-  })
+  call.on('stream', userAudioStream=>{ addAudioStream(audio, userAudioStream); });
 
   //delete audio object
-  call.on('close', () => {
-    audio.remove();
-  });
+  call.on('close', ()=>{ audio.remove(); });
 
   // connect id to call
   peers[userId] = call;
@@ -170,8 +166,5 @@ function connectToNewUser(userId, stream, myPeer, peers) {
 //add audio object to audio container
 function addAudioStream(audio, stream) {
   audio.srcObject = stream;
-  audio.addEventListener('loadedmetadata', () => {
-    audio.play();
-  });
-  audioContainer.append(audio);
+  audio.addEventListener('loadedmetadata', ()=>{ audio.play(); });
 }

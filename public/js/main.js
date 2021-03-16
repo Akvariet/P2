@@ -6,6 +6,8 @@ const overlay = document.getElementById('fade');
 const form = document.getElementById('nameForm');
 const input = document.getElementById('username');
 
+const audioContainer = document.getElementById('aud-container')
+
 const allUsers = new UserCollection();
 
 //when the name has been submitted do this
@@ -18,6 +20,53 @@ form.addEventListener('submit', e => {
 
   //connect user to server
   socket.open();
+
+  //connect to the pper server with "undefined" ID (generates uuid instead)
+  const myPeer = new Peer(undefined, {
+    secure: true, 
+    host: 'audp2p.herokuapp.com', 
+    port: 443,
+  });
+
+  //ALL PEER DATA HERE \/
+  //userID and call storage
+  const peers = {};
+
+  navigator.mediaDevices.getUserMedia({
+    video: false,
+    audio: true
+    //stream audio 
+  }).then(stream => {
+    //? when somebody sends data then this / already connected users
+    myPeer.on('call', call => {
+      //? call must be answered or no connection / answers with own audio stream
+      call.answer(stream);
+  
+      //creates new audio object 
+      const audio = document.createElement('audio');
+  
+      //when recieving old stream add it to audio container
+      call.on('stream', userAudioStream => {
+        addAudioStream(audio, userAudioStream)
+      });
+    });
+  
+    //when a new user connects. make audio object of that user.
+    socket.on('user-connected', userId => {
+      connectToNewUser(userId, stream, myPeer, peers);
+    });
+  });
+  
+  socket.on('user-disconnected', userId => {
+    if (peers[userId]) peers[userId].close();
+  });
+  
+  //when connected to the peer server do this
+  myPeer.on('open', id => {
+    socket.emit('voice', id);
+  });
+
+  //PEER DATA /\
 
   //send name to server so it can generate a user and id
   socket.emit('new-client', input.value);
@@ -78,3 +127,5 @@ form.addEventListener('submit', e => {
     });
   });
 });
+
+

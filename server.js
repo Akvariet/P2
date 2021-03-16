@@ -45,6 +45,15 @@ io.on('connection', (socket) => {
     socket.emit('user-created', id);
     socket.emit('connected-users', users.users);
   });
+
+    //when a user is connected to the peer server do this
+  socket.on('voice', (userId) => {
+    socket.broadcast.emit('user-connected', userId)
+    //when a user disconnects do this
+    socket.on('disconnect', () => {
+      socket.broadcast.emit('user-disconnected', userId)
+    });
+  });
   
   //for updating user position
   socket.on('update-user-pos', (id, pos) => {

@@ -6,18 +6,23 @@
     <link rel="icon" href="resources/favicon.png">
   </head>
   <body>
-    <div id = "fade">
-        <div id = "loginbox">
-            <h1>Welcome to the Akvario!</h1>
-            <form id="nameForm">
-                <p>Name</p>
-                <input type="text" id="username" class="center-block" placeholder="Enter Username" minlength="2" maxlength="12" required>
-                <!--<p>Room number</p>
-                <input type="text" id="roomid" class="center-block" placeholder="Enter Room number"> required-->
-                <input type="submit" value="Go">
-            </form>
+    <div class="login-form-wrapper">
+      <div class="bg-graphics"></div>
+      <div class="login-form">
+        <div class="login-form-content">
+          <h1>Welcome to the Akvario!</h1>
+          <div id="user-preview">
+            <div id="display-color" style="width: 70px; height: 70px; border-radius: 50%; background-color: aqua; margin: 0 auto 0 auto;"></div>
+          </div>
+          <h3>Username</h3>
+          <form id="FIXME">
+            <input type="text" id="username" name="username" placeholder="Enter username" minlength="2" maxlength="12" required>
+            <button type="submit">Join</button>
+          </form>
         </div>
+        <div class="color-picker"><div class="color-picker-items"></div></div>
       </div>
+    </div>
 
       <div class="menuPopUp" id="popup">
         <img type="image" id="menuBody" alt="menuBody" src="resources/menuBody.svg">
@@ -47,6 +52,7 @@
             </div>
         </template>
         <script src="https://unpkg.com/peerjs@1.2.0/dist/peerjs.min.js"></script>
+        <script src="js/color.js"></script>
         <script src="js/main.js" type="module"></script>
         <script src="js/user.js" type="module"></script>
         <script src="js/userClient.js"></script>

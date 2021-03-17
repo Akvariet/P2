@@ -2,14 +2,23 @@ import {UserCollection} from "./user.js";
 import {spinBottle} from "./frontend-spinner.js";
 
 const socket = io({ autoConnect: false });
-const overlay = document.getElementById('fade');
-const form = document.getElementById('nameForm');
+const overlay = document.querySelector('.login-form-wrapper');
+const form = document.getElementById('FIXME');
 const input = document.getElementById('username');
 
-const audioContainer = document.getElementById('aud-container')
+const coloritems = document.getElementsByClassName("coloritem");
+const colors = ['hsl(354, 88%, 71%)', 'hsl(118, 18%, 66%)', 'hsl(343, 40%, 59%)', 'hsl(272, 15%, 42%)', 'hsl(4, 100%, 74%)', 'hsl(26, 100%, 78%)', 'hsl(208, 40%, 35%)'];
 
 const allUsers = new UserCollection();
 const peers = {};
+
+for(let i of colors){
+  createColorItem(i);
+}
+
+Array.from(coloritems).forEach((coloritems)=>{
+  coloritems.addEventListener("click", setUserColor);
+});
 
 //when the name has been submitted do this
 form.addEventListener('submit', e => {

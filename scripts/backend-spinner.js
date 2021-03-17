@@ -25,7 +25,7 @@ export default function spin(userPos, s_pos){
                 a = 180 + a
 
             //add the difference in degrees to rots.
-            rots.push(Math.abs(a-(rotDeg%360)));
+            rots.push(Math.abs(a - (rotDeg % 360)));
         });
 
         //Return the index of the lowest angle.

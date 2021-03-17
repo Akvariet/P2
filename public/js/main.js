@@ -33,12 +33,15 @@ form.addEventListener('submit', e => {
 
       userMove(myUser, socket);
 
-      // TODO: Spinner element should be replaced by an actual spinner object.
-      const spinner = {id: 'spinner', name: '', color: 'red', pos: {top: 300, left: 300}, rad: 0};
-      const spinnerElement = instantiateUser(spinner);
+      // spinner element and the spinners style
+      const spinnerElement = document.getElementById('spinner');
+      const spinnerDiv = document.querySelector('.spinner');
+      const spinnerRot = getComputedStyle(spinnerDiv);
 
+      // when someone clicks the spinner
       spinnerElement.addEventListener('click', () => {
-        socket.emit('start-spinner');
+        if (spinnerRot.transform === 'matrix(1, 0, 0, 1, 0, 0)') // is the spinner in the starting position?
+          socket.emit('start-spinner');
       });
 
       //user rotates when the mouse moves

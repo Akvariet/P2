@@ -34,6 +34,8 @@ body{
   z-index: 1;
 }
 
+
+
 .user-container{
   visibility: hidden;
   position: absolute;
@@ -70,3 +72,18 @@ body{
   text-align: center;
   user-select: none;
 }
+
+.spinner {
+  position: absolute;
+  left: 750px;
+  top: 500px;
+  height: 65.132px;
+  width: calc(34px + 93.436px);
+  transform: rotate(0deg);
+}
+
+#spinner {
+  position: absolute;
+  left: calc(34px);
+}
+

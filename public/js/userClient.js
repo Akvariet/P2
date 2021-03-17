@@ -60,8 +60,8 @@ function menuPopUp(e){
   e.preventDefault();
   if (menu.style.display == "none"){
     menu.style.display = "block";
-    let biased_x = parseInt(e.clientX) - 90;
-    let biased_y = parseInt(e.clientY) - 270;
+    let biased_x = e.clientX - 90;
+    let biased_y = e.clientY - 270;
     menu.style.left = biased_x.toString() + "px";
     menu.style.top = biased_y.toString() + "px";
 }
@@ -82,11 +82,19 @@ function muteUser(){
     muted = true;
   }
 }
-
-function moveDiff(user){
+function isUserMoving(user){
+  let prev_X0 = 0;
+  let prev_Y0 = 0;
+  let current_X0 = 0;
+  let current_Y0 = 0;
   let current_X = user.pos.left;
   let current_Y = user.pos.top;
-  return (current_X - prev_X === 0  && current_Y - prev_Y === 0 ? true : false); 
+  console.log(`${current_X0} ${prev_X0} and ${current_Y0} ${prev_Y0}`);
+
+  console.log(typeof(current_X));
+
+
+  return (current_X - prev_X == 0  && current_Y - prev_Y == 0 ? true : false); 
 }
 
 //enables the user to move around.
@@ -113,9 +121,9 @@ function userMove(user, socket) {
 
     // Hides the popUpMenu when the user moves their character.
     const menu = document.getElementById("popup");
-    if (moveDiff(user) && menu.style.display == "block"){
+    if (isUserMoving(user) && menu.style.display == "block"){
         menu.style.display = "none";
-      }
+    }
   }
 
   function userDrag(e) {

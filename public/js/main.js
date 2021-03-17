@@ -34,8 +34,8 @@ form.addEventListener('submit', e => {
       userMove(myUser, socket);
 
       const doUser = document.getElementById(socket.id);
-      doUser.addEventListener('click', (e) =>{
-        if (moveDiff(myUser)){
+      doUser.addEventListener('onclick', (e) =>{
+        if (isUserMoving(myUser)){
           menuPopUp(e);
         }
       });

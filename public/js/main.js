@@ -73,7 +73,7 @@ form.addEventListener('submit', e => {
       
           //when recieving old stream add it to audio container
           call.on('stream', userAudioStream => {
-            addAudioStream(audio, userAudioStream, audioContainer);
+            addAudioStream(audio, userAudioStream);
           });
         });
       

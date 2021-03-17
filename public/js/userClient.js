@@ -64,8 +64,8 @@ function menuPopUp(e){
   e.preventDefault();
   if (menu.style.display === "none"){
     menu.style.display = "block";
-    let biased_x = parseInt(e.clientX) - 90;
-    let biased_y = parseInt(e.clientY) - 270;
+    let biased_x = e.clientX - 90;
+    let biased_y = e.clientY - 270;
     menu.style.left = biased_x.toString() + "px";
     menu.style.top = biased_y.toString() + "px";
 }
@@ -86,11 +86,13 @@ function muteUser(){
     muted = true;
   }
 }
-
-function moveDiff(user){
+function isUserMoving(user){
+  let prev_X0 = 0;
+  let prev_Y0 = 0;
+  let current_X0 = 0;
+  let current_Y0 = 0;
   let current_X = user.pos.left;
   let current_Y = user.pos.top;
-  console.log(`prev: ${prev_X} ${prev_Y} current: ${current_X} ${current_Y}`)
   return (current_X - prev_X === 0 && current_Y - prev_Y === 0);
 }
 
@@ -118,9 +120,10 @@ function userMove(user, socket) {
 
     // Hides the popUpMenu when the user moves their character.
     const menu = document.getElementById("popup");
-    if (moveDiff(user) && menu.style.display === "block"){
+
+    if (isUserMoving(user) && menu.style.display == "block"){
         menu.style.display = "none";
-      }
+    }
   }
 
   function userDrag(e) {

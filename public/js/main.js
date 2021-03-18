@@ -36,12 +36,13 @@ socket.on('available-colors', colors => {
 
         userMove(myUser, socket);
 
-        const doUser = document.getElementById(socket.id);
-        doUser.addEventListener('click', (e) =>{
-          if (moveDiff(myUser)){
-            menuPopUp(e);
-          }
-        });
+      const doUser = document.getElementById(socket.id);
+      doUser.addEventListener('onclick', (e) =>{
+        if (isUserMoving(myUser)){
+          menuPopUp(e);
+        }
+      });
+
 
         //user rotates when the mouse moves
         window.addEventListener("mousemove",e => userRotation(e, myUser, socket), false);

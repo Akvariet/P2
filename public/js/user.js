@@ -47,12 +47,14 @@ export class colorPicker{
     static nextColor = index => {
         const pattern = /\d+/g;
         let hsl = [354, 88, 71];
+        let fail = false;
 
         try {hsl = colorPicker.hslColors[index].match(pattern);}
-        catch (e) {console.error(e);}
+        catch (e) {console.log( e +'error orcurred'); fail = true}
 
         hsl[0] = (hsl[0] + 15) % 360; // Rotate hue.
         colorPicker.hslColors[index] = `hsl(${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%)`;
+        return fail;
     }
 
     static previewColors = () => colorPicker.hslColors;
@@ -62,8 +64,10 @@ export class colorPicker{
 
     static selectColor = hsl => {
         const index = colorPicker.colorIndex(hsl);
-        const color = colorPicker.hslColors[index];
-        colorPicker.nextColor(index);
+        let color = colorPicker.hslColors[index];
+        let failed = colorPicker.nextColor(index);
+        if (failed)
+            color =colorPicker.randomColor();
         return color;
     }
 

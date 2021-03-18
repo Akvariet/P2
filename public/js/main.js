@@ -43,6 +43,17 @@ socket.on('available-colors', colors => {
         }
       });
 
+      // spinner element and the spinners style
+      const spinnerElement = document.getElementById('spinner');
+      const spinnerDiv = document.querySelector('.spinner');
+      const spinnerRot = getComputedStyle(spinnerDiv);
+
+      // when someone clicks the spinner
+      spinnerElement.addEventListener('click', () => {
+        if (spinnerRot.transform === 'matrix(1, 0, 0, 1, 0, 0)') // is the spinner in the starting position?
+          socket.emit('start-spinner');
+      });
+
 
         //user rotates when the mouse moves
         window.addEventListener("mousemove",e => userRotation(e, myUser, socket), false);

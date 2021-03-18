@@ -51,6 +51,11 @@ form.addEventListener('submit', e => {
 
       userMove(myUser, socket);
 
+      const muteBtn = document.getElementById("speakers");
+      muteBtn.addEventListener('click', () =>{
+        muteUser(socket.id);
+      })
+
       const doUser = document.getElementById(socket.id);
       doUser.addEventListener('click', (e) =>{
         if (moveDiff(myUser)){
@@ -70,8 +75,9 @@ form.addEventListener('submit', e => {
       
           //creates new audio object 
           const audio = document.createElement('audio');
-      
-          //when recieving old stream add it to audio container
+          audio.setAttribute("id", id);
+
+          //when receiving old stream add it to audio container
           call.on('stream', userAudioStream => {
             addAudioStream(audio, userAudioStream);
           });

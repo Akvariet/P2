@@ -1,5 +1,6 @@
 let prev_X, prev_Y;
 let muted;
+let clicks = 0;
 // Creates a new HTML user object.
 function instantiateUser(user){
   const userTemp = document.getElementById("userTemplate").content;
@@ -58,28 +59,33 @@ function userRotation(e, user, socket){
 function menuPopUp(e){
   const menu = document.getElementById("popup");
   e.preventDefault();
-  if (menu.style.display == "none"){
+  if (clicks % 2 === 0){
     menu.style.display = "block";
     let biased_x = parseInt(e.clientX) - 90;
     let biased_y = parseInt(e.clientY) - 270;
     menu.style.left = biased_x.toString() + "px";
     menu.style.top = biased_y.toString() + "px";
+    clicks++;
 }
   else{
     menu.style.display = "none";
+    clicks--;
   }
 }
 
-function muteUser(){
+function muteUser(id){
+  let mic = document.getElementById(id);
   let img = document.getElementById("speakers");
-  // Change to server ip address/picture
-  if (muted === true){
+
+  console.log(mic.muted);
+  // Changes mute picture
+  if (mic.muted === true){
     img.src="./resources/speakerIcon.svg";
-    muted = false;
+    mic.muted = false;
   }
   else{
     img.src="./resources/speakerIconMuted.svg";
-    muted = true;
+    mic.muted = true;
   }
 }
 
@@ -152,7 +158,8 @@ function connectToNewUser(userId, stream, myPeer, peers) {
   const call = myPeer.call(userId, stream);
 
   const audio = document.createElement('audio');
-  
+  audio.setAttribute("id", id);
+
   //when recieving new stream add it to audio container
   call.on('stream', userAudioStream=>{ addAudioStream(audio, userAudioStream); });
 
@@ -166,5 +173,8 @@ function connectToNewUser(userId, stream, myPeer, peers) {
 //add audio object to audio container
 function addAudioStream(audio, stream) {
   audio.srcObject = stream;
-  audio.addEventListener('loadedmetadata', ()=>{ audio.play(); });
+  audio.addEventListener('loadedmetadata', ()=>{
+    audio.play(); 
+    audio.muted = false;
+  });
 }

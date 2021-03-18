@@ -50,6 +50,7 @@ io.on('connection', (socket) => {
   socket.on('voice', (id) => {
     socket.broadcast.emit('user-connected', id)
   });
+
   
   //for updating user position
   socket.on('update-user-pos', (id, pos) => {

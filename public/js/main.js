@@ -7,7 +7,7 @@ const form = document.getElementById('FIXME');
 const input = document.getElementById('username');
 
 const coloritems = document.getElementsByClassName("coloritem");
-const colors = ['hsl(354, 88%, 71%)', 'hsl(118, 18%, 66%)', 'hsl(343, 40%, 59%)', 'hsl(272, 15%, 42%)', 'hsl(4, 100%, 74%)', 'hsl(26, 100%, 78%)', 'hsl(208, 40%, 35%)'];
+const colors = ['hsl(354, 88%, 71%)', 'hsl(118, 18%, 66%)', 'hsl(343, 40%, 59%)', 'hsl(272, 15%, 42%)', 'hsl(4, 100%, 74%)', 'hsl(26, 100%, 78%)', 'hsl(208, 40%, 35%)', 'white'];
 
 const allUsers = new UserCollection();
 const peers = {};

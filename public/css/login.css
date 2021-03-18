@@ -22,7 +22,7 @@
   box-shadow: -5px 8px 4px -2px rgba(0,0,0,0.2);
 }
 
-.login-form, .login-form-content, .color-picker-items{
+.login-form, .login-form-content{
   top: 50%; left: 50%;
   transform: translate(-50%,-50%);
 }
@@ -34,8 +34,16 @@
 
 
 .color-picker{
-  height: fit-content; width: 80px;
+  height: fit-content; width: 84px;
   left: 315px;
+}
+
+/*.color-picker .coloritem:nth-child(odd){}*/
+
+.color-picker-items{
+  height: fit-content; width: fit-content;
+  overflow: auto;
+  margin: 10px;
 }
 
 .coloritem{
@@ -43,7 +51,7 @@
   height: 20px;
   border-radius: 50%;
   float: left;
-  margin: 10px;
+  margin: 6px;
 }
 
 .login-form-content{

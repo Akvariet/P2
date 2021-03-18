@@ -1,5 +1,5 @@
 function createColorItem(color){
-  const colorPicker = document.querySelector('.color-picker');
+  const colorPicker = document.querySelector('.color-picker-items');
   const newColor = document.createElement("div");
   newColor.setAttribute("class", "coloritem");
   newColor.setAttribute("id", color);

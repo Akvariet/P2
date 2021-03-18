@@ -27,9 +27,9 @@
   transform: translate(-50%,-50%);
 }
 
-.login-form       { height: 425px; width: 300px;}
+.login-form       { height: 480px; width: 300px;}
 .login-form, .login-form input, button{ color: #f8f8f8; }
-.login-form h1    { font-size: 40px; }
+.login-form h1    { font-size: 40px; margin-bottom: 20px;}
 .login-form input { padding-left: 20px;}
 
 
@@ -47,8 +47,7 @@
 }
 
 .coloritem{
-  width: 20px;
-  height: 20px;
+  height: 20px; width: 20px;
   border-radius: 50%;
   float: left;
   margin: 6px;
@@ -61,16 +60,16 @@
 
 .login-form-content{
   position: absolute;
-  height: 85%; width: 85%;
+  height: 85%; width: 75%;
   text-align: center;
 }
 
-#user-preview{ 
-  height: fit-content; width: 100%;
-  margin: 20px 0 20px 0; 
+#user-preview{
+  margin: auto;
+  margin-bottom: 20px;
+  width: calc(70px + 22.5px + 22.5px + 98px);
+  height: calc(70px + 22.5px + 22.5px + 20px);
 }
-
-
 
 .login-form input, button{
   box-sizing: border-box;
@@ -79,8 +78,9 @@
   border: none;
   border-radius: 50px;
   margin-top: 15px;
-  font-size: 30px;
+  font-size: 25px;
   background-color: #2b2f38;
+  
 }
 
 ::placeholder{

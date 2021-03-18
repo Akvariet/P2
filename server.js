@@ -40,6 +40,11 @@ io.on('connection', (socket) => {
     socket.emit('user-created', id);
     socket.emit('connected-users', users.users);
   });
+
+    //when a user is connected to the peer server do this
+  socket.on('voice', (id) => {
+    socket.broadcast.emit('user-connected', id)
+  });
   
   //for updating user position
   socket.on('update-user-pos', (id, pos) => {

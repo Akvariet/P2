@@ -2,11 +2,15 @@ import {UserCollection, colorPicker} from "./user.js";
 import {spinBottle} from "./frontend-spinner.js";
 
 const socket = io({ autoConnect: false });
-const overlay = document.getElementById('fade');
-const form = document.getElementById('nameForm');
+
+const overlay = document.querySelector('.login-form-wrapper');
+const form = document.getElementById('FIXME');
 const input = document.getElementById('username');
 
 const allUsers = new UserCollection();
+
+const peers = {};
+
 let myColor;
 
 socket.open();
@@ -14,6 +18,7 @@ socket.open();
 socket.on('available-colors', colors => {
   colorPicker.hslColors.forEach((value, index) => colorPicker.hslColors[index] = colors[index]);
   displayUser();
+
 
   //when the name has been submitted do this
   form.addEventListener('submit', e => {
@@ -25,8 +30,15 @@ socket.on('available-colors', colors => {
 
     //send name to server so it can generate a user and id
     socket.emit('new-client', input.value, myColor);
+
     // The user has been created on the server with id.
     socket.on('user-created', id =>{
+      //connect to the pper server with "undefined" ID (generates uuid instead)
+      const myPeer = new Peer(id, {
+        secure: true, 
+        host: 'audp2p.herokuapp.com', 
+        port: 443,
+      });
 
       socket.on('connected-users', serverUsers =>{
 
@@ -36,23 +48,48 @@ socket.on('available-colors', colors => {
 
         userMove(myUser, socket);
 
-      const doUser = document.getElementById(socket.id);
-      doUser.addEventListener('onclick', (e) =>{
-        if (isUserMoving(myUser)){
-          menuPopUp(e);
-        }
-      });
+        const doUser = document.getElementById(socket.id);
+        doUser.addEventListener('onclick', e => {
+          if (isUserMoving(myUser)) menuPopUp(e);
+        });
 
-      // spinner element and the spinners style
-      const spinnerElement = document.getElementById('spinner');
-      const spinnerDiv = document.querySelector('.spinner');
-      const spinnerRot = getComputedStyle(spinnerDiv);
+        navigator.mediaDevices.getUserMedia({
+          video: false,
+          audio: true
+          //stream audio 
+        }).then(stream => {
+          //? when somebody sends data then this / already connected users
+          myPeer.on('call', call => {
+            //? call must be answered or no connection / answers with own audio stream
+            call.answer(stream);
+          
+            //creates new audio object 
+            const audio = document.createElement('audio');
+          
+            //when recieving old stream add it to audio container
+            call.on('stream', userAudioStream => {
+              addAudioStream(audio, userAudioStream);
+            });
+          });
+      
+        //when a new user connects. make audio object of that user.
+          socket.on('user-connected', userId => {
+          connectToNewUser(userId, stream, myPeer, peers);
+          });
+        });
 
-      // when someone clicks the spinner
-      spinnerElement.addEventListener('click', () => {
-        if (spinnerRot.transform === 'matrix(1, 0, 0, 1, 0, 0)') // is the spinner in the starting position?
-          socket.emit('start-spinner');
-      });
+        //when connected to the peer server do this
+        myPeer.on('open', id=>{ socket.emit('voice', id); });
+    
+        // spinner element and the spinners style
+        const spinnerElement = document.getElementById('spinner');
+        const spinnerDiv = document.querySelector('.spinner');
+        const spinnerRot = getComputedStyle(spinnerDiv);
+        // when someone clicks the spinner
+        spinnerElement.addEventListener('click', () => {
+          if (spinnerRot.transform === 'matrix(1, 0, 0, 1, 0, 0)') // is the spinner in the starting position?
+            socket.emit('start-spinner');
+        });
 
 
         //user rotates when the mouse moves
@@ -65,10 +102,10 @@ socket.on('available-colors', colors => {
 
         //updating user position
         socket.on('update-user-pos', (id, pos)=>{
-          const user = document.getElementById(id);
-
-          user.style.top  = pos.top + "px";
-          user.style.left = pos.left + "px";
+        const user = document.getElementById(id);
+ 
+        user.style.top  = pos.top + "px";
+        user.style.left = pos.left + "px";
         });
 
         //updating user rotation
@@ -81,11 +118,15 @@ socket.on('available-colors', colors => {
           spinBottle(rotAngle, winner); //Start the game
         });
 
-        socket.on('user-delete', id => deleteDisconnectedUser(id));
+        socket.on('user-delete', id => {
+          if(peers[id]) peers[id].close();
+          deleteDisconnectedUser(id)
+        });
       });
     });
   });
 });
+
 
 function displayUser() {
   const userPreview = document.getElementById('user-preview');
@@ -96,12 +137,44 @@ function displayUser() {
   const body = tempUser.querySelector('.body');
   const colors = colorPicker.previewColors();
 
+  const colorItems = document.getElementsByClassName("coloritem");
+  
+  for(let i of colors){
+    createColorItem(i);
+  }
+  
+  Array.from(colorItems).forEach((colorItems)=>{
+    colorItems.addEventListener("click", setUserColor);
+  });
+
   updateColor(colors[0]);
 
   userPreview.append(tempUser);
 
   nameInputField.addEventListener('input',e => updateName(e))
-  body.addEventListener('click', () => updateColor(colorPicker.randomColor()))
+
+  function createColorItem(color){
+    const colorPicker = document.querySelector('.color-picker-items');
+    const newColor = document.createElement("div");
+    newColor.setAttribute("class", "coloritem");
+    newColor.setAttribute("id", color);
+  
+    newColor.style.backgroundColor = color;
+  
+    colorPicker.appendChild(newColor);
+  }
+
+  function setUserColor(){
+    const colorItems = document.getElementsByClassName("coloritem");
+    const color = this.getAttribute("id");
+  
+    Array.from(colorItems).forEach((colorItems)=>{
+      colorItems.classList.remove("color-item-active");
+    });
+    this.classList.add("color-item-active");
+    updateColor(color);
+  }
+
   function updateName(e){
     name.innerHTML = e.target.value;
   }
@@ -109,7 +182,7 @@ function displayUser() {
   function updateColor(color){
     setBodyColor(color);
     name.style.color = color;
-    myColor=color;
+    myColor = color;
   }
 
   function setBodyColor(color){

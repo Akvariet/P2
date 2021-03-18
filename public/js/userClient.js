@@ -154,3 +154,25 @@ function deleteDisconnectedUser(id){
   if (userElement !== null)
     userElement.remove();
 }
+
+//Make audio object and get new user connection
+function connectToNewUser(userId, stream, myPeer, peers) {
+  const call = myPeer.call(userId, stream);
+
+  const audio = document.createElement('audio');
+  
+  //when recieving new stream add it to audio container
+  call.on('stream', userAudioStream=>{ addAudioStream(audio, userAudioStream); });
+
+  //delete audio object
+  call.on('close', ()=>{ audio.remove(); });
+
+  // connect id to call
+  peers[userId] = call;
+}
+
+//add audio object to audio container
+function addAudioStream(audio, stream) {
+  audio.srcObject = stream;
+  audio.addEventListener('loadedmetadata', ()=>{ audio.play(); });
+}

@@ -40,8 +40,7 @@ export class UserCollection{
 }
 
 export class colorPicker{
-    static availableColors = ['#f67280', '#99B898', '#C06C84', '#6C5B7B', '#FF847C', '#FFBF8D', '#355C7D'];
-    static hslColors = ['hsl(354, 88%, 71%)', 'hsl(118, 18%, 66%)', 'hsl(343, 40%, 59%)', 'hsl(272, 15%, 42%)', 'hsl(4, 100%, 74%)', 'hsl(26, 100%, 78%)', 'hsl(208, 40%, 35%)']
+    static hslColors = ['hsl(0, 80%, 69%)', 'hsla(325, 88%, 78%)', 'hsl(17, 88%, 78%)', 'hsl(270, 88%, 78%)', 'hsl(44, 88%, 78%)', 'hsl(212, 88%, 78%)', 'hsl(97, 78%, 82%)', 'hsl(166, 85%, 71%)']
     static index = 0;
 
     static nextColor = index => {

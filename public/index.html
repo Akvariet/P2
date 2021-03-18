@@ -7,18 +7,24 @@
   </head>
   <body>
     <div id = "fade">
-        <div id = "loginbox">
+        <div id = "login-box">
             <h1>Welcome to the Akvario!</h1>
+            <div id="user-preview"></div>
             <form id="nameForm">
-                <p>Name</p>
                 <input type="text" id="username" class="center-block" placeholder="Enter Username" minlength="2" maxlength="12" required>
-                <!--<p>Room number</p>
-                <input type="text" id="roomid" class="center-block" placeholder="Enter Room number"> required-->
+                <div id="colors">
+                    <div class="color"></div> <div class="color"></div> <div class="color"></div> <div class="color"></div>
+                    <div class="color"></div> <div class="color"></div> <div class="color"></div> <div class="color"></div>
+                </div>
                 <input type="submit" value="Go">
             </form>
         </div>
       </div>
 
+      <div class="menuPopUp" id="popup">
+        <img type="image" id="menuBody" alt="menuBody" src="resources/menuBody.svg">
+        <input type="image" class="speakers" alt="speakerIcon" id="speakers" src="resources/speakerIcon.svg" onclick="muteUser()">
+      </div>
 
         <div id="space">
             <div class = "spinner">

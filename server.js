@@ -2,7 +2,7 @@ import express from 'express';
 import path from 'path';
 import {createServer} from 'http';
 import * as socket_io from 'socket.io';
-import {UserCollection} from './public/js/user.js'
+import {UserCollection, colorPicker} from './public/js/user.js'
 import indexRouter from './routes/index.js';
 import spin from './scripts/backend-spinner.js';
 
@@ -24,10 +24,12 @@ const users = new UserCollection();
 // Socket.io listens for connections.
 io.on('connection', (socket) => {
 
-  socket.on('new-client', (client)=>{
-    const id   = socket.id;
-    const user = users.make(id, client);
+  socket.emit('available-colors', colorPicker.previewColors());
 
+  socket.on('new-client', (client, color)=>{
+    color = colorPicker.selectColor(color);
+    const id   = socket.id;
+    const user = users.add(UserCollection.make(id, client, color));
     //shows all active ids and free ids
     console.log(`${client} with id ${id} connected`);
 
@@ -83,3 +85,4 @@ io.on('connection', (socket) => {
 server.listen(port, () => {
   console.log(`Welcome to Akvario @ *:${port}`);
 });
+

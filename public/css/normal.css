@@ -34,8 +34,6 @@ body{
   z-index: 1;
 }
 
-
-
 .user-container{
   visibility: hidden;
   position: absolute;
@@ -87,3 +85,27 @@ body{
   left: calc(34px);
 }
 
+.menuPopUp {
+  position: absolute;
+  z-index: 8;
+  display: none;
+}
+
+#menuBody {
+  display: block;
+  position: absolute;
+  height: 250px;
+  width: 150px;
+  z-index: 1;
+}
+
+#speakers {
+  display: block;
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  left: 55px;
+  top: 20px;
+  outline: none;
+  z-index: 2;
+}

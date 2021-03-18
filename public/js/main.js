@@ -6,8 +6,8 @@ const overlay = document.querySelector('.login-form-wrapper');
 const form = document.getElementById('FIXME');
 const input = document.getElementById('username');
 
-const coloritems = document.getElementsByClassName("coloritem");
-const colors = ['hsl(354, 88%, 71%)', 'hsl(118, 18%, 66%)', 'hsl(343, 40%, 59%)', 'hsl(272, 15%, 42%)', 'hsl(4, 100%, 74%)', 'hsl(26, 100%, 78%)', 'hsl(208, 40%, 35%)', 'white'];
+const colorItems = document.getElementsByClassName("coloritem");
+const colors = ['hsl(354, 88%, 71%)', 'hsl(118, 18%, 66%)', 'hsl(343, 40%, 59%)', 'hsl(272, 15%, 42%)', 'hsl(4, 100%, 74%)', 'hsl(26, 100%, 78%)', 'hsl(208, 40%, 35%)', '#ff0044'];
 
 const allUsers = new UserCollection();
 const peers = {};
@@ -16,8 +16,8 @@ for(let i of colors){
   createColorItem(i);
 }
 
-Array.from(coloritems).forEach((coloritems)=>{
-  coloritems.addEventListener("click", setUserColor);
+Array.from(colorItems).forEach((colorItems)=>{
+  colorItems.addEventListener("click", setUserColor);
 });
 
 //when the name has been submitted do this

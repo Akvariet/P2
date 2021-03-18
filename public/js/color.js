@@ -10,7 +10,14 @@ function createColorItem(color){
 }
 
 function setUserColor(){
+  const colorItems = document.getElementsByClassName("coloritem");
   const displayColor = document.getElementById("display-color");
   const color = this.getAttribute("id");
   displayColor.style.backgroundColor = color;
+
+  Array.from(colorItems).forEach((colorItems)=>{
+    colorItems.classList.remove("color-item-active");
+  });
+
+  this.classList.add("color-item-active");
 }

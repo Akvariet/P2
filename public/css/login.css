@@ -54,6 +54,11 @@
   margin: 6px;
 }
 
+.color-item-active{
+  border: 2px solid #f8f8f8;
+  height: 16px; width: 16px;
+}
+
 .login-form-content{
   position: absolute;
   height: 85%; width: 85%;
@@ -64,6 +69,8 @@
   height: fit-content; width: 100%;
   margin: 20px 0 20px 0; 
 }
+
+
 
 .login-form input, button{
   box-sizing: border-box;

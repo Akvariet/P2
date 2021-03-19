@@ -1,7 +1,7 @@
 import {UserCollection, colorPicker} from "./user.js";
 import {spinBottle} from "./frontend-spinner.js";
 
-const socket = io({ autoConnect: false });
+const socket = io({ autoConnect: false, path:'/node0/socket.io' });
 
 const overlay = document.querySelector('.login-form-wrapper');
 const form = document.getElementById('FIXME');

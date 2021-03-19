@@ -21,7 +21,7 @@ export function spinBottle(rotationAngle, winner) {
     spinner.style.transform = 'rotate('+ rotationAngle +'deg)';
 
     //When the spinner stops, announce the winner (in the console atm) and reset the spinner's position
-    setTimeout((winner) => console.log("The winner is " + winner), (timeBeforeReset*1000)+(rotationTime*1000), winner)
+    setTimeout(announceWinner, (timeBeforeReset*1000)+(rotationTime*1000), winner);
     setTimeout(resetBottlePos, (rotationTime*1000)+(timeBeforeReset*1000), rotationAngle);
 }
 
@@ -41,3 +41,25 @@ function resetRotation() {
     spinner.style.transition = 'all 0s ease-in-out';
     spinner.style.transform = 'rotate(0deg)';
 }
+
+// Announces the winner
+function announceWinner(winner) {
+    const winnerColor = 'rgb(0,0,0)';
+    const originalColor = winner.color;
+    const winnerElement = document.getElementById(winner.id + "_body");
+
+    setColor(winnerElement, winnerColor, 200);
+    setTimeout(setColor, 100, winnerElement, originalColor, 200);
+}
+
+//Changes the color of the user element in a setInterval
+function setColor(element, color, time) {
+    let switchColor = setInterval(() => {
+        element.style.backgroundColor = color;
+        element.style.fill = color;
+    }, time);
+
+    setTimeout(() => clearInterval(switchColor), 2500);
+}
+
+

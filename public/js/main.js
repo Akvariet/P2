@@ -44,18 +44,12 @@ socket.on('available-colors', colors => {
 
         Object.keys(serverUsers).forEach(id => instantiateUser(allUsers.add(serverUsers[id])));
 
-        const doUser = document.getElementById(socket.id);
-        doUser.addEventListener('click', (e) =>{
-          if (moveDiff(myUser)){
-            menuPopUp(e);
-          }
-        });
         const myUser = allUsers.get(id);
 
         userMove(myUser, socket);
 
         const doUser = document.getElementById(socket.id);
-        doUser.addEventListener('onclick', e => {
+        doUser.addEventListener('click', e => {
           if (isUserMoving(myUser)) menuPopUp(e);
         });
 
@@ -77,17 +71,16 @@ socket.on('available-colors', colors => {
               addAudioStream(audio, userAudioStream);
             });
           });
-        });
 
         const muteBtn = document.getElementById("speakers");
         muteBtn.addEventListener('click', () =>{
-          muteUser();
-          // stops listening to other audio tracks
+          changeMuteIcon();
+          // stops listening to other audio tracks (mutes user)
           stream.getAudioTracks()[0].enabled = !(stream.getAudioTracks()[0].enabled);
         });
       
         //when a new user connects. make audio object of that user.
-          socket.on('user-connected', userId => {
+        socket.on('user-connected', userId => {
           connectToNewUser(userId, stream, myPeer, peers);
           });
         });
@@ -139,6 +132,7 @@ socket.on('available-colors', colors => {
       });
     });
   });
+});
 
 
 function displayUser() {

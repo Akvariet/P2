@@ -1,5 +1,5 @@
 let prev_X, prev_Y;
-let muted;
+let muted, clicks = 0;
 
 function createUserHTML(user){
   const userTemp = document.getElementById("userTemplate").content;
@@ -62,19 +62,17 @@ function userRotation(e, user, socket){
 function menuPopUp(e){
   const menu = document.getElementById("popup");
   e.preventDefault();
-  if (menu.style.display === "none"){
-    menu.style.display = "block";
-    let biased_x = e.clientX - 90;
-    let biased_y = e.clientY - 270;
-    menu.style.left = biased_x.toString() + "px";
-    menu.style.top = biased_y.toString() + "px";
-}
+  if (clicks % 2 === 0){
+      menu.style.display = "block";
+      clicks++;
+  }
   else{
-    menu.style.display = "none";
+      menu.style.display = "none";
+      clicks--;
   }
 }
 
-function muteUser(){
+function changeMuteIcon(){
   let img = document.getElementById("speakers");
 
   // Changes mute picture

@@ -7,14 +7,15 @@ export class UserCollection{
     get = id => this.users[`${id}`];
 
     //Creates an entirely new user and adds it to the collection.
-    make = (id, name, color, pos, rad) =>
-        this.add({
+    static make = (id, name, color, pos, rad) =>
+    {
+        return {
             id: id,
-            name: '' || name,
-            color: `rgb(0,0,0)` || color,
-            pos: { top: 0, left: 0 } || pos,
-            rad : 0 || rad
-        });
+            name:  name  || '',
+            color: color || `rgb(0,0,0)`,
+            pos:   pos   || { top: 0, left: 0 },
+            rad:   rad   || 0
+        }};
 
     // Returns the positions of all users in an object.
     positions = () =>{
@@ -36,4 +37,41 @@ export class UserCollection{
     remove = id => {
         if(this.get(id) !== undefined)
             delete this.users[`${id}`];}
+}
+
+export class colorPicker{
+    static hslColors = ['hsl(0, 80%, 69%)', 'hsla(325, 88%, 78%)', 'hsl(17, 88%, 78%)', 'hsl(270, 88%, 78%)', 'hsl(44, 88%, 78%)', 'hsl(212, 88%, 78%)', 'hsl(97, 78%, 82%)', 'hsl(166, 85%, 71%)']
+    static index = 0;
+
+    static nextColor = index => {
+        const pattern = /\d+/g;
+        let hsl = [354, 88, 71];
+        let fail = false;
+
+        try {hsl = colorPicker.hslColors[index].match(pattern);}
+        catch (e) {console.log( e +'error orcurred'); fail = true}
+
+        hsl[0] = (hsl[0] + 15) % 360; // Rotate hue.
+        colorPicker.hslColors[index] = `hsl(${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%)`;
+        return fail;
+    }
+
+    static previewColors = () => colorPicker.hslColors;
+
+    static colorIndex  = hsl =>
+        colorPicker.hslColors.indexOf(hsl);
+
+    static selectColor = hsl => {
+        const index = colorPicker.colorIndex(hsl);
+        let color = colorPicker.hslColors[index];
+        let failed = colorPicker.nextColor(index);
+        if (failed)
+            color =colorPicker.randomColor();
+        return color;
+    }
+
+    static randomColor = () => {
+        const index = Math.round(Math.random() * (colorPicker.hslColors.length - 1));
+        return colorPicker.hslColors[index];
+    }
 }

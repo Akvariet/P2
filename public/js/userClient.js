@@ -1,8 +1,7 @@
 let prev_X, prev_Y;
 let muted;
-let clicks = 0;
-// Creates a new HTML user object.
-function instantiateUser(user){
+
+function createUserHTML(user){
   const userTemp = document.getElementById("userTemplate").content;
   const userHTML = document.importNode(userTemp,true);
   const userBody = userHTML.querySelector(".body");
@@ -14,10 +13,6 @@ function instantiateUser(user){
   userContainer.setAttribute('id', id);
   userBody.setAttribute('id', id + '_body');
 
-  // Updates initial pos of the user
-  user.pos.top  = userContainer.style.top  = user.pos.top + "px";
-  user.pos.left = userContainer.style.left = user.pos.left + "px";
-
   userBody.style.backgroundColor = color;
   userBody.style.fill = color;
 
@@ -26,9 +21,17 @@ function instantiateUser(user){
   text.textContent = user.name;
   text.setAttribute('id', id + '_name');
 
-  document.getElementById("space").appendChild(userHTML);
+  return userHTML;
+}
 
-  return userBody;
+// Creates a new HTML user object.
+function instantiateUser(user){
+  const userHTML = createUserHTML(user);
+  const userContainer = userHTML.querySelector('.user-container');
+  user.pos.top  = userContainer.style.top  = user.pos.top + "px";
+  user.pos.left = userContainer.style.left = user.pos.left + "px";
+  document.getElementById("space").appendChild(userHTML);
+  return userHTML;
 }
 
 //enables the user to rotate
@@ -59,17 +62,15 @@ function userRotation(e, user, socket){
 function menuPopUp(e){
   const menu = document.getElementById("popup");
   e.preventDefault();
-  if (clicks % 2 === 0){
+  if (menu.style.display === "none"){
     menu.style.display = "block";
-    let biased_x = parseInt(e.clientX) - 90;
-    let biased_y = parseInt(e.clientY) - 270;
+    let biased_x = e.clientX - 90;
+    let biased_y = e.clientY - 270;
     menu.style.left = biased_x.toString() + "px";
     menu.style.top = biased_y.toString() + "px";
-    clicks++;
 }
   else{
     menu.style.display = "none";
-    clicks--;
   }
 }
 
@@ -83,14 +84,17 @@ function muteUser(){
   }
   else{
     img.src="./resources/speakerIconMuted.svg";
-    muted = true;  
+    muted = true;
   }
 }
-
-function moveDiff(user){
+function isUserMoving(user){
+  let prev_X0 = 0;
+  let prev_Y0 = 0;
+  let current_X0 = 0;
+  let current_Y0 = 0;
   let current_X = user.pos.left;
   let current_Y = user.pos.top;
-  return (current_X - prev_X === 0  && current_Y - prev_Y === 0 ? true : false); 
+  return (current_X - prev_X === 0 && current_Y - prev_Y === 0);
 }
 
 //enables the user to move around.
@@ -117,9 +121,10 @@ function userMove(user, socket) {
 
     // Hides the popUpMenu when the user moves their character.
     const menu = document.getElementById("popup");
-    if (moveDiff(user) && menu.style.display == "block"){
+
+    if (isUserMoving(user) && menu.style.display == "block"){
         menu.style.display = "none";
-      }
+    }
   }
 
   function userDrag(e) {
@@ -170,7 +175,5 @@ function connectToNewUser(userId, stream, myPeer, peers) {
 //add audio object to audio container
 function addAudioStream(audio, stream) {
   audio.srcObject = stream;
-  audio.addEventListener('loadedmetadata', ()=>{
-    audio.play(); 
-  });
+  audio.addEventListener('loadedmetadata', ()=>{ audio.play(); });
 }

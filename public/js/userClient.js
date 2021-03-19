@@ -73,19 +73,17 @@ function menuPopUp(e){
   }
 }
 
-function muteUser(id){
-  let mic = document.getElementById(id);
+function muteUser(){
   let img = document.getElementById("speakers");
 
-  console.log(mic.muted);
   // Changes mute picture
-  if (mic.muted === true){
+  if (muted === true){
     img.src="./resources/speakerIcon.svg";
-    mic.muted = false;
+    muted = false;
   }
   else{
     img.src="./resources/speakerIconMuted.svg";
-    mic.muted = true;
+    muted = true;  
   }
 }
 
@@ -154,13 +152,12 @@ function deleteDisconnectedUser(id){
 }
 
 //Make audio object and get new user connection
-function connectToNewUser(userId, stream, myPeer, peers) {
+function connectToNewUser(userId, stream, myPeer, peers) { 
   const call = myPeer.call(userId, stream);
 
   const audio = document.createElement('audio');
-  audio.setAttribute("id", id);
 
-  //when recieving new stream add it to audio container
+  //when receiving new stream add it to audio container
   call.on('stream', userAudioStream=>{ addAudioStream(audio, userAudioStream); });
 
   //delete audio object
@@ -175,6 +172,5 @@ function addAudioStream(audio, stream) {
   audio.srcObject = stream;
   audio.addEventListener('loadedmetadata', ()=>{
     audio.play(); 
-    audio.muted = false;
   });
 }

@@ -51,11 +51,6 @@ form.addEventListener('submit', e => {
 
       userMove(myUser, socket);
 
-      const muteBtn = document.getElementById("speakers");
-      muteBtn.addEventListener('click', () =>{
-        muteUser(socket.id);
-      })
-
       const doUser = document.getElementById(socket.id);
       doUser.addEventListener('click', (e) =>{
         if (moveDiff(myUser)){
@@ -70,17 +65,24 @@ form.addEventListener('submit', e => {
       }).then(stream => {
         //? when somebody sends data then this / already connected users
         myPeer.on('call', call => {
+
           //? call must be answered or no connection / answers with own audio stream
           call.answer(stream);
       
           //creates new audio object 
-          const audio = document.createElement('audio');
-          audio.setAttribute("id", id);
+          const audio = document.createElement("audio");
 
           //when receiving old stream add it to audio container
           call.on('stream', userAudioStream => {
             addAudioStream(audio, userAudioStream);
           });
+        });
+
+        const muteBtn = document.getElementById("speakers");
+        muteBtn.addEventListener('click', () =>{
+          muteUser();
+          // stops listening to other audio tracks
+          stream.getAudioTracks()[0].enabled = !(stream.getAudioTracks()[0].enabled);
         });
       
         //when a new user connects. make audio object of that user.
@@ -89,7 +91,7 @@ form.addEventListener('submit', e => {
         });
       });
 
-        //when connected to the peer server do this
+      //when connected to the peer server do this
       myPeer.on('open', id=>{ socket.emit('voice', id); });
 
       //user rotates when the mouse moves
@@ -99,6 +101,7 @@ form.addEventListener('submit', e => {
         allUsers.add(newUser);
         instantiateUser(newUser);
       });
+      
 
       //updating user position
       socket.on('update-user-pos', (id, pos)=>{

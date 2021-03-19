@@ -1,6 +1,6 @@
 const spinner = document.querySelector('.spinner');
 
-//Starts the game when a user clicks on the spinner
+// Starts the game when a user clicks on the spinner
 export function spinBottle(rotationAngle, winner) {
     let rotationTime;
     let timeBeforeReset = 0.5;
@@ -14,18 +14,18 @@ export function spinBottle(rotationAngle, winner) {
         default: rotationTime = 1; break;
     }
 
-    //Sets the time the spinner takes to rotate
+    // Sets the time the spinner takes to rotate
     spinner.style.transition = 'all ' + rotationTime + 's ease-in-out';
 
-    //rotates the spinner
+    // Rotates the spinner
     spinner.style.transform = 'rotate('+ rotationAngle +'deg)';
 
-    //When the spinner stops, announce the winner (in the console atm) and reset the spinner's position
+    // When the spinner stops, announce the winner (in the console atm) and reset the spinner's position
     setTimeout(announceWinner, (timeBeforeReset*1000)+(rotationTime*1000), winner);
     setTimeout(resetBottlePos, (rotationTime*1000)+(timeBeforeReset*1000), rotationAngle);
 }
 
-//Rotates the spinner to its original position.
+// Rotates the spinner to its original position.
 function resetBottlePos(rotationAngle) {
     let resetPos = (360 - (rotationAngle % 360)) + rotationAngle;
     spinner.style.transition = 'all 2s ease-in-out';
@@ -33,9 +33,9 @@ function resetBottlePos(rotationAngle) {
     setTimeout(resetRotation, 2000);
 }
 
-/*Resets the spinner's rotation in css without the user seeing it
-* so the rotation value isn't just incremented every game.
-* It starts with setting the rotation time to 0, and resets the rotation on the spinner.
+/* Resets the spinner's rotation in css without the user seeing it
+*  so the rotation value isn't just incremented every game.
+*  It starts with setting the rotation time to 0, and resets the rotation on the spinner.
 * */
 function resetRotation() {
     spinner.style.transition = 'all 0s ease-in-out';
@@ -44,15 +44,15 @@ function resetRotation() {
 
 // Announces the winner
 function announceWinner(winner) {
-    const winnerColor = 'rgb(0,0,0)';
     const originalColor = winner.color;
+    const winnerColor = 'hsl(116, 100%, 60%)';
     const winnerElement = document.getElementById(winner.id + "_body");
 
     setColor(winnerElement, winnerColor, 200);
     setTimeout(setColor, 100, winnerElement, originalColor, 200);
 }
 
-//Changes the color of the user element in a setInterval
+// Changes the color of the user element in a setInterval
 function setColor(element, color, time) {
     let switchColor = setInterval(() => {
         element.style.backgroundColor = color;

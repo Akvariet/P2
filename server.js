@@ -66,7 +66,6 @@ io.on('connection', (socket) => {
   socket.on('start-spinner', () => {
     const result = spin(users.positions(), {top : 500, left : 750}); // TODO: Get the spinners positions so they arent fixed
     const winner = (users.get(result.winner));
-    console.log(`Winner is ${winner.name}`);
     io.emit('spinner-result', result.rot, winner); // sends back the rotation of the spinner and the result of the game
   });
 

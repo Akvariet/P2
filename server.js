@@ -10,7 +10,9 @@ import spin from './scripts/backend-spinner.js';
 const app = express();
 const server = createServer(app);
 const io = new socket_io.Server(server);
-const port = process.env.PORT || 3000;
+//const port = process.env.PORT || 3000;
+const host = '127.0.0.1';
+const port = 3200;
 
 // Path that clients can use, this means it can't access core server files-
 app.use('/clientjs', express.static(path.join(path.resolve(), '/node_modules/socket.io/client-dist')));
@@ -87,7 +89,7 @@ io.on('connection', (socket) => {
 });
 
 //listens to PORT set on top
-server.listen(port, () => {
-  console.log(`Welcome to Akvario @ *:${port}`);
+server.listen(port, host, () => {
+  console.log(`Welcome to Akvario @ ${host}:${port}`);
 });
 

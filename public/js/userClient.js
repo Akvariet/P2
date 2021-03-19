@@ -28,8 +28,8 @@ function createUserHTML(user){
 function instantiateUser(user){
   const userHTML = createUserHTML(user);
   const userContainer = userHTML.querySelector('.user-container');
-  user.pos.top  = userContainer.style.top  = user.pos.top + "px";
-  user.pos.left = userContainer.style.left = user.pos.left + "px";
+  userContainer.style.top  = user.pos.top + "px";
+  userContainer.style.left = user.pos.left + "px";
   document.getElementById("space").appendChild(userHTML);
   return userHTML;
 }
@@ -54,6 +54,9 @@ function userRotation(e, user, socket){
 
   // Applies the rotation to the user.
   userElement.style.transform = "rotate(" + o + "rad)";
+
+  const userRotated = new CustomEvent('onrotation', {detail: user.rad});
+  userElement.dispatchEvent(userRotated);
 
   //user rotation is send to the server here
   socket.emit('update-user-rot', user.id, user.rad);
@@ -138,6 +141,9 @@ function userMove(user, socket) {
 
     containerElement.style.top = user.pos.top + "px";
     containerElement.style.left = user.pos.left + "px";
+
+    const userMoved = new CustomEvent('onmove', {detail: user.pos});
+    containerElement.dispatchEvent(userMoved);
 
     //user position is send to the server here
     socket.emit('update-user-pos', user.id, user.pos);

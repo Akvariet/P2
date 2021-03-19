@@ -1,11 +1,11 @@
 
-// Returns an array of distances between position and the elements in positions.
+// Returns an object of distances between position and the elements in positions.
+// The object is indexed by the user ids.
 export function distance(position, positions){
-    const temp = [];
+    const temp = {};
 
-    Object.keys(positions).forEach(u => {
-        const e = dist(relativePos(position, positions[u]))
-       temp.push(e);
+    Object.keys(positions).forEach(id => {
+       temp[id] = dist(relativePos(position, positions[id]));
     });
 
     return temp;
@@ -24,6 +24,7 @@ export function distance(position, positions){
     }
 }
 
+// Contains all of the functions that control how voice volume change according to distance.
 export class VolumeFunctions {
     constructor(slope, minVolume) {
         this.slope = slope || 0.075;
@@ -34,16 +35,15 @@ export class VolumeFunctions {
     volume = volume => volume > this.minVolume ? volume : this.minVolume;
 
     linearDecrease = distance => this.volume(-this.slope * distance + this.maxVolume);
-
 }
 
-function test(){
-    const users = {paul: {top:382, left: 28}, ken: {top:328, left: 28}, john: {top:348, left: 278}};
-    const user = {top:38, left: 28};
+// Recalculate the volume of all users.
+// Useful when this client moves and the relative positions of everyone has changed.
+export function calculateVolume(myPosition, userCollection, volumeFunc){
+    const dist = distance(myPosition, userCollection.positions());
 
-    const dist = distance(user, users);
-    dist.forEach(dist => console.log(dist));
-    dist.forEach(dist => console.log((new VolumeFunctions).linearDecrease(dist)));
-
+    Object.keys(dist).forEach(key => (userCollection.get(key)).volume = volumeFunc(dist[key]));
 }
-test();
+
+
+

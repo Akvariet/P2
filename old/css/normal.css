@@ -1,0 +1,109 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-family: Calibri, sans-serif;
+  user-select: none;
+}
+
+body{
+  background-color: rgb(255, 221, 203);
+}
+
+.floatleft {
+  float: left;
+}
+
+.floatright {
+  float: right;
+}
+
+.clearboth {
+  clear: both;
+}
+
+#space{
+  background-color: rgb(251, 235, 226);
+  position:absolute;
+  width: 1280px;
+  height: 720px;
+  border-radius: 20px;
+  top: 0; bottom: 0; right: 0; left: 0;
+  margin: auto;
+  z-index: 1;
+}
+
+.user-container{
+  visibility: hidden;
+  position: absolute;
+  width: calc(70px + 22.5px + 22.5px + 98px);
+  height: calc(70px + 22.5px + 22.5px + 20px);
+}
+
+.body{
+  visibility: visible;
+  top: 22.5px;
+  left: calc(22.5px + 49px);
+  border-radius: 100%;
+  width: 70px;
+  height: 70px;
+  position: absolute;
+  font-weight: bold;
+  text-align: center;
+}
+
+.arrow {
+  position: relative;
+  top: -35%;
+  transform:rotate(-90deg);
+  visibility: visible;
+}
+
+.name{
+  visibility: visible;
+  position: relative;
+  color: black;
+  top: calc(70px + 22.5px + 22.5px);
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  user-select: none;
+}
+
+.spinner {
+  position: absolute;
+  left: 750px;
+  top: 500px;
+  height: 65.132px;
+  width: calc(34px + 93.436px);
+  transform: rotate(0deg);
+}
+
+#spinner {
+  position: absolute;
+  left: calc(34px);
+}
+
+.menuPopUp {
+  position: absolute;
+  z-index: 8;
+  display: none;
+}
+
+#menuBody {
+  display: block;
+  position: absolute;
+  height: 250px;
+  width: 150px;
+  z-index: 1;
+}
+
+#speakers {
+  display: block;
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  left: 55px;
+  top: 20px;
+  outline: none;
+  z-index: 2;
+}

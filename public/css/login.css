@@ -1,91 +1,143 @@
+
+
+.user-container-displayed{
+    visibility: hidden;
+    position: absolute;
+    width: calc(70px + 22.5px + 22.5px + 98px);
+    height: calc(70px + 22.5px + 22.5px + 20px);
+}
+
+.body-displayed{
+    visibility: visible;
+    top: 22.5px;
+    left: calc(22.5px + 49px);
+    border-radius: 100%;
+    width: 70px;
+    height: 70px;
+    position: absolute;
+    font-weight: bold;
+    text-align: center;
+    background-color: #F8B195;
+}
+
+.arrow-displayed {
+    position: relative;
+    top: -35%;
+    transform:rotate(-90deg);
+    visibility: visible;
+    fill:#F8B195;
+}
+
+.name-displayed{
+    visibility: visible;
+    position: relative;
+    color: #393939;
+    top: calc(70px + 22.5px + 22.5px);
+    margin: 0px;
+    text-align: center;
+    user-select: none;
+    font-family: 'Darker Grotesque', sans-serif;
+}
+
 .login-form-wrapper{
-  position: absolute;
-  height: 100%; width: 100%;
-  background-color: #1f2128;
-  overflow:hidden;
-  z-index: 2;
+    position: absolute;
+    top:0px; left: 0px;
+    height: 100%; width: 100%;
+    overflow:hidden;
+    z-index: 2;
 }
 
 .bg-graphics{
-  position: absolute;
-  height: 100vw; width: 100vw;
-  border-radius: 50%;
-  border: 150px solid #262932;
-  background-color:#2b2f38;
-  top: -100%; left: -50%;
+    position: absolute;
+    height: 100vw; width: 100vw;
+    border-radius: 50%;
+    border: 150px solid rgba(255,182,153,0.5);
+    background-color: #FFB699;
+    top: -100%; left: -50%;
 }
 
 .login-form, .color-picker{
-  position: absolute;
-  border-radius: 20px;
-  background-color: #16181d;
-  box-shadow: -5px 8px 4px -2px rgba(0,0,0,0.2);
+    position: absolute;
+    border-radius: 20px;
+    background-color: #F4F4F4;
+    box-shadow: -5px 6px 10px -2px rgba(0,0,0,0.3);
 }
 
 .login-form, .login-form-content{
-  top: 50%; left: 50%;
-  transform: translate(-50%,-50%);
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
 }
 
 .login-form       { height: 480px; width: 300px;}
-.login-form, .login-form input, button{ color: #f8f8f8; }
-.login-form h1    { font-size: 40px; margin-bottom: 20px; font-family: 'Darker Grotesque', sans-serif;}
+.login-form, .login-form input{ color: #393939; }
+button{
+    color:#F8F8F8;
+    background-color: #2b2f38;
+}
+.login-form h1{
+    font-size: 38px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    font-family: 'Darker Grotesque', sans-serif;
+}
 .login-form input { padding-left: 20px;}
 
 
 .color-picker{
-  height: fit-content; width: 84px;
-  left: 315px;
+    height: fit-content; width: 84px;
+    left: 315px;
 }
 
 /*.color-picker .coloritem:nth-child(odd){}*/
 
 .color-picker-items{
-  height: fit-content; width: fit-content;
-  overflow: auto;
-  margin: 10px;
+    height: fit-content; width: fit-content;
+    overflow: auto;
+    margin: 10px;
 }
 
 .coloritem{
-  height: 20px; width: 20px;
-  border-radius: 50%;
-  float: left;
-  margin: 6px;
+    height: 20px; width: 20px;
+    border-radius: 50%;
+    float: left;
+    margin: 6px;
 }
 
 .color-item-active{
-  border: 2px solid #f8f8f8;
-  height: 16px; width: 16px;
+    border: 2px solid #2b2f38;
+    height: 16px; width: 16px;
 }
 
 .login-form-content{
-  position: absolute;
-  height: 85%; width: 75%;
-  text-align: center;
+    position: absolute;
+    height: 85%; width: 75%;
+    text-align: center;
 }
 
 #user-preview{
-  margin: auto;
-  margin-bottom: 20px;
-  width: calc(70px + 22.5px + 22.5px + 98px);
-  height: calc(70px + 22.5px + 22.5px + 20px);
+    margin: 40px auto 20px;
+    width: calc(70px + 22.5px + 22.5px + 98px);
+    height: calc(70px + 22.5px + 22.5px + 20px);
 }
 
 .login-form input, button{
-  box-sizing: border-box;
-  height: 50px; width: 100%;
-  outline: none;
-  border: none;
-  border-radius: 50px;
-  margin-top: 15px;
-  font-size: 25px;
-  background-color: #2b2f38;
+    box-sizing: border-box;
+    height: 50px; width: 100%;
+    outline: none;
+    border: none;
+    border-radius: 15px;
+    margin-top: 15px;
+    font-size: 25px;
 
+
+}
+.login-form input{
+    background-color: #FFFFFF;
 }
 
 ::placeholder{
-  color: #686e78;
-  opacity: 1;
+    color: #686e78;
+    opacity: 1;
 }
 
 button:active{ background-color: #202227;}

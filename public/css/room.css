@@ -29,6 +29,7 @@ body{
 }
 
 .name{
+    font-family: 'Darker Grotesque', sans-serif;
     visibility: visible;
     position: relative;
     color: black;

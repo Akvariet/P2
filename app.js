@@ -2,26 +2,39 @@ import express from 'express';
 import {configureRouter} from "./scripts/routes.js";
 import {createServer} from 'http';
 import bodyParser from 'body-parser'
-import * as socket_io from 'socket.io';
-import {handleConnection} from "./scripts/sockets.js";
 import {UserProperties} from "./scripts/user.js";
+import {ConnectionTable} from "./scripts/connection.js";
+import {AkvarioServer} from "./scripts/sockets.js";
 
 const app = express();
-const server = createServer(app);
-const io = new socket_io.Server(server);
+const HTTPServer = createServer(app);
+
 
 const port = process.env.PORT || 3000;
 
+const akvarioServer = new AkvarioServer(HTTPServer);
 const userData = new UserProperties();
+
+
+export function connectNewUser(name, color){
+    const user = userData.create(name, color);
+    const connection = new ConnectionTable(user);
+    return user;
+}
+export function getUserData(){
+    return userData;
+}
+
+export function getUserDataJSON(){
+    return userData.toJSON();
+}
 //userData.add('1','Simon', 'red', {top: 500, left: 500}, 2);
 
-const router = configureRouter(express.Router(), userData.toJSON());
+const router = configureRouter(express.Router());
 app.use(bodyParser.json())
 app.use('/', router);
 
-io.on('connection', socket => handleConnection(socket, userData));
-
 //listens to PORT set on top.
-server.listen(port, () => {
+HTTPServer.listen(port, () => {
     console.log(`Welcome to Akvario @ *:${port}`);
 });

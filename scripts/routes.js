@@ -1,9 +1,9 @@
 import path from "path";
-import {createUser} from "./user.js";
+import {connectNewUser, getUserDataJSON} from "../app.js";
 
 const root = path.resolve();
 
-export function configureRouter(router, userData){
+export function configureRouter(router){
 
     router.get('/', (req, res) => {
         res.sendFile(root + '/public/mainPage.html');
@@ -38,12 +38,12 @@ export function configureRouter(router, userData){
     });
 
     router.post('/login', (req, res) =>{
-        const user = createUser(req.body.username, req.body.color);
+        const user = connectNewUser(req.body.username, req.body.color);
         res.send(JSON.stringify(user));
     });
 
     router.get('/users', (req, res) => {
-        res.send(userData);
+        res.send(getUserDataJSON());
     });
 
     router.post('/connect', (req, res) => {

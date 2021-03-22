@@ -1,19 +1,26 @@
 
 
 export class UserProperties{
+    users = {};
+    userProperties = {
+        position: {},
+        rotation: {},
+        name:     {},
+        color:    {}
+    }
+
+    _previousID = 0;
+    _freeIDs = [];
+    _initialPosition = {top:10, left:10};
+    _initialRotation = 0;
+
     constructor() {
-        this.users = {};
-        this.userProperties = {
-            position: {},
-            rotation: {},
-            name:     {},
-            color:    {}
-        }
+
     }
 
     // Returns the user with the given id.
     get = id => {
-        if (!this.users.hasOwnProperty(id)) return undefined;
+        if (!this.exists(id)) return undefined;
 
         const properties = {id: id};
         Object.keys(this.userProperties).forEach(prop =>
@@ -21,6 +28,13 @@ export class UserProperties{
 
         return properties;
     }
+
+    create(name, color){
+        const id = this._freeIDs.pop() || this.nextID();
+        return this.add(id, name, color, this._initialPosition, this._initialRotation);
+    }
+
+    nextID = () => ++this._previousID;
 
     // Adds a user to collection, Returns the id.
     add = (id, name, color, position, rotation) => {
@@ -64,6 +78,7 @@ export class UserProperties{
         if(this.exists(id)){
             Object.keys(this.userProperties).forEach(prop => delete this.userProperties[prop][id]);
             delete this.users[id];
+            this._freeIDs.push(id);
         }
 
         else console.warn(`user with id ${id} did not exist and could not be deleted!`);
@@ -76,16 +91,4 @@ export class UserProperties{
         }
         return JSON.stringify(allUsers);
     }
-}
-
-const allUsers = new UserProperties();
-const freeIDs = [];
-let previousID = 0;
-let nextID = () => ++previousID;
-const initialPosition = {top:10, left:10};
-const initialRotation = 0;
-
-export function createUser(name, color){
-    const id = freeIDs.pop() || nextID();
-    return allUsers.add(id, name, color, initialPosition, initialRotation);
 }

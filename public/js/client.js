@@ -1,3 +1,5 @@
+const socket = io({autoConnect:false});
+
 export async function connect(){
     // Get the available colors.
     const colors = await getColors('/colors');
@@ -85,13 +87,19 @@ function findDisplayedUser(){
     return {body:body, arrow:arrow, name:name};
 }
 
+function connectSocket() {
+    socket.open();
+}
+
 function login(username, color){
     // Request login from server.
     requestLogin(username, color, '/login')
-    // Handle rejection.
-        .catch(() => console.warn('login Rejected!'))
     // Enter the room.
-        .then(user=>enterRoom(user.id));
+        .then(userJSON=>userJSON.json())
+        .then(user => {
+            enterRoom(user.id)
+            connectSocket()
+        });
 }
 
 async function requestLogin(username, color, url){

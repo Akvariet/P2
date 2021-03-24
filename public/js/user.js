@@ -39,39 +39,42 @@ export class UserCollection{
             delete this.users[`${id}`];}
 }
 
-export class colorPicker{
-    static hslColors = ['hsl(0, 80%, 69%)', 'hsla(325, 88%, 78%)', 'hsl(17, 88%, 78%)', 'hsl(270, 88%, 78%)', 'hsl(44, 88%, 78%)', 'hsl(212, 88%, 78%)', 'hsl(97, 78%, 82%)', 'hsl(166, 85%, 71%)']
-    static index = 0;
-
-    static nextColor = index => {
-        const pattern = /\d+/g;
-        let hsl = [354, 88, 71];
-        let fail = false;
-
-        try {hsl = colorPicker.hslColors[index].match(pattern);}
-        catch (e) {console.log( e +'error orcurred'); fail = true}
-
-        hsl[0] = (hsl[0] + 15) % 360; // Rotate hue.
-        colorPicker.hslColors[index] = `hsl(${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%)`;
-        return fail;
+export class ColorPicker{
+    constructor() {
+        this.colorPalette = {
+            red:    ['hsl(0, 100%, 74%)', 'hsl(0, 100%, 68%)', 'hsl(0, 100%, 62%)', 'hsl(0, 100%, 56%)', 'hsl(0, 100%, 48%)', 'hsl(0, 100%, 44%)', 'hsl(0, 100%, 38%)', 'hsl(0, 100%, 32%)'],
+            orange: ['hsl(32, 100%, 74%)', 'hsl(32, 100%, 68%)', 'hsl(32, 100%, 62%)', 'hsl(32, 100%, 56%)', 'hsl(32, 100%, 50%)', 'hsl(32, 100%, 44%)', 'hsl(32, 100%, 38%)', 'hsl(32, 100%, 32%)'],
+            yellow: ['hsl(60, 100%, 74%)', 'hsl(60, 100%, 68%)', 'hsl(60, 100%, 62%)', 'hsl(60, 100%, 56%)', 'hsl(60, 100%, 50%)', 'hsl(60, 100%, 44%)', 'hsl(60, 100%, 38%)', 'hsl(60, 100%, 32%)'],
+            green:  ['hsl(119, 100%, 74%)', 'hsl(119, 100%, 68%)', 'hsl(119, 100%, 62%)', 'hsl(119, 100%, 56%)', 'hsl(119, 100%, 50%)', 'hsl(119, 100%, 44%)', 'hsl(119, 100%, 38%)', 'hsl(119, 100%, 32%)'],
+            cyan:   ['hsl(179, 100%, 74%)', 'hsl(179, 100%, 68%)', 'hsl(179, 100%, 62%)', 'hsl(179, 100%, 56%)', 'hsl(179, 100%, 50%)', 'hsl(179, 100%, 44%)', 'hsl(179, 100%, 38%)', 'hsl(179, 100%, 32%)'],
+            blue:   ['hsl(212, 100%, 74%)', 'hsl(212, 100%, 68%)', 'hsl(212, 100%, 62%)', 'hsl(212, 100%, 56%)', 'hsl(212, 100%, 50%)', 'hsl(212, 100%, 44%)', 'hsl(212, 100%, 38%)', 'hsl(212, 100%, 32%)'],
+            purple: ['hsl(275, 100%, 74%)', 'hsl(275, 100%, 68%)', 'hsl(275, 100%, 62%)', 'hsl(275, 100%, 56%)', 'hsl(275, 100%, 50%)', 'hsl(275, 100%, 44%)', 'hsl(275, 100%, 38%)', 'hsl(275, 100%, 32%)'],
+            pink:   ['hsl(316, 100%, 74%)', 'hsl(316, 100%, 68%)', 'hsl(316, 100%, 62%)', 'hsl(316, 100%, 56%)', 'hsl(316, 100%, 50%)', 'hsl(316, 100%, 44%)', 'hsl(316, 100%, 38%)', 'hsl(316, 100%, 32%)']
+        };
+    }
+    get colorsForLoginScreen () {
+        const colors = [];
+        Object.keys(this.colorPalette).forEach(color => {
+            colors.push(color);
+        });
+        return colors;
     }
 
-    static previewColors = () => colorPicker.hslColors;
+    counters = {
+        red:0, orange:0, yellow:0, green:0,
+        cyan:0, blue:0, purple:0, pink:0};
 
-    static colorIndex  = hsl =>
-        colorPicker.hslColors.indexOf(hsl);
-
-    static selectColor = hsl => {
-        const index = colorPicker.colorIndex(hsl);
-        let color = colorPicker.hslColors[index];
-        let failed = colorPicker.nextColor(index);
-        if (failed)
-            color =colorPicker.randomColor();
-        return color;
+    getShade(color) {
+        console.log(color);
+        const count = this.counters[color]++;
+        this.counters[color] %= this.colorPalette[color].length;
+        return (this.colorPalette[color])[count];
     }
 
-    static randomColor = () => {
-        const index = Math.round(Math.random() * (colorPicker.hslColors.length - 1));
-        return colorPicker.hslColors[index];
+    previewShade(color) {
+        return (this.colorPalette[color])[0];
+    }
+    selectColor(color) {
+        return this.getShade(color);
     }
 }

@@ -2,7 +2,7 @@ import express from 'express';
 import path from 'path';
 import {createServer} from 'http';
 import * as socket_io from 'socket.io';
-import {UserCollection, colorPicker} from './public/js/user.js'
+import {UserCollection, ColorPicker} from './public/js/user.js'
 import indexRouter from './routes/index.js';
 import spin from './scripts/backend-spinner.js';
 
@@ -20,11 +20,13 @@ app.use(express.static('public'));
 app.use('/', indexRouter);
 
 const users = new UserCollection();
+const colorPicker = new ColorPicker();
+
 
 // Socket.io listens for connections.
 io.on('connection', (socket) => {
 
-  socket.emit('available-colors', colorPicker.previewColors());
+  socket.emit('available-colors', colorPicker.colorsForLoginScreen);
 
   socket.on('new-client', (client, color)=>{
     color = colorPicker.selectColor(color);
@@ -45,14 +47,14 @@ io.on('connection', (socket) => {
   socket.on('voice', (id) => {
     socket.broadcast.emit('user-connected', id)
   });
-  
+
   //for updating user position
   socket.on('update-user-pos', (id, pos) => {
     const user = users.get(id);
     if(user === undefined)
       return;
     user.pos = pos;
-    
+
     socket.broadcast.emit('update-user-pos', id, pos);
   });
 

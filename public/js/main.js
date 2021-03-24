@@ -1,7 +1,9 @@
 import {UserCollection, colorPicker} from "./user.js";
 import {spinBottle} from "./frontend-spinner.js";
 
-const socket = io({ autoConnect: false, path:'/node0/socket.io' });
+const socketPath = {local:'/socket.io', prod:'/node0/socket.io'};
+
+const socket = io({ autoConnect: false, path:socketPath.local});
 
 const overlay = document.querySelector('.login-form-wrapper');
 const form = document.getElementById('FIXME');
@@ -34,10 +36,11 @@ socket.on('available-colors', colors => {
     // The user has been created on the server with id.
     socket.on('user-created', id =>{
       //connect to the pper server with "undefined" ID (generates uuid instead)
-      const myPeer = new Peer(id, {
-        secure: true, 
-        host: 'audp2p.herokuapp.com', 
-        port: 443,
+      const myPeer = new Peer(id, { 
+        secure: true,
+        path:'sw2b2-18.p2datsw.cs.aau.dk/node0',
+        host: 'localhost', 
+        port: 3201,
       });
 
       socket.on('connected-users', serverUsers =>{
@@ -60,9 +63,9 @@ socket.on('available-colors', colors => {
         }).then(stream => {
           //? when somebody sends data then this / already connected users
           myPeer.on('call', call => {
+            console.log("hello")
             //? call must be answered or no connection / answers with own audio stream
             call.answer(stream);
-          
             //creates new audio object 
             const audio = document.createElement('audio');
           

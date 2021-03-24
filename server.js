@@ -15,6 +15,17 @@ const io = new socket_io.Server(server);
 const host = '127.0.0.1';
 const port = 3200;
 
+
+//-----------------------PEERSERVER HERE!-------------------------
+import {PeerServer} from 'peer';
+import * as voice from './scripts/voicep2p.js'
+const peerPort = 3201;
+const peerServer = PeerServer({port: peerPort, path: '/'});
+
+peerServer.on('connection', voice.conn);
+peerServer.on('disconnect', voice.disconn);
+//----------------------------------------------------------------
+
 // Path that clients can use, this means it can't access core server files-
 app.use('/clientjs', express.static(path.join(path.resolve(), '/node_modules/socket.io/client-dist')));
 app.use(express.static('public'));
@@ -92,5 +103,6 @@ io.on('connection', (socket) => {
 //listens to PORT set on top
 server.listen(port, host, () => {
   console.log(`Welcome to Akvario @ ${host}:${port}`);
+  console.log("PeerServer @" + peerPort);
 });
 

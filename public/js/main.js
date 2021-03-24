@@ -3,7 +3,7 @@ import {spinBottle} from "./frontend-spinner.js";
 
 const socketPath = {local:'/socket.io', prod:'/node0/socket.io'};
 
-const socket = io({ autoConnect: false, path:socketPath.local});
+const socket = io({ autoConnect: false, path:socketPath.prod});
 
 const overlay = document.querySelector('.login-form-wrapper');
 const form = document.getElementById('FIXME');
@@ -37,10 +37,9 @@ socket.on('available-colors', colors => {
     socket.on('user-created', id =>{
       //connect to the pper server with "undefined" ID (generates uuid instead)
       const myPeer = new Peer(id, { 
-        secure: true,
-        path:'sw2b2-18.p2datsw.cs.aau.dk/node0',
-        host: 'localhost', 
-        port: 3201,
+        path:'/',
+        host: 'https://sw2b2-18.p2datsw.cs.aau.dk/node0/', 
+        port: 3201
       });
 
       socket.on('connected-users', serverUsers =>{

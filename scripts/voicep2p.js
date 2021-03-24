@@ -1,7 +1,7 @@
 export function conn(client){
-    console.log(client.id + " Connected");
+    console.log("PeerJS: " + client.id + " Connected");
 }
 
 export function disconn(client){
-    console.log(client.id + " Disonnected");
+    console.log("PeerJS: " + client.id + " Disonnected");
 }

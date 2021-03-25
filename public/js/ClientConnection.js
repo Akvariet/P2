@@ -1,5 +1,4 @@
 import {moveUser, removeDeadUser, turnUser} from './interaction.js';
-import {callNewPeer, connectToPeerServer} from './voice.js';
 import {drawUser} from './login.js';
 import {enterRoom} from './client.js';
 
@@ -22,12 +21,21 @@ export class ClientConnection{
     }
 
     handleServerEvents() {
+        // The login attempt was accepted/rejected by the server.
         this.socket.on('login-successful', (myId, users) => this.login(myId, users));
         this.socket.on('login-rejected',   this.loginRejected);
+
+        // A new user has connected.
         this.socket.on('new-user-connected', user => this.newConnection(user));
+
+        // If a user disconnected.
         this.socket.on('user-disconnected', id => removeDeadUser(id));
+
+        // If a user moves or turns.
         this.socket.on('moved', (id, position) => this.move(id, position));
         this.socket.on('turned', (id, position) => this.turn(id, position));
+
+        // If the client is disconnected. (If I am disconnected.)
         this.socket.on('disconnect', reason => this.disconnect(reason));
     }
 
@@ -42,13 +50,19 @@ export class ClientConnection{
 
     login(myId, users){
         this.myID = myId;
-        connectToPeerServer(this.socket, myId);
+        // Connect to the peer server for voice chat.
+
+        // Enter the room.
         const avatar = enterRoom(myId, users);
+
+        // Make my own user interactable.
         this.handleClientEvents(myId, avatar);
     }
 
     newConnection(user){
-        callNewPeer(user.id);
+        // Connect to the new peer.
+
+        // Draw the new user on the page.
         drawUser(user);
     }
 

@@ -1,5 +1,12 @@
-import {connect} from "./client.js";
+import {displayLoginScreen} from "./client.js";
+import {ClientConnection} from './ClientConnection.js';
 
-connect();
+const connection = new ClientConnection();
+
+export function login(name, color){
+    connection.attemptLogin(name, color);
+}
+
+displayLoginScreen();
 
 

@@ -1,0 +1,40 @@
+body{
+    background-color: rgb(255, 221, 203);
+}
+
+.user-container{
+    visibility: hidden;
+    position: absolute;
+    width: calc(70px + 22.5px + 22.5px + 98px);
+    height: calc(70px + 22.5px + 22.5px + 20px);
+}
+
+.body{
+    visibility: visible;
+    top: 22.5px;
+    left: calc(22.5px + 49px);
+    border-radius: 100%;
+    width: 70px;
+    height: 70px;
+    position: absolute;
+    font-weight: bold;
+    text-align: center;
+}
+
+.arrow {
+    position: relative;
+    top: -35%;
+    transform:rotate(-90deg);
+    visibility: visible;
+}
+
+.name{
+    font-family: 'Darker Grotesque', sans-serif;
+    visibility: visible;
+    position: relative;
+    color: black;
+    top: calc(70px + 22.5px + 22.5px);
+    margin: auto;
+    text-align: center;
+    user-select: none;
+}

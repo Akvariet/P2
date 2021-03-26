@@ -1,13 +1,15 @@
 import {UserProperties} from "./user.js";
 import * as socket_io from "socket.io";
 import {ConnectionTable} from "./connection.js";
+import {ColorPicker} from "../public/js/ColorPicker.js";
 
 
 // AkvarioServer controls all real time connection with users all users.
 export class AkvarioServer{
     io;
     userProperties = new UserProperties();
-    connections = new ConnectionTable()
+    connections = new ConnectionTable();
+    colorPicker = new ColorPicker();
 
     constructor(HTTPServer){
        this.io = new socket_io.Server(HTTPServer);
@@ -24,7 +26,7 @@ export class AkvarioServer{
 
     requestLogin(socket, name, color) {
         // Validate name and color
-
+        color = this.colorPicker.getShade(color);
         // If validation is successful, login.
         this.login(socket, name, color);
 

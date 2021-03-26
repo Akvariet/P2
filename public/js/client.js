@@ -16,19 +16,9 @@ export function displayLoginScreen() {
     setupForm();
 }
 
-async function renderColorPicker() {
-    // Get the available colors from the server.
-    const colors = await getColors();
-
+function renderColorPicker() {
     // Show the available colors on the UI.
-    displayColors(colors);
-}
-
-// Fetches the user colors from the server.
-// GET on /url should return an array with the color variants.
-async function getColors(){
-    const res = await fetch('/colors');
-    return await res.json();
+    displayColors();
 }
 
 export function enterRoom(myId, allUsers){

@@ -29,7 +29,7 @@ export class UserProperties{
 
     // Creates a new user and adds it to the collection.
     create(name, color){
-        const id = this._freeIDs.pop() || this.nextID();
+        const id = this.nextID() || this._freeIDs.pop();
         return this.add(id, name, color, this._initialPosition, this._initialRotation);
     }
 

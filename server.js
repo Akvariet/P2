@@ -8,8 +8,9 @@ const server = express();
 const HTTPServer = createServer(server);
 
 const port = process.env.PORT || 3000;
+const PeerJSOptions = { port:3201 }
 
-const akvarioServer = new AkvarioServer(HTTPServer);
+const akvarioServer = new AkvarioServer(HTTPServer, PeerJSOptions);
 
 const router = configureRouter(express.Router());
 

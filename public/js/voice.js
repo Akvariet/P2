@@ -1,4 +1,5 @@
-const peerOptions = { host: 'localhost', port: 3201, };
+//Delete path if running on local machine
+const peerOptions = { host: 'localhost', port: 3201, path:'/node0'};
 
 export const peers = {}; 
 

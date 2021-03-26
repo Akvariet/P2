@@ -4,10 +4,11 @@ import {enterRoom} from './client.js';
 import {handlePeerConnections} from './voice.js';
 
 export class ClientConnection{
-    socket = io({autoConnect:false});
+    socket;
     myID;
 
-    constructor() {
+    constructor(options) {
+        this.socket = io(options)
         this.establishConnection();
     }
 

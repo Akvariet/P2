@@ -1,34 +1,46 @@
-//Delete path if running on local machine
-const peerOptions = { host: 'localhost', port: 3201, path:'/node0'};
+//set path to , path:'/node0' when running on AAU
+const peerOptions = { host: 'localhost', port: 3201};
 
+//peers contains all connected peers
 export const peers = {}; 
 
+//handles all peerjs functions and events
 export function handlePeerConnections(myId, users){
     
     const getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
     const media = {video: false, audio:true};
+
+    //connects to peerjs server
     const peer  = new Peer(myId, peerOptions);
 
+    //gets microphone stream
     getUserMedia(media, streamVoice);
+
+    //logs if successfully connected to peer server
     peer.on('open', myId => console.log("Connected to PeerJS Server with: " + myId));
 
     function streamVoice(stream){
-        peer.on('call', call =>{console.log("call")
+        //incoming call event
+        peer.on('call', call =>{
     
+            //must be answered
             call.answer(stream);
     
+            //when incoming call adds a stream
             const audio = document.createElement('audio');
             call.on('stream', remoteStream=>{
                 startRemoteStream(audio, remoteStream);
             });
         });
     
+        //calls every user already connected to server
         Object.values(users).forEach(user=>{ 
             if(myId != user.id)
-            connectToNewUser(user.id, stream)
+            connectToUser(user.id, stream)
         });
     }
 
+    //plays remote stream through audio object
     function startRemoteStream(audio, remoteStream){
         audio.srcObject = remoteStream;
         audio.addEventListener('loadedmetadata', playRemoteStream);
@@ -36,12 +48,12 @@ export function handlePeerConnections(myId, users){
         function playRemoteStream(){ audio.play(); }
     }
     
-    function connectToNewUser(newUserID, stream){
+    function connectToUser(newUserID, stream){
 
+        //makes call to remote peer
         const call = peer.call(newUserID, stream);
-        console.log(peer)
 
-
+        //when remote peer as answered and added a stream
         const audio = document.createElement('audio');
         call.on('stream', remoteStream=>{
             startRemoteStream(audio, remoteStream);
@@ -49,6 +61,7 @@ export function handlePeerConnections(myId, users){
     
         call.on('close', removeRemoteStream);
     
+        //stores call in object
         peers[newUserID] = call;
 
         function removeRemoteStream(){

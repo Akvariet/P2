@@ -7,7 +7,8 @@ import {AkvarioServer} from "./scripts/AkvarioServer.js";
 const server = express();
 const HTTPServer = createServer(server);
 
-const port = process.env.PORT || 3000;
+// port range: 3200-3209
+const port = process.env.PORT || 3200;
 const PeerJSOptions = { port:3201 }
 
 const akvarioServer = new AkvarioServer(HTTPServer, PeerJSOptions);

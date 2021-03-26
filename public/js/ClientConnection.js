@@ -51,7 +51,7 @@ export class ClientConnection{
 
     login(myId, users){
         this.myID = myId;
-        // Connect to the peer server for voice chat.
+        // Connect to the peer server and peers for voice chat
         handlePeerConnections(myId, users);
         // Enter the room.
         const avatar = enterRoom(myId, users);

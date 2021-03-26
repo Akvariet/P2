@@ -71,19 +71,28 @@ body{
   user-select: none;
 }
 
+#spinnerCanvas {
+  border: 2px solid black;
+  position: absolute;
+  left: 750px;
+  top: 500px;
+}
+
 .spinner {
   position: absolute;
-  left: 1200px;
-  top: calc(700px + 34px);
+  left: 750px;
+  top: 500px;
   height: 65.132px;
   width: calc(34px + 93.436px);
   transform: rotate(0deg);
 }
 
+
 #spinner {
   position: absolute;
   left: calc(34px);
 }
+
 
 .menuPopUp {
   position: absolute;
@@ -109,3 +118,5 @@ body{
   outline: none;
   z-index: 2;
 }
+
+

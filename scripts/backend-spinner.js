@@ -5,14 +5,16 @@ export default function spin(userPos, s_pos){
     // Pass this to the front end to run the spinner locally.
     const rot = Math.random() * 360*5;
 
-    const result = closestUser(userPos, rot);
+    let userAngles = {};
+
+    const result = closestUser(userPos, rot, userAngles);
 
     //return the result of the spin and the rotation of the spinner. Players should not move before the game is done.
-    return {winner: result, rot: rot};
+    return {winner: result, rot: rot, userAngles: userAngles};
 
     //--- Helper functions ---\\
     //Find the user which is closest to being pointed at. Pass this function so the front end can play along.
-    function closestUser(userPositions, rotDeg){
+    function closestUser(userPositions, rotDeg, userAngles){
         const relPos = getRelUserPos();
 
         const rots = [];
@@ -38,6 +40,8 @@ export default function spin(userPos, s_pos){
             //adds the difference in degrees to rots.
             rots.push(angFromRot);
 
+            //takes the angles to
+            userAngles[id] = a;
         });
 
         //Return the index of the lowest angle.

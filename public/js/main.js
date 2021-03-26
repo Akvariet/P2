@@ -50,9 +50,11 @@ socket.on('available-colors', colors => {
 
       // when someone clicks the spinner
       spinnerElement.addEventListener('click', () => {
+        console.log(spinnerRot.transform);
         if (spinnerRot.transform === 'matrix(1, 0, 0, 1, 0, 0)') // is the spinner in the starting position?
           socket.emit('start-spinner');
       });
+
 
 
         //user rotates when the mouse moves
@@ -77,8 +79,8 @@ socket.on('available-colors', colors => {
           user.style.transform =`rotate(${rot}rad)`;
         });
 
-        socket.on('spinner-result', (rotAngle, winner) => {
-          spinBottle(rotAngle, winner); //Start the game
+        socket.on('spinner-result', (rotAngle, winner, userAngles) => {
+          spinBottle(rotAngle, winner, userAngles); //Start the game
         });
 
         socket.on('user-delete', id => deleteDisconnectedUser(id));

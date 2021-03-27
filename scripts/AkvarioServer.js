@@ -1,0 +1,96 @@
+import {UserProperties} from "./user.js";
+import * as socket_io from "socket.io";
+import {ConnectionTable} from "./connection.js";
+import {ColorPicker} from "../public/js/ColorPicker.js";
+import spin from './backend-spinner.js';
+
+// AkvarioServer controls all real time connection with users all users.
+export class AkvarioServer{
+    io;
+    userProperties = new UserProperties();
+    connections = new ConnectionTable();
+    colorPicker = new ColorPicker();
+
+    constructor(HTTPServer){
+       this.io = new socket_io.Server(HTTPServer);
+       this.io.on('connection', socket =>
+           socket.on('login-attempt', (name, color) =>
+               this.requestLogin(socket, name, color)));
+    }
+
+    connectionSetup(socket){
+        socket.on('disconnect', (reason) => this.disconnect(socket, reason));
+        socket.on('moved', position => this.moveUser(socket, position));
+        socket.on('turned', rotation => this.rotateUser(socket, rotation));
+        socket.on('start-spinner', () => this.startSpinner())
+    }
+
+    requestLogin(socket, name, color) {
+        // Validate name and color
+        color = this.colorPicker.getShade(color);
+        // If validation is successful, login.
+        this.login(socket, name, color);
+
+        // Else, tell the user to try again.
+    }
+
+    login(socket, name, color) {
+        //Setup connection.
+        this.connectionSetup(socket);
+
+        // Create the user.
+        const user = this.userProperties.create(name, color);
+
+        // Save connection.
+        this.connections.newConnection(socket.id, user.id);
+
+        // Reply to the user.
+        socket.emit('login-successful', user.id, this.userProperties.allUsers());
+
+        // Broadcast to other users.
+        this.broadcast(socket, 'new-user-connected', user);
+    }
+
+    // Broadcast message to all other users than the sender.
+    broadcast(socket, event, ...args){
+        socket.broadcast.emit(event, ...args);
+    }
+
+    editUserProperty(socketID, property, value) {
+        // Find the users id.
+        const gameID = this.id(socketID);
+
+        // Change the property.
+        const user = this.userProperties.users[gameID];
+        user.setProperty(property, value);
+    }
+
+    moveUser(socket, position){
+        this.editUserProperty(socket.id, 'position', position);
+        socket.broadcast.emit('moved', this.id(socket.id), position);
+    }
+
+    rotateUser(socket, rotation) {
+        this.editUserProperty(socket.id, 'rotation', rotation);
+        socket.broadcast.emit('turned', this.id(socket.id), rotation);
+    }
+
+    id(socketID){
+        return this.connections.gameID(socketID);
+    }
+
+    disconnect(socket, reason) {
+        const id = this.id(socket.id);
+        console.log(`User ${id} has disconnected: ${reason}`);
+        socket.broadcast.emit('user-disconnected', id);
+        this.userProperties.remove(id);
+    }
+
+    startSpinner() {
+        const result = spin(this.userProperties.positions, {top : 500, left : 750}); // TODO: Get the spinners positions so they arent fixed
+        const winner = (this.userProperties.get(result.winner));
+        this.io.emit('spinner-result', result.rot, winner, result.userAngles); // sends back the rotation of the spinner and the result of the game
+    }
+
+}
+

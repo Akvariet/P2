@@ -1,89 +1,143 @@
-#fade{
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.5);
-  transition: background 2s ease-out;
-  z-index: 2;
-}
-#login-box{
-  display: flex;
-  flex-direction: column;
-  align-content: center;
-  border-radius: 20px;
-  background: #3c3f41;
-  color: #fff;
-  top: 50%;
-  left: 50%;
-  position: absolute;
-  transform: translate(-50%, -50%);
-  box-sizing: border-box;
-  z-index: 2;
+
+
+.user-container-displayed{
+    visibility: hidden;
+    position: absolute;
+    width: calc(70px + 22.5px + 22.5px + 98px);
+    height: calc(70px + 22.5px + 22.5px + 20px);
 }
 
-#login-box h1{
-  margin: 20px;
-  padding: 0 0 20px;
-  text-align: center;
-  font-size: 22px;
-  margin-top: 25px;
+.body-displayed{
+    visibility: visible;
+    top: 22.5px;
+    left: calc(22.5px + 49px);
+    border-radius: 100%;
+    width: 70px;
+    height: 70px;
+    position: absolute;
+    font-weight: bold;
+    text-align: center;
+    background-color: #F8B195;
+}
+
+.arrow-displayed {
+    position: relative;
+    top: -35%;
+    transform:rotate(-90deg);
+    visibility: visible;
+    fill:#F8B195;
+}
+
+.name-displayed{
+    visibility: visible;
+    position: relative;
+    color: #393939;
+    top: calc(70px + 22.5px + 22.5px);
+    margin: 0px;
+    text-align: center;
+    user-select: none;
+    font-family: 'Darker Grotesque', sans-serif;
+}
+
+.login-form-wrapper{
+    position: absolute;
+    top:0px; left: 0px;
+    height: 100%; width: 100%;
+    overflow:hidden;
+    z-index: 2;
+}
+
+.bg-graphics{
+    position: absolute;
+    height: 100vw; width: 100vw;
+    border-radius: 50%;
+    border: 150px solid rgba(255,182,153,0.5);
+    background-color: #FFB699;
+    top: -100%; left: -50%;
+}
+
+.login-form, .color-picker{
+    position: absolute;
+    border-radius: 20px;
+    background-color: #F4F4F4;
+    box-shadow: -5px 6px 10px -2px rgba(0,0,0,0.3);
+}
+
+.login-form, .login-form-content{
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.login-form       { height: 480px; width: 300px;}
+.login-form, .login-form input{ color: #393939; }
+button{
+    color:#F8F8F8;
+    background-color: #2b2f38;
+}
+.login-form h1{
+    font-size: 38px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    font-family: 'Darker Grotesque', sans-serif;
+}
+.login-form input { padding-left: 20px;}
+
+
+.color-picker{
+    height: fit-content; width: 84px;
+    left: 315px;
+}
+
+/*.color-picker .coloritem:nth-child(odd){}*/
+
+.color-picker-items{
+    height: fit-content; width: fit-content;
+    overflow: auto;
+    margin: 10px;
+}
+
+.coloritem{
+    height: 20px; width: 20px;
+    border-radius: 50%;
+    float: left;
+    margin: 6px;
+}
+
+.color-item-active{
+    border: 2px solid #2b2f38;
+    height: 16px; width: 16px;
+}
+
+.login-form-content{
+    position: absolute;
+    height: 85%; width: 75%;
+    text-align: center;
 }
 
 #user-preview{
-  margin: auto;
-  width: calc(70px + 22.5px + 22.5px + 98px);
-  height: calc(70px + 22.5px + 22.5px + 20px);
+    margin: 40px auto 20px;
+    width: calc(70px + 22.5px + 22.5px + 98px);
+    height: calc(70px + 22.5px + 22.5px + 20px);
 }
 
-#login-box p{
-  margin: 0;
-  padding: 0;
-  font-weight: bold;
-  margin-left: 32px;
-  margin-top: 10px; 
-}
-
-#login-box input{
-  width: 100%;
-  margin-bottom: 20px;
-}
+.login-form input, button{
+    box-sizing: border-box;
+    height: 50px; width: 100%;
+    outline: none;
+    border: none;
+    border-radius: 15px;
+    margin-top: 15px;
+    font-size: 25px;
 
 
-#login-box input[type="text"]{
-  margin: 10px auto auto auto;
-  width: 80%;
-  border: none;
-  border-bottom: 1px solid white;
-  background: transparent;
-  outline: none;
-  height: 40px;
-  color: white;
-  font-size: 16px; 
-  display: block;
+}
+.login-form input{
+    background-color: #FFFFFF;
 }
 
-::placeholder {
-  color: white;
-  opacity: 0.8;
+::placeholder{
+    color: #686e78;
+    opacity: 1;
 }
 
-#login-box input[type="submit"]{
-  border: none;
-  outline: none;
-  height: 40px;
-  width: 80%;
-  display: block;
-  margin-right: auto;
-  margin-left: auto;
-  border-radius: 10px;
-  background: #fb2525;
-  color: white;
-  font-size: 18px;
-  margin-top: 40px;
-}
-
-#login-box input[type="submit"]:hover{
-  cursor:pointer;
-  background: #F8B195;
-  color: #000;
-}
+button:active{ background-color: #202227;}

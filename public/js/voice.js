@@ -1,5 +1,5 @@
 //set path to , path:'/node0' when running on AAU
-const peerOptions = { host: 'localhost', port: 3201};
+const peerOptions = { host: 'localhost', port: 3201, path:"/node1"};
 
 //peers contains all connected peers
 export const peers = {}; 

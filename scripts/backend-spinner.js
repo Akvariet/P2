@@ -2,8 +2,13 @@
 // s_pos is the position of the spinner.
 export default function spin(userPos, s_pos){
 
-    // Pass this to the front end to run the spinner locally.
-    const rot = Math.random() * 360*5;
+    // pass this to the front end to run the spinner locally.
+    const minRounds = 2;
+    let rot;
+
+    do
+        rot = Math.random() * 360*5;
+    while(minRounds >= Math.floor(rot/360)) // spinner rotates minimum 2 rounds
 
     let userAngles = {};
 

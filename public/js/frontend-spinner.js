@@ -1,72 +1,62 @@
-const spinnerDiv = document.querySelector('.spinner');
-const spinner = getComputedStyle(spinnerDiv);
+const spinner = document.querySelector('.spinner');
 
-// Starts the game when a user clicks on the spinner
+// starts the game when a user clicks on the spinner
 export function spinBottle(rotationAngle, winner, userAngles) {
     let rotationTime;
     let timeBeforeReset = 0.5;
-    let timer = {value:0};
-    let angle = {value:0}
-    let waitTime = [0];
+    let angle = {value:0};
+    let waitTime = 0;
     let refine = 20 // how fluent the rotation animation should be. Higher number more fluent
     let userColors = {};
 
-    for (const user in userAngles) {
+    // gets the participants original colors before game starts.
+    for (const user in userAngles)
         userColors[user] = document.getElementById(user + "_body").style.fill;
-    }
 
-    console.log(userColors);
-
-    // Sets the rotation time depending on how many rounds the spinner spins
+    // sets the rotation time depending on how many rounds the spinner spins
     switch (Math.floor(rotationAngle / 360)) {
-        case 0: rotationTime = 2; break;
-        case 1: rotationTime = 3; break;
         case 2: case 3: rotationTime = 4; break;
         case 4: case 5: rotationTime = 5; break;
-        default: rotationTime = 1; break;
+        default: rotationTime = 4; break;
     }
 
+    //defines the velocity of the spinner
     const vMax = (2 * toRadians(rotationAngle)) / (rotationTime);
     const vMin = vMax/refine;
     let v = vMin;
 
-    for (let j = 1; j < refine; j++){
-        waitTime.push(waitTime[j-1] + (v*j) * Math.floor(rotationAngle*(1/refine))); // past round waittime + velocity at round j * angles rotated at round j
-    }
-
+    // rotates the spinner
     for (let i = 1; i <= refine; i++) {
-        setTimeout(spinSession, waitTime[i-1], rotationAngle, angle, v, i*(1/refine), timer, userAngles, userColors);
+        setTimeout(spinSession, waitTime, rotationAngle, angle, v, i*(1/refine), userAngles, userColors);
+        waitTime = waitTime + v * Math.floor(rotationAngle*(1/refine));
         v += vMin;
     }
 
-    // When the spinner stops, announce the winner (in the console atm) and reset the spinner's position
-    setTimeout(announceWinner, (timeBeforeReset*1000)+(waitTime[refine-1] + v * Math.floor(rotationAngle*(1/refine))), winner);
-    setTimeout(resetBottlePos, (timeBeforeReset*1000)+(waitTime[refine-1] + v * Math.floor(rotationAngle*(1/refine))), rotationAngle, angle, timer);
+    // when the spinner stops, announce the winner (in the console atm) and reset the spinner's position
+    setTimeout(announceWinner, (timeBeforeReset*1000)+(waitTime + v * Math.floor(rotationAngle*(1/refine))), winner, userColors);
+    setTimeout(resetBottlePos, (timeBeforeReset*1000)+(waitTime + v * Math.floor(rotationAngle*(1/refine))), rotationAngle, angle);
 }
 
 
-// Rotates the spinner to its original position.
-function resetBottlePos(rotationAngle, angle, timer) {
+// rotates the spinner to its original position.
+function resetBottlePos(rotationAngle, angle) {
     const vReset = 3;
     const resetPos = (360 - (rotationAngle % 360));
-    timer.value = 0;
+    let timer = 0;
 
     while (angle.value < rotationAngle + resetPos) {
         angle.value++
-        setTimeout(rotate, (vReset*timer.value), angle.value);
-        timer.value++
+        setTimeout(rotate, (vReset*timer), angle.value);
+        timer++;
     }
-    setTimeout(resetRotation,vReset*resetPos);
+
+    // resets the matrix of the spinner when it has reached the original position
+    setTimeout(() => spinner.style.transform = 'matrix(1, 0, 0, 1, 0, 0)',vReset*resetPos);
 }
 
-// Resets the spinner's matrix
-function resetRotation() {
-    spinnerDiv.style.transform = 'matrix(1, 0, 0, 1, 0, 0)'
-}
-
-// Announces the winner
-function announceWinner(winner) {
-    const originalColor = winner.color;
+// announces the winner
+function announceWinner(winner, userColors) {
+    const originalColor = userColors[winner.id];
     const winnerColor = 'hsl(116, 100%, 60%)';
     const winnerElement = document.getElementById(winner.id + "_body");
 
@@ -74,65 +64,74 @@ function announceWinner(winner) {
     setTimeout(blink, 100, winnerElement, originalColor, 200);
 }
 
+// sets the color of the user at a given interval for 2,5 seconds
 function blink(element, color, time) {
     let switchColor = setInterval(setColor, time, element, color);
-
     setTimeout(() => clearInterval(switchColor), 2500);
 }
 
-
-// Changes the color of the user element in a setInterval
+// changes the color of the user element
 function setColor(element, color) {
     element.style.backgroundColor = color;
     element.style.fill = color;
 }
 
+/* simulates a spinning session, where the spinner rotates 1/refine part of the full rotationAngle
+ at a given velocity v */
+function spinSession(rotationAngle, angle, v, part, userAngles, userColors){
+    let timer = 0;
+    while(angle.value < Math.floor(rotationAngle * part)) {
+        angle.value++;
+        setTimeout(rotate, (v*timer), angle.value); // rotates the spinner
+        setTimeout(highlightUser, (v*timer), angle.value, userAngles, userColors); //highlights the closest user
+        timer++;
+    }
+}
+
+// rotates the spinner according to the angle by changing its matrix
+function rotate(angle) {
+    spinner.style.transform = 'matrix(' + Math.cos(toRadians(angle)) + ','
+                                        + Math.sin(toRadians(angle)) + ','
+                                        + -Math.sin(toRadians(angle)) + ','
+                                        + Math.cos(toRadians(angle)) + ', 0, 0)';
+}
+
+// compute an angle from degrees to radians
 function toRadians(angle) {
     return angle * (Math.PI/180);
 }
 
-function spinSession(rotationAngle, angle, v, part, timer, userAngles, userColors){
-    console.log(userColors);
-    timer.value = 0;
-    while(angle.value < Math.floor(rotationAngle * part)) {
-        angle.value++;
-        setTimeout(rotate, (v*timer.value), angle.value);
-        setTimeout(highlightUser, (v*timer.value), angle.value, userAngles, userColors, v * (timer.value+1));
-        timer.value++;
-    }
-}
-
-// rotates the spinner according to the angle.
-function rotate(angle) {
-    spinnerDiv.style.transform = 'matrix(' + Math.cos(toRadians(angle)) + ','
-                                  + Math.sin(toRadians(angle)) + ','
-                                  + -Math.sin(toRadians(angle)) + ','
-                                  + Math.cos(toRadians(angle)) + ', 0, 0)';
-}
-
-// higjhlights the user that the spinner points at
-function highlightUser(angle, userAngles, userColors, time){
+// highlights the user that the spinner points at
+function highlightUser(angle, userAngles, userColors){
     let angles = [];
     let ids = [];
     const highlightColor = 'hsl(0, 0%, 0%)';
 
-    console.log(userColors);
-
+    //finds the angles between the users and the spinners current rotation
     for (const user in userAngles) {
-        let angFromRot = Math.abs(userAngles[user] - (angle % 360))
+        let angFromRot = Math.abs(userAngles[user] - (angle % 360));
         if (angFromRot > 180)
-            angFromRot = 360 - angFromRot
+            angFromRot = 360 - angFromRot;
         angles.push(angFromRot);
         ids.push(user);
     }
 
+    // finds the closest user to the spinner
     const closestUser = ids[angles.indexOf(Math.min(...angles))];
     const userElement = document.getElementById(closestUser + "_body");
-    const userColor = userColors[closestUser];
 
-    console.log(closestUser);
-    console.log(userColor);
+    // finds the 2nd closest user to the spinner
+    let secondSmallestAngle = Math.max(...angles);
+    for (const angle of angles) {
+        if (angle > Math.min(...angles)) {
+            if (angle < secondSmallestAngle) secondSmallestAngle = angle;
+        }
+    }
+    //gets the element of that user
+    const secClosestUser = ids[angles.indexOf(secondSmallestAngle)];
+    const secUserElement = document.getElementById(secClosestUser + "_body");
+    const secondUserColor = userColors[secClosestUser];
 
     setColor(userElement, highlightColor);
-    setTimeout(setColor, time, userElement, userColor);
+    setColor(secUserElement, secondUserColor);
 }

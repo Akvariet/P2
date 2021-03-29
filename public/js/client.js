@@ -21,7 +21,7 @@ function renderColorPicker() {
     displayColors();
 }
 
-export function enterRoom(myId, allUsers, socket){
+export function enterRoom(myId, allUsers){
     // Remove login screen.
     const wrapper = document.querySelector('.login-form-wrapper');
     wrapper.parentNode.removeChild(wrapper);
@@ -31,7 +31,7 @@ export function enterRoom(myId, allUsers, socket){
     drawAllUsers(allUsers);
 
     // Make own avatar interactable.
-    return makeInteractable(myId, socket);
+    return makeInteractable(myId);
 }
 
 

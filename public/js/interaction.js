@@ -19,7 +19,7 @@ export function removeDeadUser(id){
 }
 
 
-export function makeInteractable(id, socket){
+export function makeInteractable(id){
     const containerElement = document.getElementById(id);
     const userElement = document.getElementById(id + '_body');
     const space = document.getElementById("space");

@@ -16,8 +16,8 @@ export class ClientConnection{
         this.socket.open();
 
         // The login attempt was accepted/rejected by the server.
-        this.socket.on('login-successful', (myId, users) => this.login(myId, users, this.socket));
-        this.socket.on('login-rejected',   this.loginRejected);
+        this.socket.on('login-successful', (myId, users) => this.login(myId, users));
+        this.socket.on('login-rejected', this.loginRejected);
     }
 
     emit(event, ...args){
@@ -51,12 +51,12 @@ export class ClientConnection{
         this.emit('login-attempt', name, color);
     }
 
-    login(myId, users, socket){
+    login(myId, users){
         this.myID = myId;
         // Connect to the peer server for voice chat.
 
         // Enter the room.
-        const avatar = enterRoom(myId, users, socket);
+        const avatar = enterRoom(myId, users);
 
         // Make my own user interactable.
         this.handleClientEvents(myId, avatar);

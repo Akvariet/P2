@@ -3,23 +3,17 @@ import {router} from "./scripts/routes.js";
 import {createServer} from 'http';
 import bodyParser from 'body-parser'
 import {AkvarioServer} from "./scripts/AkvarioServer.js";
+import {port, peerJSOptions} from './scripts/serverConfig.js'
 
 const server = express();
 const HTTPServer = createServer(server);
-
-// port range: 3200-3209
-const port = process.env.PORT || 3200;
-const PeerJSOptions = { port:3201 }
-
-const akvarioServer = new AkvarioServer(HTTPServer, PeerJSOptions);
-
-
+const akvarioServer = new AkvarioServer(HTTPServer, peerJSOptions);
 
 server.use(bodyParser.json())
 server.use(express.static('public'));
 server.use(router);
 
-//listens to PORT set on top.
+//listens to PORT set in /scripts/serverConfig.
 HTTPServer.listen(port, () => {
     console.log(`Welcome to Akvario @ *:${port}`);
 });

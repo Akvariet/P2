@@ -1,5 +1,4 @@
-//set path to , path:'/node0' when running on AAU
-const peerOptions = { host: 'localhost', port: 3201, path:"/node1"};
+import {options, production} from './clientConfig.js';
 
 //peers contains all connected peers
 export const peers = {}; 
@@ -11,7 +10,7 @@ export function handlePeerConnections(myId, users){
     const media = {video: false, audio:true};
 
     //connects to peerjs server
-    const peer  = new Peer(myId, peerOptions);
+    const peer  = new Peer(myId, options('voice', production));
 
     //gets microphone stream
     getUserMedia(media, streamVoice);

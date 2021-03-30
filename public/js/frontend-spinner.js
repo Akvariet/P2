@@ -91,9 +91,9 @@ function spinSession(rotationAngle, angle, v, part, userAngles, userColors){
 // rotates the spinner according to the angle by changing its matrix
 function rotate(angle) {
     spinner.style.transform = 'matrix(' + Math.cos(toRadians(angle)) + ','
-        + Math.sin(toRadians(angle)) + ','
-        + -Math.sin(toRadians(angle)) + ','
-        + Math.cos(toRadians(angle)) + ', 0, 0)';
+                                        + Math.sin(toRadians(angle)) + ','
+                                        + -Math.sin(toRadians(angle)) + ','
+                                        + Math.cos(toRadians(angle)) + ', 0, 0)';
 }
 
 // compute an angle from degrees to radians
@@ -127,6 +127,7 @@ function highlightUser(angle, userAngles, userColors){
             if (angle < secondSmallestAngle) secondSmallestAngle = angle;
         }
     }
+
     //gets the element of that user
     const secClosestUser = ids[angles.indexOf(secondSmallestAngle)];
     const secUserElement = document.getElementById(secClosestUser + "_body");

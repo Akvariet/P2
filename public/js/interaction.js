@@ -1,4 +1,5 @@
 import {startSpinner} from './ClientConnection.js';
+import {peers} from './voice.js';
 
 export function moveUser(id, position){
     const user = document.getElementById(id);
@@ -15,7 +16,13 @@ export function turnUser(id, rotation){
 export function removeDeadUser(id){
     const userElement = document.getElementById(id);
     if (userElement !== null)
-        userElement.remove();
+        userElement.remove()
+
+    //Close peer connection
+    if (peers[id]) {
+        peers[id].close();
+        delete peers[id];
+    }
 }
 
 

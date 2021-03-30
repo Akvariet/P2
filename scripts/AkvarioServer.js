@@ -1,5 +1,6 @@
 import {UserProperties} from "./user.js";
 import * as socket_io from "socket.io";
+import { PeerServer } from 'peer';
 import {ConnectionTable} from "./connection.js";
 import {ColorPicker} from "../public/js/ColorPicker.js";
 import spin from './backend-spinner.js';
@@ -7,18 +8,22 @@ import spin from './backend-spinner.js';
 // AkvarioServer controls all real time connection with users all users.
 export class AkvarioServer{
     io;
+    peerServer;
     userProperties = new UserProperties();
     connections = new ConnectionTable();
     colorPicker = new ColorPicker();
 
-    constructor(HTTPServer){
-       this.io = new socket_io.Server(HTTPServer);
-       this.io.on('connection', socket =>
-           socket.on('login-attempt', (name, color) =>
-               this.requestLogin(socket, name, color)));
+    constructor(HTTPServer, options){
+        this.io = new socket_io.Server(HTTPServer);
+        this.io.on('connection', socket =>
+            socket.on('login-attempt', (name, color) =>
+                this.requestLogin(socket, name, color)));
+        this.peerServer = PeerServer(options);
     }
 
     connectionSetup(socket){
+        this.peerServer.on('connection', client => this.peerConnect(client, false));
+        this.peerServer.on('disconnect', client => this.peerDisconnect(client, false));
         socket.on('disconnect', (reason) => this.disconnect(socket, reason));
         socket.on('moved', position => this.moveUser(socket, position));
         socket.on('turned', rotation => this.rotateUser(socket, rotation));
@@ -92,5 +97,13 @@ export class AkvarioServer{
         this.io.emit('spinner-result', result.rot, winner, result.userAngles); // sends back the rotation of the spinner and the result of the game
     }
 
+
+    peerConnect(client, enabled){
+        if(enabled) console.log(`PeerJS Server: ${client.id} Connected!`);
+    }
+
+    peerDisconnect(client, enabled){
+        if(enabled) console.log(`PeerJS Server: ${client.id} Disconnected!`)
+    }
 }
 

@@ -2,12 +2,14 @@ import {moveUser, removeDeadUser, turnUser} from './interaction.js';
 import {drawUser} from './login.js';
 import {enterRoom} from './client.js';
 import {spinBottle} from "./frontend-spinner.js";
+import {handlePeerConnections} from './voice.js';
 
 export class ClientConnection{
-    socket = io({autoConnect:false});
+    socket;
     myID;
 
-    constructor() {
+    constructor(options) {
+        this.socket = io(options)
         this.establishConnection();
     }
 
@@ -53,8 +55,8 @@ export class ClientConnection{
 
     login(myId, users){
         this.myID = myId;
-        // Connect to the peer server for voice chat.
-
+        // Connect to the peer server and peers for voice chat
+        handlePeerConnections(myId, users);
         // Enter the room.
         const avatar = enterRoom(myId, users);
 
@@ -65,8 +67,6 @@ export class ClientConnection{
     }
 
     newConnection(user){
-        // Connect to the new peer.
-
         // Draw the new user on the page.
         drawUser(user);
     }

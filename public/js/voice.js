@@ -1,64 +1,70 @@
-const calls = {};
-let myStream;
-let myPeer;
+import {options, production} from './clientConfig.js';
 
-export function connectToPeerServer(socket, id, host, port){
-    //connect to the peer server with "undefined" ID (generates uuid instead)
-    myPeer = new Peer(id, {
-        secure: true,
-        host:   host || 'audp2p.herokuapp.com',
-        port:   port || 443,
-    });
+//peers contains all connected peers
+export const peers = {}; 
 
-    navigator.mediaDevices.getUserMedia({
-        video: false,
-        audio: true
-        //stream audio
-    }).then(stream => {
-        myStream = stream;
+//handles all peerjs functions and events
+export function handlePeerConnections(myId, users){
+    
+    const getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+    const media = {video: false, audio:true};
 
-        //? when somebody sends data then this / already connected users
-        myPeer.on('call', call => {
-            console.log('call received');
-            //? call must be answered or no connection / answers with own audio stream
-            call.answer(myStream);
+    //connects to peerjs server
+    const peer  = new Peer(myId, options('voice', production));
 
-            //creates new audio object
+    //gets microphone stream
+    getUserMedia(media, streamVoice);
+
+    //logs if successfully connected to peer server
+    peer.on('open', myId => console.log("Connected to PeerJS Server with: " + myId));
+
+    function streamVoice(stream){
+        //incoming call event
+        peer.on('call', call =>{
+    
+            //must be answered
+            call.answer(stream);
+    
+            //when incoming call adds a stream
             const audio = document.createElement('audio');
-            document.body.append(audio);
-
-
-            //when receiving old stream add it to audio container
-            call.on('stream', userAudioStream => {
-                addAudioStream(audio, userAudioStream);
+            call.on('stream', remoteStream=>{
+                startRemoteStream(audio, remoteStream);
             });
         });
-    });
+    
+        //calls every user already connected to server
+        Object.values(users).forEach(user=>{ 
+            if(myId != user.id)
+            connectToUser(user.id, stream)
+        });
+    }
 
-    //when connected to the peer server do this
-    myPeer.on('open', id => socket.emit('voice', id));
+    //plays remote stream through audio object
+    function startRemoteStream(audio, remoteStream){
+        audio.srcObject = remoteStream;
+        audio.addEventListener('loadedmetadata', playRemoteStream);
+    
+        function playRemoteStream(){ audio.play(); }
+    }
+    
+    function connectToUser(newUserID, stream){
+
+        //makes call to remote peer
+        const call = peer.call(newUserID, stream);
+
+        //when remote peer as answered and added a stream
+        const audio = document.createElement('audio');
+        call.on('stream', remoteStream=>{
+            startRemoteStream(audio, remoteStream);
+        });
+    
+        call.on('close', removeRemoteStream);
+    
+        //stores call in object
+        peers[newUserID] = call;
+
+        function removeRemoteStream(){
+            audio.remove();
+        }
+    }
 }
-
-//Make audio object and get new user connection
-export function callNewPeer(userId, stream) {
-    const call = myPeer.call(userId, stream);
-    console.log('calling user ' + userId);
-
-    const audio = document.createElement('audio');
-
-    //when receiving new stream add it to audio container
-    call.on('stream', userAudioStream => addAudioStream(audio, userAudioStream));
-
-    //delete audio object
-    call.on('close', () => audio.remove());
-
-    // connect id to call
-    calls[userId] = call;
-}
-
-//add audio object to audio container
-function addAudioStream(audio, stream) {
-    audio.srcObject = stream;
-    audio.addEventListener('loadedmetadata', ()=> audio.play());
-}
-

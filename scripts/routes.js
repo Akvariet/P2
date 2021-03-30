@@ -1,19 +1,6 @@
-import path from "path";
+import express from 'express'
+export const router = express.Router();
 
-const root = path.resolve();
-
-export function configureRouter(router){
-    router.get('/', (req, res) => {
-        res.sendFile(root + '/public/mainPage.html');
-    });
-
-    router.get('/favicon.ico', (req, res) =>{
-        res.sendFile(root + '/public/resources/favicon.png');
-    });
-
-    router.get('/colors', (req, res) => {
-        res.send(JSON.stringify(['red', 'blue', 'green', 'yellow', 'brown', 'grey', 'orange', 'magenta']));
-    });
-
-    return router;
-}
+router.get('/', (req, res) => {
+    res.render('index.html');
+});

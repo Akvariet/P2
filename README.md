@@ -7,3 +7,7 @@ The topic of the project was "En ny corona-hverdag" (Everyday life with corona) 
 **Our Goals**
 - Make online social events possible by having the chat environment emulate the physical aspects of real life.
 - Connect people in larger groups and enable people to mingle online.
+
+## Configuration
+- To configure the client modify **production** in */public/js/clientConfig.js* 
+- To configure the server modify */scripts/serverConfig.js*

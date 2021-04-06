@@ -93,6 +93,7 @@ export class AkvarioServer{
     }
 
     startSpinner() {
+        // if no one has requested yet
         if (this.allowReq) {
             this.allowReq = false;
             const result = spin(this.userProperties.positions, {top: 500, left: 750}); // TODO: Get the spinners positions so they arent fixed

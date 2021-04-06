@@ -12,6 +12,7 @@ export class AkvarioServer{
     userProperties = new UserProperties();
     connections = new ConnectionTable();
     colorPicker = new ColorPicker();
+    allowReq = true;
 
     constructor(HTTPServer, options){
         this.io = new socket_io.Server(HTTPServer);
@@ -92,11 +93,14 @@ export class AkvarioServer{
     }
 
     startSpinner() {
-        const result = spin(this.userProperties.positions, {top : 500, left : 750}); // TODO: Get the spinners positions so they arent fixed
-        const winner = (this.userProperties.get(result.winner));
-        this.io.emit('spinner-result', result.rot, winner, result.userAngles); // sends back the rotation of the spinner and the result of the game
+        if (this.allowReq) {
+            this.allowReq = false;
+            const result = spin(this.userProperties.positions, {top: 500, left: 750}); // TODO: Get the spinners positions so they arent fixed
+            const winner = (this.userProperties.get(result.winner));
+            this.io.emit('spinner-result', result.rot, winner, result.userAngles); // sends back the rotation of the spinner and the result of the game
+        }
+        setTimeout(() => this.allowReq = true, 1000);
     }
-
 
     peerConnect(client, enabled){
         if(enabled) console.log(`PeerJS Server: ${client.id} Connected!`);

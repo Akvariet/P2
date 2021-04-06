@@ -98,7 +98,7 @@ export class AkvarioServer{
             this.allowReq = false;
             const result = spin(this.userProperties.positions, {top: 500, left: 750}); // TODO: Get the spinners positions so they arent fixed
             const winner = (this.userProperties.get(result.winner));
-            this.io.emit('spinner-result', result.rot, winner, result.userAngles); // sends back the rotation of the spinner and the result of the game
+            this.io.emit('spinner-result', result.rot, winner, result.userAngles, this.userProperties.colors); // sends back the rotation of the spinner and the result of the game
         }
         setTimeout(() => this.allowReq = true, 1000);
     }

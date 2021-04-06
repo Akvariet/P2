@@ -1,17 +1,12 @@
 const spinner = document.querySelector('.spinner');
 
 // starts the game when a user clicks on the spinner
-export function spinBottle(rotationAngle, winner, userAngles) {
+export function spinBottle(rotationAngle, winner, userAngles, userColors) {
     let rotationTime;
     let timeBeforeReset = 0.5;
     let angle = {value:0};
     let waitTime = 0;
     let refine = 20 // how fluent the rotation animation should be. Higher number more fluent
-    let userColors = {};
-
-    // gets the participants original colors before game starts.
-    for (const user in userAngles)
-        userColors[user] = document.getElementById(user + "_body").style.backgroundColor;
 
     // sets the rotation time depending on how many rounds the spinner spins
     switch (Math.floor(rotationAngle / 360)) {

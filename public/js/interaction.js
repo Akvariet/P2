@@ -109,7 +109,6 @@ export function makeInteractable(id){
 
         // when someone clicks the spinner
         spinnerElement.addEventListener('click', () => {
-            console.log(spinnerRot.transform);
             if (spinnerRot.transform === 'matrix(1, 0, 0, 1, 0, 0)') { // is the spinner in the starting position?
                 startSpinner();
             }

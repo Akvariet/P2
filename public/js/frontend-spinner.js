@@ -11,7 +11,7 @@ export function spinBottle(rotationAngle, winner, userAngles) {
 
     // gets the participants original colors before game starts.
     for (const user in userAngles)
-        userColors[user] = document.getElementById(user + "_body").style.fill;
+        userColors[user] = document.getElementById(user + "_body").style.backgroundColor;
 
     // sets the rotation time depending on how many rounds the spinner spins
     switch (Math.floor(rotationAngle / 360)) {
@@ -27,19 +27,19 @@ export function spinBottle(rotationAngle, winner, userAngles) {
 
     // rotates the spinner
     for (let i = 1; i <= refine; i++) {
-        setTimeout(spinSession, waitTime, rotationAngle, angle, v, i*(1/refine), userAngles, userColors);
-        waitTime = waitTime + v * Math.floor(rotationAngle*(1/refine));
+        setTimeout(spinSession, waitTime, rotationAngle, angle, v, i * (1 / refine), userAngles, userColors);
+        waitTime = waitTime + v * Math.floor(rotationAngle * (1 / refine));
         v += vMin;
     }
 
     // when the spinner stops, announce the winner (in the console atm) and reset the spinner's position
     setTimeout(announceWinner, (timeBeforeReset*1000)+(waitTime + v * Math.floor(rotationAngle*(1/refine))), winner, userColors);
-    setTimeout(resetBottlePos, (timeBeforeReset*1000)+(waitTime + v * Math.floor(rotationAngle*(1/refine))), rotationAngle, angle);
+    setTimeout(rePosSpinner, (timeBeforeReset*1000)+(waitTime + v * Math.floor(rotationAngle*(1/refine))), rotationAngle, angle, userAngles);
 }
 
 
 // rotates the spinner to its original position.
-function resetBottlePos(rotationAngle, angle) {
+function rePosSpinner(rotationAngle, angle, userAngles) {
     const vReset = 3;
     const resetPos = (360 - (rotationAngle % 360));
     let timer = 0;
@@ -50,8 +50,25 @@ function resetBottlePos(rotationAngle, angle) {
         timer++;
     }
 
-    // resets the matrix of the spinner when it has reached the original position
-    setTimeout(() => spinner.style.transform = 'matrix(1, 0, 0, 1, 0, 0)',vReset*resetPos);
+    // resets the matrix of the spinner when the winner announcement is done
+    setTimeout(resetSpinnerAndUsers,2600, userAngles);
+}
+
+// resets the spinner matrix and the users colors if something happend
+function resetSpinnerAndUsers(userColors){
+
+    //checking if someone still has the selected or winner color
+    for(const user in userColors) {
+        const userElement = document.getElementById(user + '_body');
+        const userColor = userColors[user];
+
+        // if the users color is different from his original color, change it
+        if (userElement.style.backgroundColor !== userColor || userElement.style.fill !== userColor)
+            setColor(userElement, userColor);
+    }
+
+    // resets the spinners matrix
+    spinner.style.transform = 'matrix(1, 0, 0, 1, 0, 0)';
 }
 
 // announces the winner
@@ -107,7 +124,7 @@ function highlightUser(angle, userAngles, userColors){
     let ids = [];
     const highlightColor = 'hsl(0, 0%, 0%)';
 
-    //finds the angles between the users and the spinners current rotation
+    // finds the angles between the users and the spinners current rotation
     for (const user in userAngles) {
         let angFromRot = Math.abs(userAngles[user] - (angle % 360));
         if (angFromRot > 180)
@@ -117,22 +134,22 @@ function highlightUser(angle, userAngles, userColors){
     }
 
     // finds the closest user to the spinner
-    const closestUser = ids[angles.indexOf(Math.min(...angles))];
+    const closestUserIndex = angles.indexOf(Math.min(...angles));
+    const closestUser = ids[closestUserIndex];
     const userElement = document.getElementById(closestUser + "_body");
 
-    // finds the 2nd closest user to the spinner
-    let secondSmallestAngle = Math.max(...angles);
-    for (const angle of angles) {
-        if (angle > Math.min(...angles)) {
-            if (angle < secondSmallestAngle) secondSmallestAngle = angle;
-        }
-    }
-
-    //gets the element of that user
-    const secClosestUser = ids[angles.indexOf(secondSmallestAngle)];
-    const secUserElement = document.getElementById(secClosestUser + "_body");
-    const secondUserColor = userColors[secClosestUser];
-
+    // sets the color on the selected user to the highlight color
     setColor(userElement, highlightColor);
-    setColor(secUserElement, secondUserColor);
+
+    // makes sure  that all the other users are their original color
+    for (let i = 1; i <= ids.length; i++) {
+        if (ids[i-1] === closestUser) continue; // if we meet the selected user, go to next user
+
+        const nonSelectedUser = document.getElementById(ids[i-1] + "_body");
+        const nonSelectedUserColor = userColors[i];
+
+        // if the users color is different from his original color, change it
+        if (nonSelectedUser.style.backgroundColor !== nonSelectedUserColor || nonSelectedUser.style.fill !== nonSelectedUserColor)
+            setColor(nonSelectedUser, nonSelectedUserColor);
+    }
 }

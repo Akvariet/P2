@@ -2,7 +2,7 @@ import {UserProperties} from "./user.js";
 import * as socket_io from "socket.io";
 import { PeerServer } from 'peer';
 import {ConnectionTable} from "./connection.js";
-import {ColorPicker} from "../public/js/ColorPicker.js";
+import {ColorPicker} from "./ColorPicker.js";
 
 
 // AkvarioServer controls all real time connection with users all users.

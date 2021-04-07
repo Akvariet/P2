@@ -1,12 +1,22 @@
 import {login} from "./main.js";
-import {ColorPicker} from "./ColorPicker.js";
 
-const colorPicker = new ColorPicker();
+let jsondata = "";
+let hslColors;
+let serverColors;
+
+async function getJson(url) {
+    let res = await fetch(url);
+    return await res.json();
+}
+
+
+
 
 // select a color to avoid login without selecting a color.
 const displayedUser = findDisplayedUser();
 let activeColorPreview;
 let myColor = 'red';
+
 export function setupForm() {
     const nameInputField = document.getElementById('username');
     const nameLabelHTML  = document.querySelector('.name-displayed');
@@ -42,7 +52,7 @@ export function addEventHandlers(colorElements) {
 function selectColor(colorPreview){
     //Change myColor to be equal to the chosen color - such that the server knows which color the client want
     myColor = colorPreview.getAttribute("id");
-    const hslColor = colorPicker.previewShade(myColor);
+    const hslColor = hslColors[serverColors.indexOf(myColor)]//.previewShade(myColor);
 
     //If a color is active remove this and set the chosen color to be the active color
     if (activeColorPreview) activeColorPreview.classList.remove("color-item-active");
@@ -64,9 +74,15 @@ export function findDisplayedUser(){
 
 // Draw the UI for the user.
 // Takes the colors to choose from and a function to call on login.
-export function displayColors(){
+export async function displayColors(){
+    jsondata = await getJson('/colors');
+    serverColors = jsondata.colors;
+    hslColors = jsondata.hslColors;
+    //console.log(hslColors[serverColors.indexOf(myColor)]);
+
+
     const colorSelector = document.querySelector('.color-picker-items');
-    const colors = colorPicker.colorsForLoginScreen;
+    const colors = serverColors//colorPicker.colorsForLoginScreen;
 
     const colorElements = [];
     colors.forEach(color => colorElements.push(createColorItem(color)));
@@ -81,7 +97,7 @@ export function displayColors(){
         newColor.setAttribute("class", "coloritem");
         newColor.setAttribute("id", color);
 
-        newColor.style.backgroundColor = colorPicker.previewShade(color);
+        newColor.style.backgroundColor = hslColors[colors.indexOf(color)]//colorPicker.previewShade(color);
 
         colorSelector.appendChild(newColor);
         return newColor;
@@ -128,4 +144,3 @@ export function drawUser(user){
         return userHTML;
     }
 }
-

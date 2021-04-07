@@ -1,12 +1,19 @@
 import {login} from "./main.js";
-import {ColorPicker} from "./ColorPicker.js";
 
-const colorPicker = new ColorPicker();
+let colorCodes;
+let serverColors;
+
+//Get colors from the server
+async function getJson(url) {
+    let res = await fetch(url);
+    return await res.json();
+}
 
 // select a color to avoid login without selecting a color.
 const displayedUser = findDisplayedUser();
 let activeColorPreview;
 let myColor = 'red';
+
 export function setupForm() {
     const nameInputField = document.getElementById('username');
     const nameLabelHTML  = document.querySelector('.name-displayed');
@@ -42,7 +49,7 @@ export function addEventHandlers(colorElements) {
 function selectColor(colorPreview){
     //Change myColor to be equal to the chosen color - such that the server knows which color the client want
     myColor = colorPreview.getAttribute("id");
-    const hslColor = colorPicker.previewShade(myColor);
+    const hslColor = colorCodes[serverColors.indexOf(myColor)]
 
     //If a color is active remove this and set the chosen color to be the active color
     if (activeColorPreview) activeColorPreview.classList.remove("color-item-active");
@@ -64,10 +71,14 @@ export function findDisplayedUser(){
 
 // Draw the UI for the user.
 // Takes the colors to choose from and a function to call on login.
-export function displayColors(){
-    const colorSelector = document.querySelector('.color-picker-items');
-    const colors = colorPicker.colorsForLoginScreen;
+export async function displayColors(){
+    //Wait for the colors to be received from serverside
+    let jsonData = await getJson('/colors');
+    serverColors = jsonData.colors;
+    colorCodes = jsonData.colorCode;
 
+    const colorSelector = document.querySelector('.color-picker-items');
+    const colors = serverColors
     const colorElements = [];
     colors.forEach(color => colorElements.push(createColorItem(color)));
     //set a start color for the users to be sure it dosen't crash if the user dosen't chose one
@@ -81,7 +92,7 @@ export function displayColors(){
         newColor.setAttribute("class", "coloritem");
         newColor.setAttribute("id", color);
 
-        newColor.style.backgroundColor = colorPicker.previewShade(color);
+        newColor.style.backgroundColor = colorCodes[colors.indexOf(color)];
 
         colorSelector.appendChild(newColor);
         return newColor;
@@ -128,4 +139,3 @@ export function drawUser(user){
         return userHTML;
     }
 }
-

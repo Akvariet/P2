@@ -9,7 +9,7 @@ export function options(file,prod){
             return { host: 'localhost', port: 3201};
         case 'main':
             if(prod) 
-                return {autoConnect: false, path:'/node0/socket.io'};
+                return {autoConnect: false, path:'/node0/socket.io', transports: ["polling"]};
             return {autoConnect: false};
     }
 }

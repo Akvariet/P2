@@ -1,16 +1,13 @@
-import {options, production} from './clientConfig.js';
-import {adjustVolume, getPos} from './proxi.js';
-import {connection} from './main.js';
+import {beginProxiChat, proxiChat} from './proxi.js';
 
 //peers contains all connected peers
 export const peers = {};
-const audioPlayers = {};
+
 let myId;
 let myStream;
 
 //handles all peerjs functions and events
 export function handlePeerConnections(id, users) {
-
     myId = id;
 
     const getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
@@ -23,11 +20,11 @@ export function handlePeerConnections(id, users) {
     getUserMedia(media, streamVoice);
 
     peer.on('open', myId =>{
-        console.log("Connected to PeerJS Server with: " + myId)
         beginProxiChat(myId);
+
         //calls every user already connected to server
         Object.values(users).forEach(user=>{
-            if(myId != user.id)
+            if(myId !== user.id)
             connectToUser(user.id, myStream)
         });
     });
@@ -52,7 +49,7 @@ export function handlePeerConnections(id, users) {
 
         //calls every user already connected to server
         Object.values(users).forEach(user => {
-            if (myId != user.id)
+            if (myId !== user.id)
                 connectToUser(user.id, stream)
         });
     }
@@ -91,30 +88,5 @@ export function handlePeerConnections(id, users) {
         }
     }
 }
-function beginProxiChat(myID){
-    const myElement = document.getElementById(myID);
-    myElement.addEventListener('moved', (e)=>{
 
-        for (const audioPlayer in audioPlayers) {
-            adjustVolume(audioPlayers[audioPlayer].audio, e.detail, audioPlayers[audioPlayer].position);
-        }
-    });
-}
-
-function proxiChat(audio, userID){
-
-    const userContainer = document.getElementById(userID);
-    const myElement = document.getElementById(connection.myID);
-    userContainer.append(audio);
-    audioPlayers[userID] = {audio: audio, position: getPos(userContainer)};
-
-    userContainer.addEventListener('moved', (e) => {
-        const pos1 = getPos(myElement);
-        const pos2 = getPos(userContainer);
-
-        audioPlayers[userID].position = pos2;
-
-        adjustVolume(audio, pos1, pos2);
-    })
-}
 

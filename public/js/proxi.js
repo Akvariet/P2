@@ -1,21 +1,9 @@
+import {connection} from './main.js';
 
+const audioPlayers = {};
 
 function distance(myPosition, position){
     return dist(relativePos(myPosition, position))
-}
-
-
-// Returns an object of distances between position and the elements in positions.
-// The object is indexed by the user ids.
-export function distances(position, positions){
-    const temp = {};
-
-    Object.keys(positions).forEach(id => {
-       temp[id] = dist(relativePos(position, positions[id]));
-    });
-
-    return temp;
-
 }
 
 // Returns distance given a relative position.
@@ -53,20 +41,38 @@ export class VolumeFunctions {
     }
 }
 
-// Recalculate the volume of all users.
-// Useful when this client moves and the relative positions of everyone has changed.
-export function calculateVolume(myPosition, userCollection, volumeFunc){
-    const dist = distances(myPosition, userCollection.positions());
+export function beginProxiChat(myID){
+    const myElement = document.getElementById(myID);
+    myElement.addEventListener('moved', (e)=>{
 
-    Object.keys(dist).forEach(key => (userCollection.get(key)).volume = volumeFunc(dist[key]));
+        for (const audioPlayer in audioPlayers) {
+            adjustVolume(audioPlayers[audioPlayer].audio, e.detail, audioPlayers[audioPlayer].position);
+        }
+    });
+}
+
+export function proxiChat(audio, userID){
+
+    const userContainer = document.getElementById(userID);
+    const myElement = document.getElementById(connection.myID);
+    userContainer.append(audio);
+    audioPlayers[userID] = {audio: audio, position: getPos(userContainer)};
+
+    userContainer.addEventListener('moved', () => {
+        const pos1 = getPos(myElement);
+        const pos2 = getPos(userContainer);
+
+        audioPlayers[userID].position = pos2;
+
+        adjustVolume(audio, pos1, pos2);
+    })
 }
 
 const volFunc = new VolumeFunctions();
 
 export function adjustVolume(audio, myPosition, position){
     const d = distance(myPosition, position);
-    const vol = volFunc.linearDecrease(d);
-    audio.volume = vol;
+    audio.volume = volFunc.linearDecrease(d);
 }
 
 export function getPos(HTMLElement){

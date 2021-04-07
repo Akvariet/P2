@@ -46,12 +46,6 @@ export function handlePeerConnections(id, users) {
                 startRemoteStream(audio, remoteStream);
             });
         });
-
-        //calls every user already connected to server
-        Object.values(users).forEach(user => {
-            if (myId !== user.id)
-                connectToUser(user.id, stream)
-        });
     }
 
     //plays remote stream through audio object

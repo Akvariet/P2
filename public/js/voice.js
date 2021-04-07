@@ -6,6 +6,7 @@ import {connection} from './main.js';
 export const peers = {};
 const audioPlayers = {};
 let myId;
+let myStream;
 
 //handles all peerjs functions and events
 export function handlePeerConnections(id, users) {
@@ -21,13 +22,18 @@ export function handlePeerConnections(id, users) {
     //gets microphone stream
     getUserMedia(media, streamVoice);
 
-    //logs if successfully connected to peer server
-    peer.on('open', myId => {
-        console.log("Connected to PeerJS Server with: " + myId);
+    peer.on('open', myId =>{
+        console.log("Connected to PeerJS Server with: " + myId)
         beginProxiChat(myId);
+        //calls every user already connected to server
+        Object.values(users).forEach(user=>{
+            if(myId != user.id)
+            connectToUser(user.id, myStream)
+        });
     });
 
     function streamVoice(stream) {
+        myStream = stream;
         //incoming call event
         peer.on('call', call => {
 

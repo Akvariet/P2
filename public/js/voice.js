@@ -17,7 +17,7 @@ export function handlePeerConnections(id, users) {
     const media = {video: false, audio: true};
 
     //connects to peerjs server
-    const peer = new Peer(myId, options('voice', production));
+    const peer = new Peer(myId);
 
     //gets microphone stream
     getUserMedia(media, streamVoice);

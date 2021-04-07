@@ -1,91 +1,20 @@
 const spinner = document.querySelector('.spinner');
 
 // starts the game when a user clicks on the spinner
-export function spinBottle(rotationAngle, winner, userAngles, userColors) {
-    let rotationTime;
-    let timeBeforeReset = 0.5;
-    let angle = {value:0};
-    let waitTime = 0;
-    let refine = 20 // how fluent the rotation animation should be. Higher number more fluent
-
-    // sets the rotation time depending on how many rounds the spinner spins
-    switch (Math.floor(rotationAngle / 360)) {
-        case 2: case 3: rotationTime = 4; break;
-        case 4: case 5: rotationTime = 5; break;
-        default: rotationTime = 4; break;
-    }
-
-    //defines the velocity of the spinner
-    const vMax = (2 * toRadians(rotationAngle)) / (rotationTime);
-    const vMin = vMax/refine;
-    let v = vMin;
+export function spinBottle(userColors, spinner) {
+    let currentAngle = {value : 0};
+    const userAngles = spinner.result.userAngles;
+    const rotationAngle = spinner.rotationAngle;
+    const refine = spinner.refine;
 
     // rotates the spinner
-    for (let i = 1; i <= refine; i++) {
-        setTimeout(spinSession, waitTime, rotationAngle, angle, v, i * (1 / refine), userAngles, userColors);
-        waitTime = waitTime + v * Math.floor(rotationAngle * (1 / refine));
-        v += vMin;
-    }
+    for (let i = 1; i <= refine; i++)
+        setTimeout(spinSession, spinner.waitTime.sessions[i-1], rotationAngle, currentAngle,
+                   spinner.velocity.sessions[i-1], i * (1 / refine), userAngles, userColors);
 
     // when the spinner stops, announce the winner (in the console atm) and reset the spinner's position
-    setTimeout(announceWinner, (timeBeforeReset*1000)+(waitTime + v * Math.floor(rotationAngle*(1/refine))), winner, userColors);
-    setTimeout(rePosSpinner, (timeBeforeReset*1000)+(waitTime + v * Math.floor(rotationAngle*(1/refine))), rotationAngle, angle, userAngles);
-}
-
-
-// rotates the spinner to its original position.
-function rePosSpinner(rotationAngle, angle, userAngles) {
-    const vReset = 3;
-    const resetPos = (360 - (rotationAngle % 360));
-    let timer = 0;
-
-    while (angle.value < rotationAngle + resetPos) {
-        angle.value++
-        setTimeout(rotate, (vReset*timer), angle.value);
-        timer++;
-    }
-
-    // resets the matrix of the spinner when the winner announcement is done
-    setTimeout(resetSpinnerAndUsers,2600, userAngles);
-}
-
-// resets the spinner matrix and the users colors if something happend
-function resetSpinnerAndUsers(userColors){
-
-    //checking if someone still has the selected or winner color
-    for(const user in userColors) {
-        const userElement = document.getElementById(user + '_body');
-        const userColor = userColors[user];
-
-        // if the users color is different from his original color, change it
-        if (userElement.style.backgroundColor !== userColor || userElement.style.fill !== userColor)
-            setColor(userElement, userColor);
-    }
-
-    // resets the spinners matrix
-    spinner.style.transform = 'matrix(1, 0, 0, 1, 0, 0)';
-}
-
-// announces the winner
-function announceWinner(winner, userColors) {
-    const originalColor = userColors[winner.id];
-    const winnerColor = 'hsl(116, 100%, 60%)';
-    const winnerElement = document.getElementById(winner.id + "_body");
-
-    blink(winnerElement, winnerColor, 200);
-    setTimeout(blink, 100, winnerElement, originalColor, 200);
-}
-
-// sets the color of the user at a given interval for 2,5 seconds
-function blink(element, color, time) {
-    let switchColor = setInterval(setColor, time, element, color);
-    setTimeout(() => clearInterval(switchColor), 2500);
-}
-
-// changes the color of the user element
-function setColor(element, color) {
-    element.style.backgroundColor = color;
-    element.style.fill = color;
+    setTimeout(announceWinner, spinner.waitTime.rePos, spinner.winner, userColors);
+    setTimeout(rePosSpinner, spinner.waitTime.rePos, rotationAngle, currentAngle, userAngles, spinner);
 }
 
 /* simulates a spinning session, where the spinner rotates 1/refine part of the full rotationAngle
@@ -103,9 +32,9 @@ function spinSession(rotationAngle, angle, v, part, userAngles, userColors){
 // rotates the spinner according to the angle by changing its matrix
 function rotate(angle) {
     spinner.style.transform = 'matrix(' + Math.cos(toRadians(angle)) + ','
-                                        + Math.sin(toRadians(angle)) + ','
-                                        + -Math.sin(toRadians(angle)) + ','
-                                        + Math.cos(toRadians(angle)) + ', 0, 0)';
+        + Math.sin(toRadians(angle)) + ','
+        + -Math.sin(toRadians(angle)) + ','
+        + Math.cos(toRadians(angle)) + ', 0, 0)';
 }
 
 // compute an angle from degrees to radians
@@ -141,10 +70,64 @@ function highlightUser(angle, userAngles, userColors){
         if (ids[i-1] === closestUser) continue; // if we meet the selected user, go to next user
 
         const nonSelectedUser = document.getElementById(ids[i-1] + "_body");
-        const nonSelectedUserColor = userColors[i];
+        const nonSelectedUserColor = userColors[ids[i-1]];
 
         // if the users color is different from his original color, change it
         if (nonSelectedUser.style.backgroundColor !== nonSelectedUserColor || nonSelectedUser.style.fill !== nonSelectedUserColor)
             setColor(nonSelectedUser, nonSelectedUserColor);
     }
 }
+
+// changes the color of the user element
+function setColor(element, color) {
+    element.style.backgroundColor = color;
+    element.style.fill = color;
+}
+
+// rotates the spinner to its original position.
+function rePosSpinner(rotationAngle, angle, userAngles, spinner) {
+    let timer = 0;
+    while (angle.value < rotationAngle + spinner.resetPos) {
+        angle.value++
+        setTimeout(rotate, (spinner.velocity.rePos*timer), angle.value);
+        timer++;
+    }
+
+    // resets the matrix of the spinner when the winner announcement is done
+    setTimeout(resetSpinnerAndUsers,spinner.waitTime.reset, userAngles);
+}
+
+// resets the spinner matrix and the users colors if something happend
+function resetSpinnerAndUsers(userColors){
+
+    //checking if someone still has the selected or winner color
+    for(const user in userColors) {
+        const userElement = document.getElementById(user + '_body');
+        const userColor = userColors[user];
+
+        // if the users color is different from his original color, change it
+        if (userElement.style.backgroundColor !== userColor || userElement.style.fill !== userColor)
+            setColor(userElement, userColor);
+    }
+
+    // resets the spinners matrix
+    spinner.style.transform = 'matrix(1, 0, 0, 1, 0, 0)';
+}
+
+// announces the winner
+function announceWinner(winner, userColors) {
+    const originalColor = userColors[winner.id];
+    const winnerColor = 'hsl(116, 100%, 60%)';
+    const winnerElement = document.getElementById(winner.id + "_body");
+
+    blink(winnerElement, winnerColor, 200);
+    setTimeout(blink, 100, winnerElement, originalColor, 200);
+}
+
+// sets the color of the user at a given interval for 2,5 seconds
+function blink(element, color, time) {
+    let switchColor = setInterval(setColor, time, element, color);
+    setTimeout(() => clearInterval(switchColor), 2500);
+}
+
+

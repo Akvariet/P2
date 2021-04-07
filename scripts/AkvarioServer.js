@@ -3,7 +3,7 @@ import * as socket_io from "socket.io";
 import { PeerServer } from 'peer';
 import {ConnectionTable} from "./connection.js";
 import {ColorPicker} from "../public/js/ColorPicker.js";
-import spin from './backend-spinner.js';
+import {Spinner} from './backend-spinner.js';
 
 // AkvarioServer controls all real time connection with users all users.
 export class AkvarioServer{
@@ -13,6 +13,7 @@ export class AkvarioServer{
     connections = new ConnectionTable();
     colorPicker = new ColorPicker();
     allowReq = true;
+    spinner = new Spinner();
 
     constructor(HTTPServer, options){
         this.io = new socket_io.Server(HTTPServer);
@@ -93,14 +94,16 @@ export class AkvarioServer{
     }
 
     startSpinner() {
-        // if no one has requested yet
-        if (this.allowReq) {
+        if (this.allowReq) { // if no one already has requested
             this.allowReq = false;
-            const result = spin(this.userProperties.positions, {top: 500, left: 750}); // TODO: Get the spinners positions so they arent fixed
-            const winner = (this.userProperties.get(result.winner));
-            this.io.emit('spinner-result', result.rot, winner, result.userAngles, this.userProperties.colors); // sends back the rotation of the spinner and the result of the game
+
+            //start a new game in the backend which gives the spinner new properties
+            this.spinner.newGame(this.userProperties);
+
+            // sends back the rotation of the spinner and the result of the game
+            this.io.emit('spinner-result', this.userProperties.colors, this.spinner);
         }
-        setTimeout(() => this.allowReq = true, 1000);
+        setTimeout(() => this.allowReq = true, this.spinner.waitTime.total);
     }
 
     peerConnect(client, enabled){

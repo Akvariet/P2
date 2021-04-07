@@ -1,16 +1,13 @@
 import {login} from "./main.js";
 
-let jsondata = "";
-let hslColors;
+let colorCodes;
 let serverColors;
 
+//Get colors from the server
 async function getJson(url) {
     let res = await fetch(url);
     return await res.json();
 }
-
-
-
 
 // select a color to avoid login without selecting a color.
 const displayedUser = findDisplayedUser();
@@ -52,7 +49,7 @@ export function addEventHandlers(colorElements) {
 function selectColor(colorPreview){
     //Change myColor to be equal to the chosen color - such that the server knows which color the client want
     myColor = colorPreview.getAttribute("id");
-    const hslColor = hslColors[serverColors.indexOf(myColor)]//.previewShade(myColor);
+    const hslColor = colorCodes[serverColors.indexOf(myColor)]
 
     //If a color is active remove this and set the chosen color to be the active color
     if (activeColorPreview) activeColorPreview.classList.remove("color-item-active");
@@ -75,15 +72,13 @@ export function findDisplayedUser(){
 // Draw the UI for the user.
 // Takes the colors to choose from and a function to call on login.
 export async function displayColors(){
-    jsondata = await getJson('/colors');
-    serverColors = jsondata.colors;
-    hslColors = jsondata.hslColors;
-    //console.log(hslColors[serverColors.indexOf(myColor)]);
-
+    //Wait for the colors to be received from serverside
+    let jsonData = await getJson('/colors');
+    serverColors = jsonData.colors;
+    colorCodes = jsonData.colorCode;
 
     const colorSelector = document.querySelector('.color-picker-items');
-    const colors = serverColors//colorPicker.colorsForLoginScreen;
-
+    const colors = serverColors
     const colorElements = [];
     colors.forEach(color => colorElements.push(createColorItem(color)));
     //set a start color for the users to be sure it dosen't crash if the user dosen't chose one
@@ -97,7 +92,7 @@ export async function displayColors(){
         newColor.setAttribute("class", "coloritem");
         newColor.setAttribute("id", color);
 
-        newColor.style.backgroundColor = hslColors[colors.indexOf(color)]//colorPicker.previewShade(color);
+        newColor.style.backgroundColor = colorCodes[colors.indexOf(color)];
 
         colorSelector.appendChild(newColor);
         return newColor;

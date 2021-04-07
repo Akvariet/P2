@@ -18,7 +18,7 @@ export class ColorPicker {
 
     previewShade(color) {
         color = color.toLowerCase();
-        //returns the hsl color of the input color
+        //returns the colorcode of the input color
         //e.g. "red" => "hsl(0, 100%, 74%)"
         if (this.colorPalette.hasOwnProperty(color))
             return (this.colorPalette[color])[0];
@@ -34,4 +34,15 @@ export class ColorPicker {
             return (this.colorPalette[color])[count];}
         else return undefined
     }
+}
+
+const colorPicker = new ColorPicker();
+
+export function extractColors(){
+    const colors = colorPicker.colorsForLoginScreen;
+    const colorCode = [];
+    for (const color in colors){
+        colorCode.push(colorPicker.previewShade(colors[color]));
+    }
+    return {colors: colors, colorCode:colorCode};
 }

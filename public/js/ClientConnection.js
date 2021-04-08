@@ -1,6 +1,7 @@
 import {moveUser, removeDeadUser, turnUser} from './interaction.js';
 import {drawUser} from './login.js';
 import {enterRoom} from './client.js';
+import {spinBottle} from "./frontend-spinner.js";
 import {handlePeerConnections} from './voice.js';
 
 export class ClientConnection{
@@ -18,7 +19,7 @@ export class ClientConnection{
 
         // The login attempt was accepted/rejected by the server.
         this.socket.on('login-successful', (myId, users) => this.login(myId, users));
-        this.socket.on('login-rejected',   this.loginRejected);
+        this.socket.on('login-rejected', this.loginRejected);
     }
 
     emit(event, ...args){
@@ -38,6 +39,9 @@ export class ClientConnection{
 
         // If the client is disconnected. (If I am disconnected.)
         this.socket.on('disconnect', reason => this.disconnect(reason));
+
+        // If the client starts the spinner
+        this.socket.on('spinner-result', spinBottle);
     }
 
     disconnect(reason){
@@ -83,4 +87,18 @@ export class ClientConnection{
     turn(id, position){
         turnUser(id, position)
     }
+
+    startSpinner(){
+        this.emit('start-spinner');
+    }
+}
+
+export const connection = new ClientConnection();
+
+export function startSpinner() {
+    connection.startSpinner();
+}
+
+export function login(name, color){
+    connection.attemptLogin(name, color);
 }

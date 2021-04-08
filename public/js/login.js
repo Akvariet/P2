@@ -1,4 +1,4 @@
-import {login} from "./main.js";
+import {login} from "./ClientConnection.js";
 
 let colorCodes;
 let serverColors;
@@ -49,7 +49,7 @@ export function addEventHandlers(colorElements) {
 function selectColor(colorPreview){
     //Change myColor to be equal to the chosen color - such that the server knows which color the client want
     myColor = colorPreview.getAttribute("id");
-    const hslColor = colorCodes[serverColors.indexOf(myColor)]
+    const colorCode = colorCodes[serverColors.indexOf(myColor)];
 
     //If a color is active remove this and set the chosen color to be the active color
     if (activeColorPreview) activeColorPreview.classList.remove("color-item-active");
@@ -58,8 +58,8 @@ function selectColor(colorPreview){
     activeColorPreview = colorPreview;
 
     //Change the user color to the chosen
-    displayedUser.arrow.style.fill = hslColor;
-    displayedUser.body.style.backgroundColor = hslColor;
+    displayedUser.arrow.style.fill = colorCode;
+    displayedUser.body.style.backgroundColor = colorCode;
 }
 
 export function findDisplayedUser(){
@@ -75,7 +75,7 @@ export async function displayColors(){
     //Wait for the colors to be received from serverside
     let jsonData = await getJson('/colors');
     serverColors = jsonData.colors;
-    colorCodes = jsonData.colorCode;
+    colorCodes = jsonData.colorCodes;
 
     const colorSelector = document.querySelector('.color-picker-items');
     const colors = serverColors

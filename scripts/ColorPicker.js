@@ -40,9 +40,9 @@ const colorPicker = new ColorPicker();
 
 export function extractColors(){
     const colors = colorPicker.colorsForLoginScreen;
-    const colorCode = [];
+    const colorCodes = [];
     for (const color in colors){
-        colorCode.push(colorPicker.previewShade(colors[color]));
+        colorCodes.push(colorPicker.previewShade(colors[color]));
     }
-    return {colors: colors, colorCode:colorCode};
+    return {colors: colors, colorCodes:colorCodes};
 }

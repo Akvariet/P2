@@ -2,8 +2,8 @@ import {UserProperties} from "./user.js";
 import * as socket_io from "socket.io";
 import { PeerServer } from 'peer';
 import {ConnectionTable} from "./connection.js";
-import {ColorPicker} from "../public/js/ColorPicker.js";
 import {Spinner} from './backend-spinner.js';
+import {ColorPicker} from "./ColorPicker.js";
 
 // AkvarioServer controls all real time connection with users all users.
 export class AkvarioServer{
@@ -29,7 +29,7 @@ export class AkvarioServer{
         socket.on('disconnect', (reason) => this.disconnect(socket, reason));
         socket.on('moved', position => this.moveUser(socket, position));
         socket.on('turned', rotation => this.rotateUser(socket, rotation));
-        socket.on('start-spinner', () => this.startSpinner())
+        socket.on('start-spinner', () => this.startSpinner());
     }
 
     requestLogin(socket, name, color) {

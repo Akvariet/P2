@@ -1,4 +1,4 @@
-import {connection} from './main.js';
+import {connection} from './ClientConnection.js';
 
 const audioPlayers = {};
 

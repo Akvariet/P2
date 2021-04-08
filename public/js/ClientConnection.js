@@ -93,7 +93,7 @@ export class ClientConnection{
     }
 }
 
-const connection = new ClientConnection();
+export const connection = new ClientConnection();
 
 export function startSpinner() {
     connection.startSpinner();

@@ -61,23 +61,31 @@ export function handlePeerConnections(id, users) {
     function connectToUser(newUserID, stream) {
 
         //makes call to remote peer
-        const call = peer.call(newUserID, stream);
+        let call;
+        let reconnect = setInterval(connect, 250);
+        
+        function connect(){
+    
+            call = peer.call(newUserID, stream);
+        
+            if(call){
+                clearInterval(reconnect);
+                console.log("connection successfull")
+                const audio = document.createElement('audio');
+                proxiChat(audio, newUserID);
+        
+                call.on('stream', remoteStream => {
+                    startRemoteStream(audio, remoteStream);
+                });
+        
+                call.on('close', removeRemoteStream);
+        
+                //stores call in object
+                peers[newUserID] = call;
+            }
+        }
 
-        //when remote peer has answered and added a stream
-        const audio = document.createElement('audio');
-        proxiChat(audio, newUserID);
-
-        call.on('stream', remoteStream => {
-            startRemoteStream(audio, remoteStream);
-        });
-
-        call.on('close', removeRemoteStream);
-
-        //stores call in object
-        peers[newUserID] = call;
-
-        function removeRemoteStream()
-        {
+        function removeRemoteStream(){
             audio.remove();
         }
     }

@@ -11,5 +11,9 @@ export function options(file,prod){
             if(prod) 
                 return {autoConnect: false, path:'/node0/socket.io', transports: ["polling"]};
             return {autoConnect: false};
+        case 'login':
+            if(prod)
+                return '/node0/colors';
+            return '/colors';
     }
 }

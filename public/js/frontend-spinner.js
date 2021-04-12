@@ -6,6 +6,7 @@ export function spinBottle(userColors, spinner) {
     const userAngles = spinner.result.userAngles;
     const rotationAngle = spinner.rotationAngle;
     const refine = spinner.refine;
+    Object.freeze(userColors);
 
     // rotates the spinner
     for (let i = 1; i <= refine; i++)
@@ -72,6 +73,9 @@ function highlightUser(angle, userAngles, userColors){
         const nonSelectedUser = document.getElementById(ids[i-1] + "_body");
         const nonSelectedUserColor = userColors[ids[i-1]];
 
+        // if a user has left akvario during the spinner game
+        if (nonSelectedUser === null) continue;
+
         // if the users color is different from his original color, change it
         if (nonSelectedUser.style.backgroundColor !== nonSelectedUserColor || nonSelectedUser.style.fill !== nonSelectedUserColor)
             setColor(nonSelectedUser, nonSelectedUserColor);
@@ -80,8 +84,10 @@ function highlightUser(angle, userAngles, userColors){
 
 // changes the color of the user element
 function setColor(element, color) {
-    element.style.backgroundColor = color;
-    element.style.fill = color;
+    if (element !== null) {
+        element.style.backgroundColor = color;
+        element.style.fill = color;
+    }
 }
 
 // rotates the spinner to its original position.
@@ -104,6 +110,8 @@ function resetSpinnerAndUsers(userColors){
     for(const user in userColors) {
         const userElement = document.getElementById(user + '_body');
         const userColor = userColors[user];
+
+        if (userElement === null) continue;
 
         // if the users color is different from his original color, change it
         if (userElement.style.backgroundColor !== userColor || userElement.style.fill !== userColor)

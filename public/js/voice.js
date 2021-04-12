@@ -82,11 +82,11 @@ export function handlePeerConnections(id, users) {
         
                 //stores call in object
                 peers[newUserID] = call;
-            }
-        }
 
-        function removeRemoteStream(){
-            audio.remove();
+                function removeRemoteStream(){
+                    audio.remove();
+                }
+            }
         }
     }
 }

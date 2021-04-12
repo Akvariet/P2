@@ -3,6 +3,7 @@ import {drawUser} from './login.js';
 import {enterRoom} from './client.js';
 import {spinBottle} from "./frontend-spinner.js";
 import {handlePeerConnections} from './voice.js';
+import {options, production} from './clientConfig.js';
 
 export class ClientConnection{
     socket;
@@ -93,7 +94,7 @@ export class ClientConnection{
     }
 }
 
-export const connection = new ClientConnection();
+export const connection = new ClientConnection(options('main', production));
 
 export function startSpinner() {
     connection.startSpinner();

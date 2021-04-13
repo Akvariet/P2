@@ -45,6 +45,7 @@ export class ClientConnection{
         // If the client starts the spinner
         this.socket.on('spinner-result', spinBottle);
 
+        // When a person is talking or stops talking
         this.socket.on('user-speaking', displayUserSpeak);
     }
 

@@ -1,73 +1,75 @@
+import {mouseCoordinates} from './interaction.js'
+
 let cameramoveAllowed = true;
+const mouseCoordinates = {x: 0, y: 0};
+let posLeft=0, posTop=0;
 
-export function preventScroll(){
-    const space = document.getElementById("space");
-
-    space.ontouchend = (e) => {
-        e.preventDefault();
-    };
+export function updateMouseCoordinates(){
+  document.onmousemove = (e) => {
+    mouseCoordinates.x = e.clientX, mouseCoordinates.y = e.clientY;
+    console.log(mouseCoordinates.x, mouseCoordinates.y);
+  }
 }
 
 export function cameraMove(){
-  let posLeft=0, posTop=0;
-  document.addEventListener("mousemove", (e)=>{
-    if (cameramoveAllowed){
-      let boarderSize = 150; // px
-      let cameraVelocity = 6.23; // px
+  if (cameramoveAllowed){
+    let boarderSize = 150; // px
+    let cameraVelocity = 6.23; // px
 
-      let space = document.getElementById("space");
-      
-      // defines border size according to the window size
-      let w = window.innerWidth, h = window.innerHeight;
-      let wBorderLeft = boarderSize, wBorderRight = w - boarderSize;
-      let hBorderTop = boarderSize, hBorderBottom = h - boarderSize;
-
-      // defines position of element in comparison with the viewport
-      let bodyRect = document.body.getBoundingClientRect();
+    let space = document.getElementById("space");
     
-      // if inside the window boarder
-      if (e.pageX > wBorderRight || e.pageX < wBorderLeft || e.pageY > hBorderBottom || e.pageY < hBorderTop){
+    // defines border size according to the window size
+    let w = window.innerWidth, h = window.innerHeight;
+    let wBorderLeft = boarderSize, wBorderRight = w - boarderSize;
+    let hBorderTop = boarderSize, hBorderBottom = h - boarderSize;
 
-        // finds midpoint of screen
-        let origoX = (window.innerWidth / 2) - bodyRect.left;
-        let origoY = (window.innerHeight / 2) - bodyRect.top;
-      
-        // creates relative position of mouse on midpoint of screen
-        let mouseX = -(origoX - e.pageX + bodyRect.left);
-        let mouseY = origoY - e.pageY + bodyRect.top;
+    // defines position of element in comparison with the viewport
+    let bodyRect = document.body.getBoundingClientRect();
 
-        // gives the angle in radians (is negative value past pi)
-        let angle = Math.atan2(mouseY,mouseX); 
+    // if inside the window boarder
+    if (mouseCoordinates.x > wBorderRight || mouseCoordinates.x < wBorderLeft || mouseCoordinates.y > hBorderBottom || mouseCoordinates.y < hBorderTop){
 
-        /* gives a scalable value of the x- and y-coordinate according to the angle, which the user moves the camera.
-           if the mouse position goes in the negative x-, y-coordinate side, it is required to flip the scalable value,
-           as angle mod 0.5π resets at origo and the highest angle value will be around -0.1.*/
-        let a = (mouseX > 0) ? Math.abs(angle % (Math.PI / 2)) : Math.abs(Math.PI/2 - Math.abs(angle % (Math.PI / 2)));
-        let b = (mouseY > 0) ? Math.abs(angle % (Math.PI / 2)) : Math.abs(Math.PI/2 - Math.abs(angle % (Math.PI / 2)));
+      // finds midpoint of screen
+      let origoX = (window.innerWidth / 2) - bodyRect.left;
+      let origoY = (window.innerHeight / 2) - bodyRect.top;
+    
+      // creates relative position of mouse on midpoint of screen
+      let mouseX = -(origoX - mouseCoordinates.x + bodyRect.left);
+      let mouseY = origoY - mouseCoordinates.y + bodyRect.top;
 
-        // Assigns camera velocity according to relative angle of x- and y-coordinate 
-        let giveX = cameraVelocity - cameraVelocity*(a/(Math.PI / 2)); 
-        let giveY = cameraVelocity - cameraVelocity*(b/(Math.PI / 2));
+      // gives the angle in radians (is negative value past pi)
+      let angle = Math.atan2(mouseY,mouseX); 
 
-        // the values are negative, when e.g. x-coordinate is left side of origo or y-coordinate is bottom side of origo
-        giveX = (mouseX <= 0) ? giveX : -giveX;
-        giveY = (mouseY <= 0) ? -giveY : giveY;
+      /* gives a scalable value of the x- and y-coordinate according to the angle, which the user moves the camera.
+          if the mouse position goes in the negative x-, y-coordinate side, it is required to flip the scalable value,
+          as angle mod 0.5π resets at origo and the highest angle value will be around -0.1.*/
+      let a = (mouseX > 0) ? Math.abs(angle % (Math.PI / 2)) : Math.abs(Math.PI/2 - Math.abs(angle % (Math.PI / 2)));
+      let b = (mouseY > 0) ? Math.abs(angle % (Math.PI / 2)) : Math.abs(Math.PI/2 - Math.abs(angle % (Math.PI / 2)));
 
-        // accumulates the coordinates in new variable
-        posLeft += bodyRect.left + giveX;
-        posTop += bodyRect.top + giveY;
+      // Assigns camera velocity according to relative angle of x- and y-coordinate 
+      let giveX = cameraVelocity - cameraVelocity*(a/(Math.PI / 2)); 
+      let giveY = cameraVelocity - cameraVelocity*(b/(Math.PI / 2));
 
-        // sets the position of space to the accumulated values
-        space.style.left = posLeft + "px";
-        space.style.top = posTop + "px";
+      // the values are negative, when e.g. x-coordinate is left side of origo or y-coordinate is bottom side of origo
+      giveX = (mouseX <= 0) ? giveX : -giveX;
+      giveY = (mouseY <= 0) ? -giveY : giveY;
 
-        // Popupmenu: hides popupmenu upon moving camera
-        const popup = document.getElementById("menuPopUp");
-        popup.style.display = "none";
-      }
+      // accumulates the coordinates in new variable
+      posLeft += bodyRect.left + giveX;
+      posTop += bodyRect.top + giveY;
+
+      console.log("give:" + Math.round(giveX), Math.round(giveY), "pos: " + Math.round(posLeft), Math.round(posTop));
+
+      // sets the position of space to the accumulated values
+      space.style.left = posLeft + "px";
+      space.style.top = posTop + "px";
+
+
+      // Popupmenu: hides popupmenu upon moving camera
+      const popup = document.getElementById("menuPopUp");
+      popup.style.display = "none";
     }
-    
-  });
+  }
 }
 
 export function getcameramove(value){

@@ -1,4 +1,4 @@
-import {cameraMove} from './cameraMove.js';
+import {cameraMove, updateMouseCoordinates} from './cameraMove.js';
 import {changeMuteStateUser, menuPopUp, userCoordinates, cameraCoordinates} from './popUpMenu.js';
 import {startSpinner} from './ClientConnection.js';
 import {peers} from './voice.js';
@@ -39,8 +39,16 @@ export function makeInteractable(id){
     userMove();
     userRotate();
     clickSpinner();
-    cameraMove();
     usePopUpMenu();
+    updateMouseCoordinates();
+
+    window.main = () => {
+        window.requestAnimationFrame(main);
+        cameraMove();
+    }
+
+    window.main();
+
     return containerElement;
 
     // Enables the user to move around.
@@ -89,6 +97,8 @@ export function makeInteractable(id){
         function closeDragUser() {
             document.onmouseup = null;
             document.onmousemove = null;
+
+            window.main();
 
             const cameramoveAllowed = new CustomEvent('cameramove', {detail: true});
             containerElement.dispatchEvent(cameramoveAllowed);

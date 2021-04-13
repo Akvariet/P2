@@ -1,8 +1,7 @@
-import {connection} from './ClientConnection.js';
-
 const audioPlayers = {};
+let myID;
 
-function distance(myPosition, position){
+export function distance(myPosition, position){
     return dist(relativePos(myPosition, position))
 }
 
@@ -41,7 +40,8 @@ export class VolumeFunctions {
     }
 }
 
-export function beginProxiChat(myID){
+export function beginProxiChat(id){
+    myID = id;
     const myElement = document.getElementById(myID);
     myElement.addEventListener('moved', (e)=>{
 
@@ -54,7 +54,7 @@ export function beginProxiChat(myID){
 export function proxiChat(audio, userID){
 
     const userContainer = document.getElementById(userID);
-    const myElement = document.getElementById(connection.myID);
+    const myElement = document.getElementById(myID);
     userContainer.append(audio);
     audioPlayers[userID] = {audio: audio, position: getPos(userContainer)};
 

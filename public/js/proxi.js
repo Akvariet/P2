@@ -21,8 +21,8 @@ function relativePos(pos1, pos2){
 // Contains all of the functions that control how voice volume change according to distance.
 export class VolumeFunctions {
     constructor(slope, minVolume) {
-        this.slope = slope || 0.0015;
-        this.minVolume = minVolume || 0.015;
+        this.slope = slope || 0.0008;
+        this.minVolume = minVolume || 0.02;
         this.maxVolume = 1;
     }
     //Volume functions

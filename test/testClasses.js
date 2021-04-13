@@ -37,11 +37,6 @@ export class TestSuite{
         this.tests.push(() => this.test(func, input, output));
     }
 
-    addClassMethodTest(instance, method, input, output){
-        method.bind(instance);
-        this.tests.push(() => this.test(method, input, output));
-    }
-
     test(func, input, output)
     {
         if (typeof output === 'object')
@@ -55,11 +50,12 @@ export class TestSuite{
 
             // If e is an assertion error, the test has failed.
             this.fails.push(
-                `${func.name} has failed in ${this.suiteName}!\nReceived input : ${JSON.stringify(input)}\nGot output     : ${JSON.stringify(err.actual)}\nExpected output: ${JSON.stringify(output)}\n`
+                testFailed(func.name,this.suiteName, input, err.actual, output)
             );
 
         }
     }
+
     evaluate(result, expectedOutput){
         if(typeof result === 'number' && typeof expectedOutput === 'number'){
             result = Number(result.toFixed(this.precision));
@@ -78,17 +74,30 @@ export class TestSuite{
         const tests = this.tests.length;
         const fails = this.fails.length;
         const warnings = this.warnings.length;
-        const status = `Completed ${tests} test${tests===1? '' : 's'} in ${this.suiteName} with ${fails} error${fails===1? '' : 's'} and ${warnings} warning${warnings===1? '' : 's'}${fails + warnings? '!' : '.'}`
+        const statusStr = status(this.suiteName, tests,fails, warnings);
 
-        console.log(status);
+        console.log(statusStr);
 
         if (fails) console.log('**** Fails ****')
         for (const fail of this.fails) {
-            console.error(fail);
+            console.warn(fail);
         }
         if(warnings) console.log('**** Warnings ****')
         for (const warning of this.warnings) {
             console.warn(warning)
         }
     }
+}
+
+function testFailed(functionName, suiteName, input, output, expected){
+    return functionName + ' has failed in ' + suiteName + '!\n' +
+        'Received input : ' + JSON.stringify(input) + '\n' +
+        'Got output     : ' + JSON.stringify(expected) + '\n' +
+        'Expected output: ' + JSON.stringify(output);
+}
+
+function status(suiteName, tests, fails, warnings) {
+    return 'Completed ' + tests + ` test${tests === 1 ? '' : 's'} in ` + suiteName + ' with ' +
+        fails + ` error${fails === 1 ? '' : 's'} and ` +
+        warnings + ` warning${warnings === 1 ? '' : 's'}${fails + warnings ? '!' : '.'}`;
 }

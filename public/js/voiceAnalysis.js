@@ -27,7 +27,7 @@ export function analyzeVoice(stream) {
 
     // sets the range of sounds that we want to get. sounds < -40 is 0 in the data array, and sounds > -10 is 255 (max value)
     analyser.maxDecibels = -10;
-    analyser.minDecibels = -40;
+    analyser.minDecibels = -50;
 
     function analyse() {
         //run this function before next repaint

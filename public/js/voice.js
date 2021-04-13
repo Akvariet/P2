@@ -1,4 +1,5 @@
 import {beginProxiChat, proxiChat} from './proxi.js';
+import {analyzeVoice} from './voiceAnalysis.js';
 
 //peers contains all connected peers
 export const peers = {};
@@ -31,6 +32,10 @@ export function handlePeerConnections(id, users) {
 
     function streamVoice(stream) {
         myStream = stream;
+
+        //start analyze the users voice
+        analyzeVoice(stream);
+
         //incoming call event
         peer.on('call', call => {
 

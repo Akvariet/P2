@@ -3,6 +3,7 @@ import {drawUser} from './login.js';
 import {enterRoom} from './client.js';
 import {spinBottle} from "./frontend-spinner.js";
 import {handlePeerConnections} from './voice.js';
+import {displayUserSpeak} from "./voiceAnalysis.js";
 
 export class ClientConnection{
     socket;
@@ -42,6 +43,8 @@ export class ClientConnection{
 
         // If the client starts the spinner
         this.socket.on('spinner-result', spinBottle);
+
+        this.socket.on('user-speaking', () => console.log("Hello team"));
     }
 
     disconnect(reason){

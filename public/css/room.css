@@ -21,11 +21,22 @@ body{
     text-align: center;
 }
 
+.speaking{
+    width: 62px;
+    height: 62px;
+    border: 4px solid;
+    border-color: #424242;
+}
+
 .arrow {
     position: relative;
     top: -35%;
     transform:rotate(-90deg);
     visibility: visible;
+}
+
+div.speaking > svg {
+    top: -46%;
 }
 
 .name{

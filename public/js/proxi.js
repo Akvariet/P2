@@ -1,6 +1,6 @@
 import {connection} from './ClientConnection.js';
 
-const audioPlayers = {};
+export const audioPlayers = {};
 
 function distance(myPosition, position){
     return dist(relativePos(myPosition, position))

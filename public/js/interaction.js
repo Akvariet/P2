@@ -1,3 +1,5 @@
+import {cameraMove} from './cameraMove.js';
+import {changeMuteStateUser, menuPopUp, userCoordinates, cameraCoordinates} from './popUpMenu.js';
 import {startSpinner} from './ClientConnection.js';
 import {peers} from './voice.js';
 
@@ -37,6 +39,8 @@ export function makeInteractable(id){
     userMove();
     userRotate();
     clickSpinner();
+    cameraMove();
+    usePopUpMenu();
     return containerElement;
 
     // Enables the user to move around.
@@ -52,6 +56,12 @@ export function makeInteractable(id){
             pos4 = e.clientY;
             document.onmouseup = closeDragUser;
             document.onmousemove = userDrag;
+
+            const cameramoveAllowed = new CustomEvent('cameramove', {detail: false});
+            containerElement.dispatchEvent(cameramoveAllowed);
+
+            userCoordinates.x = containerElement.style.left, userCoordinates.y = containerElement.style.top;
+            cameraCoordinates.x = space.style.left, cameraCoordinates.y =  space.style.top;
         }
 
         function userDrag(e) {
@@ -70,11 +80,18 @@ export function makeInteractable(id){
 
             const userMoved = new CustomEvent('moved', {detail: {top:top, left:left}});
             containerElement.dispatchEvent(userMoved);
+
+            // hides popupmenu upon moving
+            const popup = document.getElementById("menuPopUp");
+            popup.style.display = "none";
         }
 
         function closeDragUser() {
             document.onmouseup = null;
             document.onmousemove = null;
+
+            const cameramoveAllowed = new CustomEvent('cameramove', {detail: true});
+            containerElement.dispatchEvent(cameramoveAllowed);
         }
     }
     // Enables the user to rotate
@@ -116,5 +133,18 @@ export function makeInteractable(id){
                 startSpinner();
             }
         });
+    }
+
+    // Enables the user to use the popupmenu
+    function usePopUpMenu() {
+        enableMuteUser();
+        userElement.onclick = (e) => menuPopUp(e, id);
+    }
+
+    function enableMuteUser() {
+        const muteBtn = document.getElementById("speakers");
+        muteBtn.onclick = () => {
+            changeMuteStateUser();
+        }
     }
 }

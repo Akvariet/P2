@@ -1,4 +1,5 @@
 import {login} from "./ClientConnection.js";
+import {options, production} from './clientConfig.js';
 
 let colorCodes;
 let serverColors;
@@ -73,7 +74,7 @@ export function findDisplayedUser(){
 // Takes the colors to choose from and a function to call on login.
 export async function displayColors(){
     //Wait for the colors to be received from serverside
-    let jsonData = await getJson('/colors');
+    let jsonData = await getJson(options('login', production));
     serverColors = jsonData.colors;
     colorCodes = jsonData.colorCodes;
 

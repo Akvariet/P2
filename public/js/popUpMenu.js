@@ -54,7 +54,7 @@ export function menuPopUp(e, id){
   }
 }
 
-export function changeMuteStateUser(){
+export function doStateDeafen(){
     let img = document.getElementById("speakers");
 
     // changes mute picture through search path of image and mutes user upon change of state

@@ -1,5 +1,5 @@
 import {cameraMove, updateMouseCoordinates} from './cameraMove.js';
-import {changeMuteStateUser, menuPopUp, userCoordinates, cameraCoordinates} from './popUpMenu.js';
+import {menuPopUp, userCoordinates, cameraCoordinates, doStateDeafen} from './popUpMenu.js';
 import {startSpinner} from './ClientConnection.js';
 import {peers} from './voice.js';
 
@@ -40,7 +40,7 @@ export function makeInteractable(id){
     userRotate();
     clickSpinner();
     usePopUpMenu();
-    updateMouseCoordinates();
+    document.onmousemove = updateMouseCoordinates;
 
     window.main = () => {
         window.requestAnimationFrame(main);
@@ -96,7 +96,7 @@ export function makeInteractable(id){
 
         function closeDragUser() {
             document.onmouseup = null;
-            document.onmousemove = null;
+            document.onmousemove = updateMouseCoordinates;
 
             window.main();
 
@@ -154,7 +154,7 @@ export function makeInteractable(id){
     function enableMuteUser() {
         const muteBtn = document.getElementById("speakers");
         muteBtn.onclick = () => {
-            changeMuteStateUser();
+            doStateDeafen();
         }
     }
 }

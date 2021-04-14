@@ -1,14 +1,9 @@
-import {mouseCoordinates} from './interaction.js'
-
 let cameramoveAllowed = true;
-const mouseCoordinates = {x: 0, y: 0};
 let posLeft=0, posTop=0;
+const mouseCoordinates = {x: 0, y: 0};
 
-export function updateMouseCoordinates(){
-  document.onmousemove = (e) => {
+export function updateMouseCoordinates(e){
     mouseCoordinates.x = e.clientX, mouseCoordinates.y = e.clientY;
-    console.log(mouseCoordinates.x, mouseCoordinates.y);
-  }
 }
 
 export function cameraMove(){
@@ -57,8 +52,6 @@ export function cameraMove(){
       // accumulates the coordinates in new variable
       posLeft += bodyRect.left + giveX;
       posTop += bodyRect.top + giveY;
-
-      console.log("give:" + Math.round(giveX), Math.round(giveY), "pos: " + Math.round(posLeft), Math.round(posTop));
 
       // sets the position of space to the accumulated values
       space.style.left = posLeft + "px";

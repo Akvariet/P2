@@ -30,6 +30,7 @@ export class AkvarioServer{
         socket.on('moved', position => this.moveUser(socket, position));
         socket.on('turned', rotation => this.rotateUser(socket, rotation));
         socket.on('start-spinner', () => this.startSpinner());
+        socket.on('user-speaking', (speaking, id) => socket.broadcast.emit('user-speaking', speaking, id));
     }
 
     requestLogin(socket, name, color) {

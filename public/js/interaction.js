@@ -1,4 +1,4 @@
-import {cameraMove, updateMouseCoordinates} from './cameraMove.js';
+import {cameraMove, checkMouseInsideWindow, checkMouseOutsideWindow, updateMouseCoordinates} from './cameraMove.js';
 import {menuPopUp, userCoordinates, cameraCoordinates, doStateDeafen} from './popUpMenu.js';
 import {startSpinner} from './ClientConnection.js';
 import {peers} from './voice.js';
@@ -41,6 +41,8 @@ export function makeInteractable(id){
     clickSpinner();
     usePopUpMenu();
     document.onmousemove = updateMouseCoordinates;
+    document.onmouseleave = checkMouseOutsideWindow;
+    document.onmouseenter = checkMouseInsideWindow;
 
     window.main = () => {
         window.requestAnimationFrame(main);
@@ -97,8 +99,6 @@ export function makeInteractable(id){
         function closeDragUser() {
             document.onmouseup = null;
             document.onmousemove = updateMouseCoordinates;
-
-            window.main();
 
             const cameramoveAllowed = new CustomEvent('cameramove', {detail: true});
             containerElement.dispatchEvent(cameramoveAllowed);

@@ -6,10 +6,18 @@ export function updateMouseCoordinates(e){
     mouseCoordinates.x = e.clientX, mouseCoordinates.y = e.clientY;
 }
 
+export function checkMouseOutsideWindow(e){
+    cameramoveAllowed = false;
+}
+
+export function checkMouseInsideWindow(){
+    cameramoveAllowed = true;
+}
+
 export function cameraMove(){
   if (cameramoveAllowed){
     let boarderSize = 150; // px
-    let cameraVelocity = 6.23; // px
+    const cameraVelocity = 6.12; // px
 
     let space = document.getElementById("space");
     
@@ -56,7 +64,6 @@ export function cameraMove(){
       // sets the position of space to the accumulated values
       space.style.left = posLeft + "px";
       space.style.top = posTop + "px";
-
 
       // Popupmenu: hides popupmenu upon moving camera
       const popup = document.getElementById("menuPopUp");

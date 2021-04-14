@@ -34,6 +34,7 @@ export function removeDeadUser(id){
 export function makeInteractable(id){
     const containerElement = document.getElementById(id);
     const userElement = document.getElementById(id + '_body');
+    const space = document.getElementById('space');
 
     userMove();
     userRotate();
@@ -101,8 +102,8 @@ export function makeInteractable(id){
 
         function lookAtMouse(e){
             // Updates the mouse pos relative to the space div.
-            let mouseX = e.clientX;
-            let mouseY = e.clientY;
+            let mouseX = e.clientX - space.offsetLeft;
+            let mouseY = e.clientY - space.offsetTop;
 
             // Updates user pos from middle.
             let userX = containerElement.offsetTop - mouseY + (115/2);
@@ -146,7 +147,7 @@ export function makeInteractable(id){
             window.requestAnimationFrame(main);
             cameraMove();
         }
-        
+
         document.onmousemove = updateMouseCoordinates;
         document.onmouseleave = checkMouseOutsideWindow;
         document.onmouseenter = checkMouseInsideWindow;

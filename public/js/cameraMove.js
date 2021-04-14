@@ -21,7 +21,7 @@ export function cameraMove(){
     let space = document.getElementById("space");
     
     // defines border size according to the window size
-    let boarderSize = 150; // px
+    let boarderSize = 100; // px
     let w = window.innerWidth, h = window.innerHeight;
     let wBorderLeft = boarderSize, wBorderRight = w - boarderSize;
     let hBorderTop = boarderSize, hBorderBottom = h - boarderSize;

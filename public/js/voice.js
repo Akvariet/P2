@@ -3,9 +3,8 @@ import {analyzeVoice} from './voiceAnalysis.js';
 
 //peers contains all connected peers
 export const peers = {};
-
+export let myStream;
 let myId;
-let myStream;
 
 //handles all peerjs functions and events
 export function handlePeerConnections(id, users) {

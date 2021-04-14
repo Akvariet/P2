@@ -1,6 +1,7 @@
 import {audioPlayers} from './proxi.js';
+import {myStream} from './voice.js';
 
-let muted, deafened, isPopUp;
+let muted = false, deafened = false, isPopUp;
 export const userCoordinates = {x: 0, y: 0};
 export const cameraCoordinates = {x: 0, y: 0};
 
@@ -41,7 +42,7 @@ export function menuPopUp(e, id){
     // calculates midpoint of container element and uses relative integers to place popupmenu above user
     let userCenter = {x: (userRect.right + userRect.left)/2, y: (userRect.top + userRect.bottom)/2}
     popup.style.left = (userCenter.x - 35) + "px";
-    popup.style.top = (userCenter.y - 180) + "px";
+    popup.style.top = (userCenter.y - 255) + "px";
 
     if (!isUserMoving(id) && !isCameraMoving()) {
       popup.style.display = "block";
@@ -54,26 +55,52 @@ export function menuPopUp(e, id){
   }
 }
 
-export function doStateDeafen(){
-    let img = document.getElementById("speakers");
+export function doStateMute(){
+    let img = document.getElementById("microphone");
 
-    // changes deafen picture through search path of image and deafens user upon change of state
-    if (deafened){
-      img.src="./resources/speakerIcon.svg";
-      deafened = false;
+    // changes microphone picture through search path of image and mutes the user upon change of state
+    if (muted){
+      img.src="./resources/mic-fill.svg";
+      muted = false;
 
-      // undeafens the user and therefore unmutes all other users
-      for (const audioPlayer in audioPlayers) {
-        audioPlayers[audioPlayer].audio.muted = false;
-      }
+      // mutes the user
+      toggleMic();
     }
     else{
-      img.src="./resources/speakerIconMuted.svg";
-      deafened = true;
+      img.src="./resources/mic-mute-fill.svg";
+      muted = true;
 
-      // deafens the user such that every other user is muted
-      for (const audioPlayer in audioPlayers) {
-        audioPlayers[audioPlayer].audio.muted = true;
-      }
+      // unmutes the user
+      toggleMic();
     }
+}
+
+function toggleMic() {
+  myStream.getTracks().forEach(track => track.enabled = !track.enabled);
+}
+
+export function doStateDeafen(){
+  let img = document.getElementById("speakers");
+
+  // changes deafen picture through search path of image and deafens user upon change of state
+  if (deafened){
+    img.src="./resources/volume-up-fill.svg";
+    deafened = false;
+
+    // undeafens the user and therefore unmutes all other users
+    toggleSpeakers();
+  }
+  else{
+    img.src="./resources/volume-mute-fill.svg";
+    deafened = true;
+
+    // deafens the user such that every other user is muted
+    toggleSpeakers();
+  }
+}
+
+function toggleSpeakers(){
+  for (const audioPlayer in audioPlayers){
+      audioPlayers[audioPlayer].audio.muted = deafened;
+  }
 }

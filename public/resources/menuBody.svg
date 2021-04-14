@@ -8,9 +8,9 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="18.59766mm"
-   height="29.227884mm"
+   height="48.026436mm"
    version="1.1"
-   viewBox="0 0 18.59766 29.227884"
+   viewBox="0 0 18.59766 48.026435"
    id="svg6"
    sodipodi:docname="menuBody.svg"
    inkscape:version="1.0.2-2 (e86c870879, 2021-01-15)">
@@ -53,12 +53,13 @@
      id="namedview8"
      showgrid="false"
      inkscape:zoom="2.8284271"
-     inkscape:cx="47.789387"
-     inkscape:cy="54.205576"
+     inkscape:cx="48.421459"
+     inkscape:cy="117.17"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg6" />
+     inkscape:current-layer="svg6"
+     inkscape:document-rotation="0" />
   <metadata
      id="metadata2">
     <rdf:RDF>
@@ -74,7 +75,7 @@
   <g
      id="g849"
      clip-path="url(#clipPath973)"
-     transform="matrix(1,0,0,0.57767152,-1.7206e-4,0)">
+     transform="matrix(1,0,0,1.3673508,-1.7206e-4,0)">
     <g
        id="g836">
       <path
@@ -90,7 +91,7 @@
   <g
      id="g849-4"
      clip-path="url(#clipPath873-2)"
-     transform="translate(-1.7206e-4,-37.296238)">
+     transform="translate(-1.7206e-4,-18.497684)">
     <g
        id="g836-6">
       <path

@@ -40,16 +40,7 @@ export function makeInteractable(id){
     userRotate();
     clickSpinner();
     usePopUpMenu();
-    document.onmousemove = updateMouseCoordinates;
-    document.onmouseleave = checkMouseOutsideWindow;
-    document.onmouseenter = checkMouseInsideWindow;
-
-    window.main = () => {
-        window.requestAnimationFrame(main);
-        cameraMove();
-    }
-
-    window.main();
+    useCameraMove();
 
     return containerElement;
 
@@ -149,6 +140,18 @@ export function makeInteractable(id){
     function usePopUpMenu() {
         enableMuteUser();
         userElement.onclick = (e) => menuPopUp(e, id);
+    }
+
+    function useCameraMove() {
+        window.main = () => {
+            window.requestAnimationFrame(main);
+            cameraMove();
+        }
+        
+        document.onmousemove = updateMouseCoordinates;
+        document.onmouseleave = checkMouseOutsideWindow;
+        document.onmouseenter = checkMouseInsideWindow;
+        window.main();
     }
 
     function enableMuteUser() {

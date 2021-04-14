@@ -1,6 +1,6 @@
 import {audioPlayers} from './proxi.js';
 
-let muted, isPopUp;
+let muted, deafened, isPopUp;
 export const userCoordinates = {x: 0, y: 0};
 export const cameraCoordinates = {x: 0, y: 0};
 
@@ -57,19 +57,21 @@ export function menuPopUp(e, id){
 export function doStateDeafen(){
     let img = document.getElementById("speakers");
 
-    // changes mute picture through search path of image and mutes user upon change of state
-    if (muted){
+    // changes deafen picture through search path of image and deafens user upon change of state
+    if (deafened){
       img.src="./resources/speakerIcon.svg";
-      muted = false;
+      deafened = false;
 
+      // undeafens the user and therefore unmutes all other users
       for (const audioPlayer in audioPlayers) {
         audioPlayers[audioPlayer].audio.muted = false;
       }
     }
     else{
       img.src="./resources/speakerIconMuted.svg";
-      muted = true;
+      deafened = true;
 
+      // deafens the user such that every other user is muted
       for (const audioPlayer in audioPlayers) {
         audioPlayers[audioPlayer].audio.muted = true;
       }

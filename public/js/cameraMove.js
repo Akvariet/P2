@@ -6,7 +6,7 @@ export function updateMouseCoordinates(e){
     mouseCoordinates.x = e.clientX, mouseCoordinates.y = e.clientY;
 }
 
-export function checkMouseOutsideWindow(e){
+export function checkMouseOutsideWindow(){
     cameramoveAllowed = false;
 }
 
@@ -16,12 +16,12 @@ export function checkMouseInsideWindow(){
 
 export function cameraMove(){
   if (cameramoveAllowed){
-    let boarderSize = 150; // px
     const cameraVelocity = 6.12; // px
-
+    
     let space = document.getElementById("space");
     
     // defines border size according to the window size
+    let boarderSize = 150; // px
     let w = window.innerWidth, h = window.innerHeight;
     let wBorderLeft = boarderSize, wBorderRight = w - boarderSize;
     let hBorderTop = boarderSize, hBorderBottom = h - boarderSize;

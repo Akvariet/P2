@@ -1,4 +1,4 @@
-let cameramoveAllowed = true;
+let cameramoveAllowed = true, movingCamera = false;
 let posLeft=0, posTop=0;
 const mouseCoordinates = {x: 0, y: 0};
 
@@ -29,45 +29,57 @@ export function cameraMove(){
     // defines position of element in comparison with the viewport
     let bodyRect = document.body.getBoundingClientRect();
 
-    // if inside the window boarder
-    if (mouseCoordinates.x > wBorderRight || mouseCoordinates.x < wBorderLeft || mouseCoordinates.y > hBorderBottom || mouseCoordinates.y < hBorderTop){
+    // finds midpoint of screen
+    let origoX = (window.innerWidth / 2) - bodyRect.left;
+    let origoY = (window.innerHeight / 2) - bodyRect.top;
 
-      // finds midpoint of screen
-      let origoX = (window.innerWidth / 2) - bodyRect.left;
-      let origoY = (window.innerHeight / 2) - bodyRect.top;
+    // creates relative position of mouse on midpoint of screen
+    let mouseX = -(origoX - mouseCoordinates.x + bodyRect.left);
+    let mouseY = origoY - mouseCoordinates.y + bodyRect.top;
+
+    // gives the angle in radians (is negative value past pi)
+    let angle = Math.atan2(mouseY,mouseX); 
     
-      // creates relative position of mouse on midpoint of screen
-      let mouseX = -(origoX - mouseCoordinates.x + bodyRect.left);
-      let mouseY = origoY - mouseCoordinates.y + bodyRect.top;
+    let a = Math.cos(angle);
+    let giveX = -((a / Math.cos(0.698132))*cameraVelocity) // 40 degrees in radians is 0.698132
 
-      // gives the angle in radians (is negative value past pi)
-      let angle = Math.atan2(mouseY,mouseX); 
+    let b = Math.sin(angle);
+    let giveY = ((b / Math.sin(0.698132))*cameraVelocity)
 
-      /* gives a scalable value of the x- and y-coordinate according to the angle, which the user moves the camera.
-          if the mouse position goes in the negative x-, y-coordinate side, it is required to flip the scalable value,
-          as angle mod 0.5π resets at origo and the highest angle value will be around -0.1.*/
-      let a = (mouseX > 0) ? Math.abs(angle % (Math.PI / 2)) : Math.abs(Math.PI/2 - Math.abs(angle % (Math.PI / 2)));
-      let b = (mouseY > 0) ? Math.abs(angle % (Math.PI / 2)) : Math.abs(Math.PI/2 - Math.abs(angle % (Math.PI / 2)));
+    if (mouseCoordinates.x < wBorderLeft){
+        posLeft += cameraVelocity;
+        posTop += bodyRect.top + giveY;
 
-      // Assigns camera velocity according to relative angle of x- and y-coordinate 
-      let giveX = cameraVelocity - cameraVelocity*(a/(Math.PI / 2)); 
-      let giveY = cameraVelocity - cameraVelocity*(b/(Math.PI / 2));
+        movingCamera = true;
+    }
+    else if (mouseCoordinates.x > wBorderRight){
+        posLeft -= cameraVelocity;
+        posTop += bodyRect.top + giveY;
 
-      // the values are negative, when e.g. x-coordinate is left side of origo or y-coordinate is bottom side of origo
-      giveX = (mouseX <= 0) ? giveX : -giveX;
-      giveY = (mouseY <= 0) ? -giveY : giveY;
+        movingCamera = true;
+    }
+    else if (mouseCoordinates.y < hBorderTop){
+        posLeft += bodyRect.left + giveX;
+        posTop += cameraVelocity;
 
-      // accumulates the coordinates in new variable
-      posLeft += bodyRect.left + giveX;
-      posTop += bodyRect.top + giveY;
+        movingCamera = true;
+    }
+    else if (mouseCoordinates.y > hBorderBottom){
+        posLeft += bodyRect.left + giveX;
+        posTop -= cameraVelocity;
 
-      // sets the position of space to the accumulated values
-      space.style.left = posLeft + "px";
-      space.style.top = posTop + "px";
-
-      // Popupmenu: hides popupmenu upon moving camera
-      const popup = document.getElementById("menuPopUp");
-      popup.style.display = "none";
+        movingCamera = true;
+    }
+    
+    if (movingCamera){
+        space.style.left = posLeft + "px";
+        space.style.top = posTop + "px";
+        
+        movingCamera = false;
+        
+        // Popupmenu: hides popupmenu upon moving camera
+        const popup = document.getElementById("menuPopUp");
+        popup.style.display = "none";
     }
   }
 }

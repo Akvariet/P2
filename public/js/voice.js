@@ -9,27 +9,26 @@ let myId;
 //handles all peerjs functions and events
 export function handlePeerConnections(id, users) {
     myId = id;
-
     const getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
     const media = {video: false, audio: true};
-
-    //connects to peerjs server
-    const peer = new Peer(myId);
 
     //gets microphone stream
     getUserMedia(media, streamVoice);
 
-    peer.on('open', myId =>{
-        beginProxiChat(myId);
-
-        //calls every user already connected to server
-        Object.values(users).forEach(user=>{
-            if(myId !== user.id)
-            connectToUser(user.id, myStream)
-        });
-    });
-
     function streamVoice(stream) {
+        //connects to peerjs server
+        const peer = new Peer(id, {host: "audp2p.herokuapp.com", port: 443, secure: true});
+        
+        peer.on('open', myId =>{
+            beginProxiChat(myId);
+            
+            //calls every user already connected to server
+            Object.values(users).forEach(user=>{
+                if(myId !== user.id)
+                connectToUser(user.id, peer, myStream)
+            });
+        });
+
         myStream = stream;
 
         //start analyze the users voice
@@ -62,7 +61,7 @@ export function handlePeerConnections(id, users) {
         }
     }
 
-    function connectToUser(newUserID, stream) {
+    function connectToUser(newUserID, peer, stream) {
 
         //makes call to remote peer
         let call;
@@ -90,7 +89,7 @@ export function handlePeerConnections(id, users) {
                 function removeRemoteStream(){
                     audio.remove();
                 }
-            }
+            }   
         }
     }
 }

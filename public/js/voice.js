@@ -19,17 +19,17 @@ export function handlePeerConnections(id, users) {
     //gets microphone stream
     getUserMedia(media, streamVoice);
 
-    peer.on('open', myId =>{
-        beginProxiChat(myId);
-        console.log("re")
-        //calls every user already connected to server
-        Object.values(users).forEach(user=>{
-            if(myId !== user.id)
-            connectToUser(user.id, myStream)
-        });
-    });
-
     function streamVoice(stream) {
+        peer.on('open', myId =>{
+            beginProxiChat(myId);
+            console.log("re")
+            //calls every user already connected to server
+            Object.values(users).forEach(user=>{
+                if(myId !== user.id)
+                connectToUser(user.id, myStream)
+            });
+        });
+        
         myStream = stream;
 
         //start analyze the users voice

@@ -1,6 +1,5 @@
 import {UserProperties} from "./user.js";
 import * as socket_io from "socket.io";
-import { PeerServer } from 'peer';
 import {ConnectionTable} from "./connection.js";
 import {Spinner} from './backend-spinner.js';
 import {ColorPicker} from "./ColorPicker.js";
@@ -8,24 +7,20 @@ import {ColorPicker} from "./ColorPicker.js";
 // AkvarioServer controls all real time connection with users all users.
 export class AkvarioServer{
     io;
-    peerServer;
     userProperties = new UserProperties();
     connections = new ConnectionTable();
     colorPicker = new ColorPicker();
     allowReq = true;
     spinner = new Spinner();
 
-    constructor(HTTPServer, options){
+    constructor(HTTPServer){
         this.io = new socket_io.Server(HTTPServer);
         this.io.on('connection', socket =>
             socket.on('login-attempt', (name, color) =>
                 this.requestLogin(socket, name, color)));
-        this.peerServer = PeerServer(options);
     }
 
     connectionSetup(socket){
-        this.peerServer.on('connection', client => this.peerConnect(client, false));
-        this.peerServer.on('disconnect', client => this.peerDisconnect(client, false));
         socket.on('disconnect', (reason) => this.disconnect(socket, reason));
         socket.on('moved', position => this.moveUser(socket, position));
         socket.on('turned', rotation => this.rotateUser(socket, rotation));
@@ -105,14 +100,6 @@ export class AkvarioServer{
             this.io.emit('spinner-result', this.userProperties.colors, this.spinner);
         }
         setTimeout(() => this.allowReq = true, this.spinner.waitTime.total);
-    }
-
-    peerConnect(client, enabled){
-        if(enabled) console.log(`PeerJS Server: ${client.id} Connected!`);
-    }
-
-    peerDisconnect(client, enabled){
-        if(enabled) console.log(`PeerJS Server: ${client.id} Disconnected!`)
     }
 }
 

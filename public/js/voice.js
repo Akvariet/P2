@@ -10,19 +10,18 @@ let myStream;
 //handles all peerjs functions and events
 export function handlePeerConnections(id, users) {
     myId = id;
-
     const getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
     const media = {video: false, audio: true};
 
     //connects to peerjs server
-    const peer = new Peer(myId);
+    const peer = new Peer(id, {host: "audp2p.herokuapp.com", port: 443, secure: true});
 
     //gets microphone stream
     getUserMedia(media, streamVoice);
 
     peer.on('open', myId =>{
         beginProxiChat(myId);
-
+        console.log("re")
         //calls every user already connected to server
         Object.values(users).forEach(user=>{
             if(myId !== user.id)

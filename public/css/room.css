@@ -90,13 +90,30 @@ div.speaking > svg {
     -ms-user-select: none;
 }
 
+#microphone {
+    display: block;
+    position: relative;
+    width: 50px;
+    height: 50px;
+    left: 11.5px;
+    top: -165px;
+    outline: none;
+
+    /* makes the image non-draggable or selectable*/
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
 #speakers {
     display: block;
     position: relative;
     width: 50px;
     height: 50px;
-    left: 15px;
-    top: -95px;
+    left: 11.5px;
+    top: -145px;
     outline: none;
 
     /* makes the image non-draggable or selectable*/

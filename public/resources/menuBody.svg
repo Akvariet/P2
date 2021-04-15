@@ -1,106 +1,26 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="18.59766mm"
-   height="29.227884mm"
-   version="1.1"
-   viewBox="0 0 18.59766 29.227884"
-   id="svg6"
-   sodipodi:docname="menuBody.svg"
-   inkscape:version="1.0.2-2 (e86c870879, 2021-01-15)">
-  <defs
-     id="defs10">
-    <clipPath
-       clipPathUnits="userSpaceOnUse"
-       id="clipPath873-2">
-      <rect
-         style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#0000ff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.212508;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"
-         id="rect875-1"
-         width="25.787142"
-         height="16.234018"
-         x="-3.7139108"
-         y="50.397812" />
-    </clipPath>
-    <clipPath
-       clipPathUnits="userSpaceOnUse"
-       id="clipPath973">
-      <rect
-         style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#0000ff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.252052;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;stop-color:#000000;stop-opacity:1"
-         id="rect975"
-         width="21.848946"
-         height="26.954666"
-         x="-1.307235"
-         y="-3.2054205" />
-    </clipPath>
-  </defs>
-  <sodipodi:namedview
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1"
-     objecttolerance="10"
-     gridtolerance="10"
-     guidetolerance="10"
-     inkscape:pageopacity="0"
-     inkscape:pageshadow="2"
-     inkscape:window-width="1920"
-     inkscape:window-height="1027"
-     id="namedview8"
-     showgrid="false"
-     inkscape:zoom="2.8284271"
-     inkscape:cx="47.789387"
-     inkscape:cy="54.205576"
-     inkscape:window-x="-8"
-     inkscape:window-y="-8"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="svg6" />
-  <metadata
-     id="metadata2">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
-  <g
-     id="g849"
-     clip-path="url(#clipPath973)"
-     transform="matrix(1,0,0,0.57767152,-1.7206e-4,0)">
-    <g
-       id="g836">
-      <path
-         d="m 4.9206e-4,0.91133 v 53.97 a 2.5172,2.5172 0 0 0 0.58342,1.6114 l 8.13180004,9.7581 a 0.75945,0.75945 0 0 0 1.1669,0 l 8.1317999,-9.7581 a 2.5172,2.5172 0 0 0 0.58342,-1.6114 v -53.97 A 0.91133,0.91133 0 0 0 17.686502,0 H 0.91150206 a 0.91133,0.91133 0 0 0 -0.91133,0.91133 z"
-         fill="#f67280"
-         fill-rule="evenodd"
-         stop-color="#000000"
-         stroke-width="0.098411"
-         style="font-variation-settings:normal"
-         id="path4" />
-    </g>
-  </g>
-  <g
-     id="g849-4"
-     clip-path="url(#clipPath873-2)"
-     transform="translate(-1.7206e-4,-37.296238)">
-    <g
-       id="g836-6">
-      <path
-         d="m 4.9206e-4,0.91133 v 53.97 a 2.5172,2.5172 0 0 0 0.58342,1.6114 l 8.13180004,9.7581 a 0.75945,0.75945 0 0 0 1.1669,0 l 8.1317999,-9.7581 a 2.5172,2.5172 0 0 0 0.58342,-1.6114 v -53.97 A 0.91133,0.91133 0 0 0 17.686502,0 H 0.91150206 a 0.91133,0.91133 0 0 0 -0.91133,0.91133 z"
-         fill="#f67280"
-         fill-rule="evenodd"
-         stop-color="#000000"
-         stroke-width="0.098411"
-         style="font-variation-settings:normal"
-         id="path4-2" />
-    </g>
-  </g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="18.598mm" height="48.026mm" version="1.1" viewBox="0 0 18.598 48.026" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+ <defs>
+  <clipPath id="clipPath873-2">
+   <rect x="-3.7139" y="50.398" width="25.787" height="16.234" fill="#00f" fill-rule="evenodd" stop-color="#000000" stroke-width=".21251" style="font-variation-settings:normal"/>
+  </clipPath>
+  <clipPath id="clipPath973">
+   <rect x="-1.3072" y="-3.2054" width="21.849" height="26.955" fill="#00f" fill-rule="evenodd" stop-color="#000000" stroke-width=".25205" style="font-variation-settings:normal"/>
+  </clipPath>
+ </defs>
+ <metadata>
+  <rdf:RDF>
+   <cc:Work rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:title/>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <g transform="matrix(1 0 0 1.3674 -.00017206 0)" clip-path="url(#clipPath973)">
+  <path d="m4.9206e-4 0.91133v53.97a2.5172 2.5172 0 0 0 0.58342 1.6114l8.1318 9.7581a0.75945 0.75945 0 0 0 1.1669 0l8.1318-9.7581a2.5172 2.5172 0 0 0 0.58342-1.6114v-53.97a0.91133 0.91133 0 0 0-0.91133-0.91133h-16.775a0.91133 0.91133 0 0 0-0.91133 0.91133z" fill="#f67280" fill-rule="evenodd" stop-color="#000000" stroke-width=".098411" style="font-variation-settings:normal"/>
+ </g>
+ <g transform="translate(-.00017206 -18.498)" clip-path="url(#clipPath873-2)">
+  <path d="m4.9206e-4 0.91133v53.97a2.5172 2.5172 0 0 0 0.58342 1.6114l8.1318 9.7581a0.75945 0.75945 0 0 0 1.1669 0l8.1318-9.7581a2.5172 2.5172 0 0 0 0.58342-1.6114v-53.97a0.91133 0.91133 0 0 0-0.91133-0.91133h-16.775a0.91133 0.91133 0 0 0-0.91133 0.91133z" fill="#f67280" fill-rule="evenodd" stop-color="#000000" stroke-width=".098411" style="font-variation-settings:normal"/>
+ </g>
 </svg>

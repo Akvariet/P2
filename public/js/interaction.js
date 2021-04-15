@@ -1,5 +1,5 @@
-import {cameraMove, checkMouseInsideWindow, checkMouseOutsideWindow, updateMouseCoordinates} from './cameraMove.js';
-import {menuPopUp, userCoordinates, cameraCoordinates, doStateDeafen} from './popUpMenu.js';
+import {useCameraMove, updateMouseCoordinates} from './cameraMove.js';
+import {usePopUpMenu, userCoordinates, cameraCoordinates} from './popUpMenu.js';
 import {startSpinner} from './ClientConnection.js';
 import {peers} from './voice.js';
 
@@ -39,7 +39,7 @@ export function makeInteractable(id){
     userMove();
     userRotate();
     clickSpinner();
-    usePopUpMenu();
+    usePopUpMenu(id);
     useCameraMove();
 
     return containerElement;
@@ -134,30 +134,5 @@ export function makeInteractable(id){
                 startSpinner();
             }
         });
-    }
-
-    // Enables the user to use the popupmenu
-    function usePopUpMenu() {
-        enableMuteUser();
-        userElement.onclick = (e) => menuPopUp(e, id);
-    }
-
-    function useCameraMove() {
-        window.main = () => {
-            window.requestAnimationFrame(main);
-            cameraMove();
-        }
-
-        document.onmousemove = updateMouseCoordinates;
-        document.onmouseleave = checkMouseOutsideWindow;
-        document.onmouseenter = checkMouseInsideWindow;
-        window.main();
-    }
-
-    function enableMuteUser() {
-        const muteBtn = document.getElementById("speakers");
-        muteBtn.onclick = () => {
-            doStateDeafen();
-        }
     }
 }

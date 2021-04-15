@@ -6,7 +6,5 @@
 **************************/
 
 //server.js
-export const peerJSOptions = { port:3201 }
-
 export const port = process.env.PORT || 3200;
 

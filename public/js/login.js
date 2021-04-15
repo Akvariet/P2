@@ -1,5 +1,5 @@
 import {login} from "./ClientConnection.js";
-import {options, production} from './clientConfig.js';
+import {config} from './clientConfig.js';
 
 let colorCodes;
 let serverColors;
@@ -26,7 +26,7 @@ export function setupForm() {
     // Update username as the user types it in.
     nameInputField.addEventListener('input', nameChanged);
 
-    const form = document.getElementById('FIXME');
+    const form = document.getElementById('user-form');
     form.addEventListener('submit', e => {
         e.preventDefault();
         login(username, myColor);
@@ -74,7 +74,7 @@ export function findDisplayedUser(){
 // Takes the colors to choose from and a function to call on login.
 export async function displayColors(){
     //Wait for the colors to be received from serverside
-    let jsonData = await getJson(options('login', production));
+    let jsonData = await getJson(config('getJson'));
     serverColors = jsonData.colors;
     colorCodes = jsonData.colorCodes;
 

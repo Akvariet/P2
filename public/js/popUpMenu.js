@@ -1,5 +1,5 @@
 import {audioPlayers} from './proxi.js';
-import {myStream} from './voice.js';
+import {myStream} from './PeerConnection.js';
 
 let muted = false, deafened = false, isPopUp;
 export const userCoordinates = {x: 0, y: 0};
@@ -30,7 +30,6 @@ function isCameraMoving(){
   return true;
 }
 
-// Enables the user to use the popupmenu
 export function usePopUpMenu(id){
   const userElement = document.getElementById(id + '_body');
   enableUserState();

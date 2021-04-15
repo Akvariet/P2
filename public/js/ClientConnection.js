@@ -2,9 +2,10 @@ import {moveUser, removeDeadUser, turnUser} from './interaction.js';
 import {drawUser} from './login.js';
 import {enterRoom} from './client.js';
 import {spinBottle} from "./frontend-spinner.js";
-import {handlePeerConnections} from './voice.js';
+import {PeerVoiceConnection} from './PeerConnection.js';
+import {getcameramove} from './cameraMove.js';
 import {displayUserSpeak} from "./voiceAnalysis.js";
-import {options, production} from './clientConfig.js';
+import {config} from './clientConfig.js';
 
 export class ClientConnection{
     socket;
@@ -61,7 +62,8 @@ export class ClientConnection{
     login(myId, users){
         this.myID = myId;
         // Connect to the peer server and peers for voice chat
-        handlePeerConnections(myId, users);
+        const peerConnection = new PeerVoiceConnection(config('PeerVoiceConnection'), myId, users);
+
         // Enter the room.
         const avatar = enterRoom(myId, users);
 
@@ -79,6 +81,8 @@ export class ClientConnection{
     handleClientEvents(myId, myAvatar) {
         myAvatar.addEventListener('moved',  e => this.emit('moved', e.detail));
         myAvatar.addEventListener('turned', e => this.emit('turned', e.detail));
+        myAvatar.addEventListener('cameramove', e => this.emit('cameramove', e.detail));
+        this.socket.on('updatecameramove', allowed => getcameramove(allowed))
     }
 
     loginRejected(reason){
@@ -98,7 +102,7 @@ export class ClientConnection{
     }
 }
 
-export const connection = new ClientConnection(options('main', production));
+export const connection = new ClientConnection(config('ClientConnection'));
 
 export function startSpinner() {
     connection.startSpinner();

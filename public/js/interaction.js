@@ -1,4 +1,5 @@
-import {usePopUpMenu} from './popUpMenu.js';
+import {useCameraMove, updateMouseCoordinates} from './cameraMove.js';
+import {usePopUpMenu, userCoordinates, cameraCoordinates} from './popUpMenu.js';
 import {startSpinner} from './ClientConnection.js';
 import {peers} from './voice.js';
 
@@ -33,11 +34,13 @@ export function removeDeadUser(id){
 export function makeInteractable(id){
     const containerElement = document.getElementById(id);
     const userElement = document.getElementById(id + '_body');
+    const space = document.getElementById('space');
 
     userMove();
     userRotate();
     clickSpinner();
     usePopUpMenu(id);
+    useCameraMove();
 
     return containerElement;
 
@@ -54,6 +57,12 @@ export function makeInteractable(id){
             pos4 = e.clientY;
             document.onmouseup = closeDragUser;
             document.onmousemove = userDrag;
+
+            const cameramoveAllowed = new CustomEvent('cameramove', {detail: false});
+            containerElement.dispatchEvent(cameramoveAllowed);
+
+            userCoordinates.x = containerElement.style.left, userCoordinates.y = containerElement.style.top;
+            cameraCoordinates.x = space.style.left, cameraCoordinates.y =  space.style.top;
         }
 
         function userDrag(e) {
@@ -80,7 +89,10 @@ export function makeInteractable(id){
 
         function closeDragUser() {
             document.onmouseup = null;
-            document.onmousemove = null;
+            document.onmousemove = updateMouseCoordinates;
+
+            const cameramoveAllowed = new CustomEvent('cameramove', {detail: true});
+            containerElement.dispatchEvent(cameramoveAllowed);
         }
     }
     // Enables the user to rotate
@@ -90,8 +102,8 @@ export function makeInteractable(id){
 
         function lookAtMouse(e){
             // Updates the mouse pos relative to the space div.
-            let mouseX = e.clientX;
-            let mouseY = e.clientY;
+            let mouseX = e.clientX - space.offsetLeft;
+            let mouseY = e.clientY - space.offsetTop;
 
             // Updates user pos from middle.
             let userX = containerElement.offsetTop - mouseY + (115/2);

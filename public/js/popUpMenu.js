@@ -30,7 +30,6 @@ function isCameraMoving(){
   return true;
 }
 
-// Enables the user to use the popupmenu
 export function usePopUpMenu(id){
   const userElement = document.getElementById(id + '_body');
   enableUserState();

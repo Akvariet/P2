@@ -30,7 +30,25 @@ function isCameraMoving(){
   return true;
 }
 
-export function menuPopUp(e, id){
+// Enables the user to use the popupmenu
+export function usePopUpMenu(id){
+  const userElement = document.getElementById(id + '_body');
+  enableUserState();
+  userElement.onclick = (e) => menuPopUp(e, id);
+}
+
+function enableUserState() {
+  const muteBtn = document.getElementById("microphone");
+  const spksBtn = document.getElementById("speakers");
+  muteBtn.onclick = () => {
+      doStateMute();
+  }
+  spksBtn.onclick = () => {
+      doStateDeafen();
+  }
+}
+
+function menuPopUp(e, id){
   e.preventDefault();
 
   const containerElement = document.getElementById(id);
@@ -55,7 +73,7 @@ export function menuPopUp(e, id){
   }
 }
 
-export function doStateMute(){
+function doStateMute(){
     let img = document.getElementById("microphone");
 
     // changes microphone picture through search path of image and mutes the user upon change of state
@@ -79,7 +97,7 @@ function toggleMic() {
   myStream.getTracks().forEach(track => track.enabled = !track.enabled);
 }
 
-export function doStateDeafen(){
+function doStateDeafen(){
   let img = document.getElementById("speakers");
 
   // changes deafen picture through search path of image and deafens user upon change of state

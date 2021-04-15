@@ -30,7 +30,6 @@ export class AkvarioServer{
         socket.on('moved', position => this.moveUser(socket, position));
         socket.on('turned', rotation => this.rotateUser(socket, rotation));
         socket.on('start-spinner', () => this.startSpinner());
-        socket.on('cameramove', allowed => this.cameramoveUser(socket, allowed));
         socket.on('user-speaking', (speaking, id) => socket.broadcast.emit('user-speaking', speaking, id));
     }
 
@@ -106,10 +105,6 @@ export class AkvarioServer{
             this.io.emit('spinner-result', this.userProperties.colors, this.spinner);
         }
         setTimeout(() => this.allowReq = true, this.spinner.waitTime.total);
-    }
-
-    cameramoveUser(socket, allowed){
-        socket.emit('updatecameramove', allowed);
     }
     
     peerConnect(client, enabled){

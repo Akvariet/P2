@@ -1,4 +1,3 @@
-import {cameraMove, checkMouseInsideWindow, checkMouseOutsideWindow, updateMouseCoordinates} from './cameraMove.js';
 import {menuPopUp, userCoordinates, cameraCoordinates, doStateMute, doStateDeafen} from './popUpMenu.js';
 import {startSpinner} from './ClientConnection.js';
 import {peers} from './voice.js';
@@ -39,7 +38,6 @@ export function makeInteractable(id){
     userRotate();
     clickSpinner();
     usePopUpMenu();
-    useCameraMove();
 
     return containerElement;
 
@@ -56,12 +54,6 @@ export function makeInteractable(id){
             pos4 = e.clientY;
             document.onmouseup = closeDragUser;
             document.onmousemove = userDrag;
-
-            const cameramoveAllowed = new CustomEvent('cameramove', {detail: false});
-            containerElement.dispatchEvent(cameramoveAllowed);
-
-            userCoordinates.x = containerElement.style.left, userCoordinates.y = containerElement.style.top;
-            cameraCoordinates.x = space.style.left, cameraCoordinates.y =  space.style.top;
         }
 
         function userDrag(e) {
@@ -88,10 +80,7 @@ export function makeInteractable(id){
 
         function closeDragUser() {
             document.onmouseup = null;
-            document.onmousemove = updateMouseCoordinates;
-
-            const cameramoveAllowed = new CustomEvent('cameramove', {detail: true});
-            containerElement.dispatchEvent(cameramoveAllowed);
+            document.onmousemove = null;
         }
     }
     // Enables the user to rotate
@@ -139,18 +128,6 @@ export function makeInteractable(id){
     function usePopUpMenu() {
         enableUserState();
         userElement.onclick = (e) => menuPopUp(e, id);
-    }
-
-    function useCameraMove() {
-        window.main = () => {
-            window.requestAnimationFrame(main);
-            cameraMove();
-        }
-        
-        document.onmousemove = updateMouseCoordinates;
-        document.onmouseleave = checkMouseOutsideWindow;
-        document.onmouseenter = checkMouseInsideWindow;
-        window.main();
     }
 
     function enableUserState() {

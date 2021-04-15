@@ -106,7 +106,7 @@ export class AkvarioServer{
         }
         setTimeout(() => this.allowReq = true, this.spinner.waitTime.total);
     }
-
+    
     peerConnect(client, enabled){
         if(enabled) console.log(`PeerJS Server: ${client.id} Connected!`);
     }

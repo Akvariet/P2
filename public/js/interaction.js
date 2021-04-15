@@ -1,3 +1,4 @@
+import {usePopUpMenu} from './popUpMenu.js';
 import {startSpinner} from './ClientConnection.js';
 import {peers} from './voice.js';
 
@@ -36,6 +37,8 @@ export function makeInteractable(id){
     userMove();
     userRotate();
     clickSpinner();
+    usePopUpMenu(id);
+
     return containerElement;
 
     // Enables the user to move around.
@@ -69,6 +72,10 @@ export function makeInteractable(id){
 
             const userMoved = new CustomEvent('moved', {detail: {top:top, left:left}});
             containerElement.dispatchEvent(userMoved);
+
+            // hides popupmenu upon moving
+            const popup = document.getElementById("menuPopUp");
+            popup.style.display = "none";
         }
 
         function closeDragUser() {

@@ -1,4 +1,5 @@
-const audioPlayers = {};
+
+export const audioPlayers = {};
 let myID;
 
 export function distance(myPosition, position){

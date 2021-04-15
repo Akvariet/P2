@@ -6,6 +6,10 @@ export function updateMouseCoordinates(e){
     mouseCoordinates.x = e.clientX, mouseCoordinates.y = e.clientY;
 }
 
+export function getcameramove(value){
+    cameramoveAllowed = value;
+}
+
 export function checkMouseOutsideWindow(){
     cameramoveAllowed = false;
 }
@@ -14,7 +18,19 @@ export function checkMouseInsideWindow(){
     cameramoveAllowed = true;
 }
 
-export function cameraMove(){
+export function useCameraMove() {
+    window.main = () => {
+        window.requestAnimationFrame(main);
+        cameraMove();
+    }
+
+    document.onmousemove = updateMouseCoordinates;
+    document.onmouseleave = checkMouseOutsideWindow;
+    document.onmouseenter = checkMouseInsideWindow;
+    window.main();
+}
+
+function cameraMove(){
   if (cameramoveAllowed){
     const cameraVelocity = 6.12; // px
     
@@ -84,6 +100,3 @@ export function cameraMove(){
   }
 }
 
-export function getcameramove(value){
-    cameramoveAllowed = value;
-}

@@ -22,6 +22,7 @@ export function useCameraMove() {
     document.onmousemove = updateMouseCoordinates;
     document.onmouseout = () => cameramoveAllowed = false; // if mouse leaves window, denies cameramove
     document.onmouseover = () => cameramoveAllowed = true; // if mouse enters window, allows cameramove
+
     window.main(); // updates cameraMove every frame
 }
 

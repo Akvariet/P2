@@ -15,9 +15,14 @@ export class AkvarioServer{
 
     constructor(HTTPServer){
         this.io = new socket_io.Server(HTTPServer);
-        this.io.on('connection', socket =>
-            socket.on('login-attempt', (name, color) =>
-                this.requestLogin(socket, name, color)));
+        this.io.on('connection', (socket) =>{
+            socket.on('login-attempt', (name, color) =>{
+                if(name && color && name.length <= 12 && name.length >= 2)
+                    this.requestLogin(socket, name, color);
+                else
+                    this.rejectLogin(socket, 'Error in input');
+            });
+        });
     }
 
     connectionSetup(socket){
@@ -38,21 +43,29 @@ export class AkvarioServer{
         // Else, tell the user to try again.
     }
 
+    rejectLogin(socket, reason){
+        socket.emit('login-rejected', reason);
+    }
+
     login(socket, name, color) {
         //Setup connection.
         this.connectionSetup(socket);
 
-        // Create the user.
-        const user = this.userProperties.create(name, color);
+        try{
+            // Create the user.
+            const user = this.userProperties.create(name, color);
+            // Save connection.
+            this.connections.newConnection(socket.id, user.id);
 
-        // Save connection.
-        this.connections.newConnection(socket.id, user.id);
+            // Reply to the user.
+            socket.emit('login-successful', user.id, this.userProperties.allUsers());
 
-        // Reply to the user.
-        socket.emit('login-successful', user.id, this.userProperties.allUsers());
-
-        // Broadcast to other users.
-        this.broadcast(socket, 'new-user-connected', user);
+            // Broadcast to other users.
+            this.broadcast(socket, 'new-user-connected', user);
+        } catch(err){
+            console.error(err);
+            this.rejectLogin(socket, err);
+        }
     }
 
     // Broadcast message to all other users than the sender.

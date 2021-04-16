@@ -31,7 +31,9 @@ export function analyzeVoice(stream) {
 
     function analyse() {
         //run this function before next repaint
-        newAnalysis = requestAnimationFrame(analyse);
+        // Using setTimeout to avoid the browser not running the code when the tab is not in focus.
+        // The timout can be adjusted.
+        newAnalysis = setTimeout(analyse, 25);
 
         // Gets the sound data of the analyser and puts it into the dataArray
         analyser.getByteFrequencyData(dataArray);

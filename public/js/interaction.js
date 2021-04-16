@@ -1,5 +1,5 @@
-import {startSpinner} from './ClientConnection.js';
 import {peers} from './voice.js';
+import {clickSpinner} from "./frontend-spinner.js";
 
 export function moveUser(id, position){
     const containerElement = document.getElementById(id);
@@ -100,21 +100,5 @@ export function makeInteractable(id){
             const userRotated = new CustomEvent('turned', {detail: rotation});
             containerElement.dispatchEvent(userRotated);
         }
-    }
-
-    // Enables the user to press on the spinner
-    function clickSpinner() {
-
-        // spinner element and the spinners style
-        const spinnerElement = document.getElementById('spinner');
-        const spinnerDiv = document.querySelector('.spinner');
-        const spinnerRot = getComputedStyle(spinnerDiv);
-
-        // when someone clicks the spinner
-        spinnerElement.addEventListener('click', () => {
-            if (spinnerRot.transform === 'matrix(1, 0, 0, 1, 0, 0)') { // is the spinner in the starting position?
-                startSpinner();
-            }
-        });
     }
 }

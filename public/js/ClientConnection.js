@@ -94,15 +94,11 @@ export class ClientConnection{
     }
 
     startSpinner(){
-        this.emit('start-spinner');
+        this.emit('start-spinner', this.myID);
     }
 }
 
 export const connection = new ClientConnection(options('main', production));
-
-export function startSpinner() {
-    connection.startSpinner();
-}
 
 export function login(name, color){
     connection.attemptLogin(name, color);

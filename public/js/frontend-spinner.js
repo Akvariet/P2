@@ -1,4 +1,21 @@
+import {connection} from "./ClientConnection.js";
+
 const spinner = document.querySelector('.spinner');
+
+// Enables the user to press on the spinner
+export function clickSpinner() {
+
+    // spinner element and the spinners style
+    const spinnerElement = document.getElementById('spinner');
+    const spinnerRot = getComputedStyle(spinner);
+
+    // when someone clicks the spinner
+    spinnerElement.addEventListener('click', () => {
+        if (spinnerRot.transform === 'matrix(1, 0, 0, 1, 0, 0)') { // is the spinner in the starting position?
+            connection.startSpinner();
+        }
+    });
+}
 
 // starts the game when a user clicks on the spinner
 export function spinBottle(userColors, spinner) {

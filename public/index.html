@@ -31,7 +31,7 @@
                             <h3 class="name-displayed" id="0_name">Username</h3>
                         </div>
                     </div>
-                    <form id="FIXME">
+                    <form id="user-form">
                         <input type="text" id="username" name="username" placeholder="Enter username" minlength="2" maxlength="12" required>
                         <button type="submit">Join</button>
                     </form>
@@ -41,7 +41,7 @@
     </div>
 
     <div id="space">
-        <div class = "circle">
+        <div class = "game-area">
             <div class = "spinner">
                 <svg id = "spinner"
                      xmlns="http://www.w3.org/2000/svg"
@@ -53,6 +53,12 @@
                 </svg>
             </div>
         </div>
+    </div>
+
+    <div class="menuPopUp" id="menuPopUp">
+        <img type="image" id="menuBody" alt="menuBody" src="resources/menuBody.svg">
+        <input type="image" class="microphone" alt="microphoneIcon" id="microphone" src="resources/mic-fill.svg">
+        <input type="image" class="speakers" alt="speakeersIcon" id="speakers" src="resources/volume-up-fill.svg">
     </div>
 
     <template id="userTemplate">

@@ -1,6 +1,5 @@
 import {UserProperties} from "./user.js";
 import * as socket_io from "socket.io";
-import { PeerServer } from 'peer';
 import {ConnectionTable} from "./connection.js";
 import {Spinner} from './backend-spinner.js';
 import {ColorPicker} from "./ColorPicker.js";
@@ -8,27 +7,29 @@ import {ColorPicker} from "./ColorPicker.js";
 // AkvarioServer controls all real time connection with users all users.
 export class AkvarioServer{
     io;
-    peerServer;
     userProperties = new UserProperties();
     connections = new ConnectionTable();
     colorPicker = new ColorPicker();
     allowReq = true;
     spinner = new Spinner();
 
-    constructor(HTTPServer, options){
+    constructor(HTTPServer){
         this.io = new socket_io.Server(HTTPServer);
-        this.io.on('connection', socket =>
-            socket.on('login-attempt', (name, color) =>
-                this.requestLogin(socket, name, color)));
-        this.peerServer = PeerServer(options);
+        this.io.on('connection', (socket) =>{
+            socket.on('login-attempt', (name, color) =>{
+                if(name && color && name.length <= 12 && name.length >= 2)
+                    this.requestLogin(socket, name, color);
+                else
+                    this.rejectLogin(socket, 'Error in input');
+            });
+        });
     }
 
     connectionSetup(socket){
-        this.peerServer.on('connection', client => this.peerConnect(client, false));
-        this.peerServer.on('disconnect', client => this.peerDisconnect(client, false));
         socket.on('disconnect', (reason) => this.disconnect(socket, reason));
         socket.on('moved', position => this.moveUser(socket, position));
         socket.on('turned', rotation => this.rotateUser(socket, rotation));
+        socket.on('cameramove', allowed => this.cameramoveUser(socket, allowed));
         socket.on('start-spinner', id => this.startSpinner(id));
         socket.on('user-speaking', (speaking, id) => socket.broadcast.emit('user-speaking', speaking, id));
     }
@@ -42,21 +43,29 @@ export class AkvarioServer{
         // Else, tell the user to try again.
     }
 
+    rejectLogin(socket, reason){
+        socket.emit('login-rejected', reason);
+    }
+
     login(socket, name, color) {
         //Setup connection.
         this.connectionSetup(socket);
 
-        // Create the user.
-        const user = this.userProperties.create(name, color);
+        try{
+            // Create the user.
+            const user = this.userProperties.create(name, color);
+            // Save connection.
+            this.connections.newConnection(socket.id, user.id);
 
-        // Save connection.
-        this.connections.newConnection(socket.id, user.id);
+            // Reply to the user.
+            socket.emit('login-successful', user.id, this.userProperties.allUsers());
 
-        // Reply to the user.
-        socket.emit('login-successful', user.id, this.userProperties.allUsers());
-
-        // Broadcast to other users.
-        this.broadcast(socket, 'new-user-connected', user);
+            // Broadcast to other users.
+            this.broadcast(socket, 'new-user-connected', user);
+        } catch(err){
+            console.error(err);
+            this.rejectLogin(socket, err);
+        }
     }
 
     // Broadcast message to all other users than the sender.
@@ -120,12 +129,8 @@ export class AkvarioServer{
         }
     }
 
-    peerConnect(client, enabled){
-        if(enabled) console.log(`PeerJS Server: ${client.id} Connected!`);
-    }
-
-    peerDisconnect(client, enabled){
-        if(enabled) console.log(`PeerJS Server: ${client.id} Disconnected!`)
+    cameramoveUser(socket, allowed){
+        socket.emit('updatecameramove', allowed);
     }
 }
 

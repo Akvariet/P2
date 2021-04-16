@@ -1,5 +1,12 @@
 body{
+    margin: 0px;
     background-color: rgb(255, 221, 203);
+    overflow: hidden;
+}
+
+#space{
+    position: absolute;
+    left:0px; top:0px;
 }
 
 .user-container{
@@ -64,7 +71,7 @@ div.speaking > svg {
     left: calc(34px);
 }
 
-.circle {
+.game-area {
     position: absolute;
     border-radius: 100%;
     height: 500px;
@@ -73,4 +80,57 @@ div.speaking > svg {
     border-color: #424242;
     left: 750px;
     top: 500px;
+}
+
+.menuPopUp {
+    position: absolute;
+    z-index: 8;
+    display: none;
+    height: 110px;
+}
+
+#menuBody {
+    display: block;
+    position: relative;
+
+    /* makes the image non-draggable or selectable*/
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+#microphone {
+    display: block;
+    position: relative;
+    width: 50px;
+    height: 50px;
+    left: 11.5px;
+    top: -165px;
+    outline: none;
+
+    /* makes the image non-draggable or selectable*/
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+#speakers {
+    display: block;
+    position: relative;
+    width: 50px;
+    height: 50px;
+    left: 11.5px;
+    top: -145px;
+    outline: none;
+
+    /* makes the image non-draggable or selectable*/
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
 }

@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="50mm" height="178.85mm" version="1.1" viewBox="0 0 50 178.85" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+<svg width="18.598mm" height="48.026mm" version="1.1" viewBox="0 0 18.598 48.026" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+ <defs>
+  <clipPath id="clipPath873-2">
+   <rect x="-3.7139" y="50.398" width="25.787" height="16.234" fill="#00f" fill-rule="evenodd" stop-color="#000000" stroke-width=".21251" style="font-variation-settings:normal"/>
+  </clipPath>
+  <clipPath id="clipPath973">
+   <rect x="-1.3072" y="-3.2054" width="21.849" height="26.955" fill="#00f" fill-rule="evenodd" stop-color="#000000" stroke-width=".25205" style="font-variation-settings:normal"/>
+  </clipPath>
+ </defs>
  <metadata>
   <rdf:RDF>
    <cc:Work rdf:about="">
@@ -9,5 +17,10 @@
    </cc:Work>
   </rdf:RDF>
  </metadata>
- <path transform="scale(.26458)" d="m0 9.2604v548.41a25.578 25.578 70.097 0 0 5.9284 16.374l82.631 99.157a7.7171 7.7171 180 0 0 11.857 0l82.631-99.157a25.578 25.578 109.9 0 0 5.9284-16.374v-548.41a9.2604 9.2604 45 0 0-9.2604-9.2604h-170.46a9.2604 9.2604 135 0 0-9.2604 9.2604z" fill="#f67280" fill-rule="evenodd" stop-color="#000000" stroke-width="1.031" style="font-variation-settings:normal"/>
+ <g transform="matrix(1 0 0 1.3674 -.00017206 0)" clip-path="url(#clipPath973)">
+  <path d="m4.9206e-4 0.91133v53.97a2.5172 2.5172 0 0 0 0.58342 1.6114l8.1318 9.7581a0.75945 0.75945 0 0 0 1.1669 0l8.1318-9.7581a2.5172 2.5172 0 0 0 0.58342-1.6114v-53.97a0.91133 0.91133 0 0 0-0.91133-0.91133h-16.775a0.91133 0.91133 0 0 0-0.91133 0.91133z" fill="#f67280" fill-rule="evenodd" stop-color="#000000" stroke-width=".098411" style="font-variation-settings:normal"/>
+ </g>
+ <g transform="translate(-.00017206 -18.498)" clip-path="url(#clipPath873-2)">
+  <path d="m4.9206e-4 0.91133v53.97a2.5172 2.5172 0 0 0 0.58342 1.6114l8.1318 9.7581a0.75945 0.75945 0 0 0 1.1669 0l8.1318-9.7581a2.5172 2.5172 0 0 0 0.58342-1.6114v-53.97a0.91133 0.91133 0 0 0-0.91133-0.91133h-16.775a0.91133 0.91133 0 0 0-0.91133 0.91133z" fill="#f67280" fill-rule="evenodd" stop-color="#000000" stroke-width=".098411" style="font-variation-settings:normal"/>
+ </g>
 </svg>

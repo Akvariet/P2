@@ -1,8 +1,8 @@
-import {connection} from './ClientConnection.js';
 
-const audioPlayers = {};
+export const audioPlayers = {};
+let myID;
 
-function distance(myPosition, position){
+export function distance(myPosition, position){
     return dist(relativePos(myPosition, position))
 }
 
@@ -22,8 +22,8 @@ function relativePos(pos1, pos2){
 // Contains all of the functions that control how voice volume change according to distance.
 export class VolumeFunctions {
     constructor(slope, minVolume) {
-        this.slope = slope || 0.0005;
-        this.minVolume = minVolume || 0.05;
+        this.slope = slope || 0.0008;
+        this.minVolume = minVolume || 0.02;
         this.maxVolume = 1;
     }
     //Volume functions
@@ -41,7 +41,8 @@ export class VolumeFunctions {
     }
 }
 
-export function beginProxiChat(myID){
+export function beginProxiChat(id){
+    myID = id;
     const myElement = document.getElementById(myID);
     myElement.addEventListener('moved', (e)=>{
 
@@ -54,7 +55,7 @@ export function beginProxiChat(myID){
 export function proxiChat(audio, userID){
 
     const userContainer = document.getElementById(userID);
-    const myElement = document.getElementById(connection.myID);
+    const myElement = document.getElementById(myID);
     userContainer.append(audio);
     audioPlayers[userID] = {audio: audio, position: getPos(userContainer)};
 

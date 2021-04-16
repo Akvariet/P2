@@ -32,6 +32,7 @@ export class AkvarioServer{
         socket.on('cameramove', allowed => this.cameramoveUser(socket, allowed));
         socket.on('start-spinner', id => this.startSpinner(id));
         socket.on('user-speaking', (speaking, id) => socket.broadcast.emit('user-speaking', speaking, id));
+        socket.on('sound-controls', (elm, state, id) => socket.broadcast.emit('sound-controls', elm, state, id));
     }
 
     requestLogin(socket, name, color) {

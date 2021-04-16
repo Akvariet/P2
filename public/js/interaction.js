@@ -34,6 +34,8 @@ export function removeDeadUser(id){
 export function makeInteractable(id){
     const containerElement = document.getElementById(id);
     const userElement = document.getElementById(id + '_body');
+    const userDisplayElement = containerElement.querySelector(".body-display");
+    const arrow = containerElement.querySelector(".arrow");
     const space = document.getElementById('space');
 
     userMove();
@@ -48,8 +50,9 @@ export function makeInteractable(id){
     function userMove() {
         let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
 
-        userElement.onmousedown = dragMouseDown;
-
+        userDisplayElement.onmousedown = dragMouseDown;
+        arrow.onmousedown = dragMouseDown;
+        
         function dragMouseDown(e) {
             e.preventDefault();
 

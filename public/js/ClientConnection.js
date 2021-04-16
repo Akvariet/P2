@@ -48,6 +48,9 @@ export class ClientConnection{
 
         // When a person is talking or stops talking
         this.socket.on('user-speaking', displayUserSpeak);
+
+        // Displays or hides icon in user body
+        this.socket.on('sound-controls', this.displayUserState);
     }
 
     disconnect(reason){
@@ -102,6 +105,23 @@ export class ClientConnection{
 
     startSpinner(){
         this.emit('start-spinner');
+    }
+
+    displayUserState(elm, state, id){
+        const containerElement = document.getElementById(id);
+        const userDisplayElement = containerElement.querySelector(".body-display");
+
+        switch(elm){
+            case 'mic':
+                if(state) userDisplayElement.style.backgroundImage = "url(../resources/mic-mute-fill.svg)";
+                else      userDisplayElement.style.backgroundImage = "none";
+            break;
+            case 'speaker':
+                if(state) userDisplayElement.style.backgroundImage = "url(../resources/volume-mute-fill.svg)";
+                else      userDisplayElement.style.backgroundImage = "none";
+            break;
+            default: console.error("Error displaying user state"); break;
+        }
     }
 }
 

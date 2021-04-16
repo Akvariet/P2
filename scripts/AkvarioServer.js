@@ -95,7 +95,14 @@ export class AkvarioServer{
     }
 
     startSpinner(id) {
-        const userPos = (this.spinner.getRelUserPos((this.userProperties.positions), this.spinner.pos))[id];
+
+        // gets the users relative position to the spinner
+        const relPos = this.spinner.getRelUserPos((this.userProperties.positions), this.spinner.pos);
+
+        // finds the user who clicked on the spinner
+        const userPos = relPos[id];
+
+        // calculates the distance from the user to the spinner
         const dist = Math.sqrt(Math.pow(userPos.top, 2) + Math.pow(userPos.left, 2));
 
         if (dist <= this.spinner.range) {

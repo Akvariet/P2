@@ -23,9 +23,13 @@ export class Spinner {
     spin(userPos, s_pos){
         const minRounds = 2;
         let rot;
-        const relPos = this.getRelUserPos(userPos, s_pos)
-        const players = this.findPlayers(relPos);
         const userAngles = {};
+
+        // gets the users relative position to the spinner
+        const relPos = this.getRelUserPos(userPos, s_pos);
+
+        // finds the players who inside the game area, and gets relative position from relPos
+        const players = this.findPlayers(relPos);
 
         do
             rot = Math.random() * 360*5;
@@ -37,7 +41,7 @@ export class Spinner {
         return {winner: result, rotationAngle: rot, userAngles: userAngles};
     }
 
-    //Find the user which is closest to being pointed at. Pass this function so the front end can play along.
+    //Find the user which is closest to being pointed at
     closestUser(players, rotDeg, userAngles){
         const rots = [];
         const ids  = Object.keys(players);

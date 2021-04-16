@@ -41,12 +41,9 @@ export function usePopUpMenu(id){
 function enableUserState(id) {
     const muteBtn = document.getElementById("microphone");
     const spksBtn = document.getElementById("speakers");
-    muteBtn.onclick = () => {
-        doStateMute(id);
-    }
-    spksBtn.onclick = () => {
-        doStateDeafen(id);
-    }
+    
+    muteBtn.onclick = () => doStateMute(id);
+    spksBtn.onclick = () => doStateDeafen(id);
 }
 
 function menuPopUp(e, id){
@@ -92,7 +89,7 @@ function doStateMute(id){
             deafened = false;
         }
 
-        displayState(id, 'mic', "none");
+        displayState(id, 'mic', muted, "none");
     }
     else{
         img.src="./resources/mic-mute-fill.svg";
@@ -100,7 +97,7 @@ function doStateMute(id){
 
         // unmutes the user
         toggleMic();
-        displayState(id, 'mic', "url(../resources/mic-mute-fill.svg)");
+        displayState(id, 'mic', muted, "url(../resources/mic-mute-fill.svg)");
     }
 }
 
@@ -126,7 +123,7 @@ function doStateDeafen(id){
             muted = false;
         }
 
-        displayState(id, 'speaker', "none");
+        displayState(id, 'speaker', deafened, "none");
     }
     else{
         img.src="./resources/volume-mute-fill.svg";
@@ -141,7 +138,7 @@ function doStateDeafen(id){
             muted = true;
         }
 
-        displayState(id, 'speaker', "url(../resources/volume-mute-fill.svg)");
+        displayState(id, 'speaker', deafened, "url(../resources/volume-mute-fill.svg)");
     }
 }
 
@@ -151,10 +148,10 @@ function toggleSpeakers(){
     }
 }
 
-function displayState(id, elm, backgroundIMG){
+function displayState(id, elm, state, backgroundIMG){
     const containerElement = document.getElementById(id);
     const userDisplayElement = containerElement.querySelector(".body-display");
 
     userDisplayElement.style.backgroundImage = backgroundIMG;
-    connection.emit('sound-controls', elm, deafened, id);
+    connection.emit('sound-controls', elm, state, id);
 }

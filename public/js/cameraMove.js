@@ -1,6 +1,6 @@
 import {isCameraMoving} from './popUpMenu.js';
 
-export let cameramoveAllowed = true;
+let cameramoveAllowed = true;
 let posLeft=0, posTop=0;
 const mouseCoordinates = {x: 0, y: 0};
 

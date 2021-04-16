@@ -29,8 +29,8 @@ export class AkvarioServer{
         socket.on('disconnect', (reason) => this.disconnect(socket, reason));
         socket.on('moved', position => this.moveUser(socket, position));
         socket.on('turned', rotation => this.rotateUser(socket, rotation));
-        socket.on('start-spinner', () => this.startSpinner());
         socket.on('cameramove', allowed => this.cameramoveUser(socket, allowed));
+        socket.on('start-spinner', id => this.startSpinner(id));
         socket.on('user-speaking', (speaking, id) => socket.broadcast.emit('user-speaking', speaking, id));
         socket.on('sound-controls', (elm, state, id) => socket.broadcast.emit('sound-controls', elm, state, id));
     }
@@ -104,17 +104,30 @@ export class AkvarioServer{
         this.userProperties.remove(id);
     }
 
-    startSpinner() {
-        if (this.allowReq) { // if no one already has requested
-            this.allowReq = false;
+    startSpinner(id) {
 
-            //start a new game in the backend which gives the spinner new properties
-            this.spinner.newGame(this.userProperties);
+        // gets the users relative position to the spinner
+        const relPos = this.spinner.getRelUserPos((this.userProperties.positions), this.spinner.pos);
 
-            // sends back the rotation of the spinner and the result of the game
-            this.io.emit('spinner-result', this.userProperties.colors, this.spinner);
+        // finds the user who clicked on the spinner
+        const userPos = relPos[id];
+
+        // calculates the distance from the user to the spinner
+        const dist = Math.sqrt(Math.pow(userPos.top, 2) + Math.pow(userPos.left, 2));
+
+        if (dist <= this.spinner.range) {
+            if (this.allowReq) { // if no one already has requested
+                this.allowReq = false;
+
+                //start a new game in the backend which gives the spinner new properties
+                this.spinner.newGame(this.userProperties);
+
+                // sends back the rotation of the spinner and the result of the game
+                this.io.emit('spinner-result', this.userProperties.colors, this.spinner);
+
+                setTimeout(() => this.allowReq = true, this.spinner.waitTime.total);
+            }
         }
-        setTimeout(() => this.allowReq = true, this.spinner.waitTime.total);
     }
 
     cameramoveUser(socket, allowed){

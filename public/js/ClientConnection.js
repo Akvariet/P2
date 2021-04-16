@@ -92,7 +92,11 @@ export class ClientConnection{
         myAvatar.addEventListener('moved',  e => this.emit('moved', e.detail));
         myAvatar.addEventListener('turned', e => this.emit('turned', e.detail));
         myAvatar.addEventListener('cameramove', e => this.emit('cameramove', e.detail));
-        this.socket.on('updatecameramove', allowed => getcameramove(allowed))
+        this.socket.on('updatecameramove', allowed => getcameramove(allowed));
+    }
+
+    loginRejected(reason){
+        // Do something...
     }
 
     move(id, position){
@@ -104,7 +108,7 @@ export class ClientConnection{
     }
 
     startSpinner(){
-        this.emit('start-spinner');
+        this.emit('start-spinner', this.myID);
     }
 
     displayUserState(elm, state, id){
@@ -126,10 +130,6 @@ export class ClientConnection{
 }
 
 export const connection = new ClientConnection(config('ClientConnection'));
-
-export function startSpinner() {
-    connection.startSpinner();
-}
 
 export function login(name, color){
     connection.attemptLogin(name, color);

@@ -3,7 +3,7 @@ import {drawUser} from './login.js';
 import {enterRoom} from './client.js';
 import {spinBottle} from "./frontend-spinner.js";
 import {handlePeerConnections} from './voice.js';
-import {getcameramove} from './cameraMove.js';
+import {cameramoveAllowed} from './cameraMove.js';
 import {displayUserSpeak} from "./voiceAnalysis.js";
 import {options, production} from './clientConfig.js';
 
@@ -81,7 +81,7 @@ export class ClientConnection{
         myAvatar.addEventListener('moved',  e => this.emit('moved', e.detail));
         myAvatar.addEventListener('turned', e => this.emit('turned', e.detail));
         myAvatar.addEventListener('cameramove', e => this.emit('cameramove', e.detail));
-        this.socket.on('updatecameramove', allowed => getcameramove(allowed))
+        this.socket.on('updatecameramove', allowed => cameramoveAllowed = allowed);
     }
 
     loginRejected(reason){

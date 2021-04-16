@@ -18,7 +18,7 @@ function isUserMoving(id){
   return true;
 }
 
-function isCameraMoving(){
+export function isCameraMoving(){
   const space = document.getElementById("space");
 
   // if same coordinates as last time, camera moved

@@ -1,6 +1,6 @@
 import {isCameraMoving} from './popUpMenu.js';
 
-export let cameramoveAllowed = true;
+let cameramoveAllowed = true;
 let posLeft=0, posTop=0;
 const mouseCoordinates = {x: 0, y: 0};
 
@@ -20,8 +20,8 @@ export function useCameraMove() {
     }
 
     document.onmousemove = updateMouseCoordinates;
-    document.onmouseleave = () => cameramoveAllowed = false; // if mouse leaves window, denies cameramove
-    document.onmouseenter = () => cameramoveAllowed = true; // if mouse enters window, allows cameramove
+    document.onmouseout = () => cameramoveAllowed = false; // if mouse leaves window, denies cameramove
+    document.onmouseover = () => cameramoveAllowed = true; // if mouse enters window, allows cameramove
     window.main(); // updates cameraMove every frame
 }
 

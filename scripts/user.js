@@ -1,4 +1,4 @@
-
+import {v4 as uuidv4} from 'uuid';
 
 export class UserProperties{
     users = {};
@@ -33,7 +33,7 @@ export class UserProperties{
         return this.add(id, name, color, this._initialPosition, this._initialRotation);
     }
 
-    nextID = () => ++this._previousID;
+    nextID = () => uuidv4();
 
     // Adds a user to collection, Returns the id.
     add = (id, name, color, position, rotation) => {

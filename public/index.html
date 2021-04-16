@@ -1,51 +1,85 @@
-<html>
-  <head>
-    <link href="css/normal.css" type="text/css" rel="stylesheet">
-    <link href="css/login.css" type="text/css" rel="stylesheet">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
     <title>Akvario</title>
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="css/room.css">
     <link rel="icon" href="resources/favicon.png">
-  </head>
-  <body>
-    <div id = "fade">
-        <div id = "loginbox">
-            <h1>Welcome to the Akvario!</h1>
-            <form id="nameForm">
-                <p>Name</p>
-                <input type="text" id="username" class="center-block" placeholder="Enter Username" minlength="2" maxlength="12" required>
-                <!--<p>Room number</p>
-                <input type="text" id="roomid" class="center-block" placeholder="Enter Room number"> required-->
-                <input type="submit" value="Go">
-            </form>
-        </div>
-      </div>
 
-
-        <div id="space"></div>
-
-        <script src="js/main.js" type="module"></script>
-        <script src="js/user.js" type="module"></script>
-        <template id="userTemplate">
-            <div class="user-container">
-                <div class="body">
-                    <svg
-                            class="arrow"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 11.328031 13.449599"
-                            height="20px"
-                            width="20px">
-                        <g transform="translate(-91.411618,-71.178162)">
-                            <g><path d="m 345.7462,274.54091 c 0.82399,3.92069 1.4126,7.88738 1.7626,11.87874 0.4234,4.82846 0.42341,12.70724 10e-6,17.5357 -0.31671,3.6118 -0.82884,7.20385 -1.53415,10.76031 -0.92943,4.68658 1.30847,6.46831 5.44756,4.07875 l 8.78623,-5.07241 a 226183.95,226183.95 149.99924 0 0 15.78977,-9.11651 l 9.67765,-5.58809 a 5.2634256,5.2634256 89.998346 0 0 -2.6e-4,-9.11639 l -9.91419,-5.7239 a 1153838.2,1153838.2 29.999328 0 0 -15.31587,-8.84238 l -8.94831,-5.16608 c -4.47177,-2.58166 -6.81263,-0.67902 -5.75104,4.37226 z" transform="scale(0.26458333)"/>
-                            </g>
-                        </g>
-                    </svg>
+</head>
+<body>
+    <!-- Login Page -->
+    <div class="login-form-wrapper">
+        <div class="bg-graphics"></div>
+            <div class="login-form">
+                <div class="login-form-content">
+                    <h1>Welcome to the Akvario!</h1>
+                    <div id="user-preview">
+                        <div class="user-container-displayed">
+                            <div class="body-displayed">
+                                <svg class="arrow-displayed"
+                                     xmlns="http://www.w3.org/2000/svg"
+                                     viewBox="0 0 11.328031 13.449599"
+                                     height="20px"
+                                     width="20px">
+                                     <g transform="translate(-91.411618,-71.178162)">
+                                         <g><path d="m 345.7462,274.54091 c 0.82399,3.92069 1.4126,7.88738 1.7626,11.87874 0.4234,4.82846 0.42341,12.70724 10e-6,17.5357 -0.31671,3.6118 -0.82884,7.20385 -1.53415,10.76031 -0.92943,4.68658 1.30847,6.46831 5.44756,4.07875 l 8.78623,-5.07241 a 226183.95,226183.95 149.99924 0 0 15.78977,-9.11651 l 9.67765,-5.58809 a 5.2634256,5.2634256 89.998346 0 0 -2.6e-4,-9.11639 l -9.91419,-5.7239 a 1153838.2,1153838.2 29.999328 0 0 -15.31587,-8.84238 l -8.94831,-5.16608 c -4.47177,-2.58166 -6.81263,-0.67902 -5.75104,4.37226 z" transform="scale(0.26458333)"/></g>
+                                     </g>
+                                </svg>
+                            </div>
+                            <h3 class="name-displayed" id="0_name">Username</h3>
+                        </div>
+                    </div>
+                    <form id="user-form">
+                        <input type="text" id="username" name="username" placeholder="Enter username" minlength="2" maxlength="12" required>
+                        <button type="submit">Join</button>
+                    </form>
                 </div>
-                <h3 class="name" id="0_name"></h3>
-            </div>
-        </template>
+            <div class="color-picker"><div class="color-picker-items"></div></div>
+        </div>
+    </div>
 
-        <script src="js/main.js" type="module"></script>
-        <script src="js/user.js" type="module"></script>
-        <script src="js/userClient.js"></script>
-        <script src="clientjs/socket.io.js"></script>
-  </body>
+    <div id="space">
+        <div class = "spinner">
+            <svg id = "spinner"
+                 xmlns="http://www.w3.org/2000/svg"
+                 width="93.436px"
+                 height="65.132px">
+                <path
+                        d="M 34.803252,65.13249 C 15.581947,65.13249 0,50.552086 0,32.566248 0,14.580406 15.581947,4.8542449e-7 34.803252,0 c 16.915728,4.8542449e-7 50.208497,25.257473 57.95199,31.316697 0.907946,0.710463 0.906961,1.878831 -0.0021,2.58823 C 85.005598,39.950273 51.717508,65.13249 34.803371,65.13249 Z"
+                />
+            </svg>
+        </div>
+    </div>
+
+    <div class="menuPopUp" id="menuPopUp">
+        <img type="image" id="menuBody" alt="menuBody" src="resources/menuBody.svg">
+        <input type="image" class="microphone" alt="microphoneIcon" id="microphone" src="resources/mic-fill.svg">
+        <input type="image" class="speakers" alt="speakeersIcon" id="speakers" src="resources/volume-up-fill.svg">
+    </div>
+
+    <template id="userTemplate">
+        <div class="user-container">
+            <div class="body">
+                <svg
+                        class="arrow"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 11.328031 13.449599"
+                        height="20px"
+                        width="20px">
+                    <g transform="translate(-91.411618,-71.178162)">
+                        <g><path d="m 345.7462,274.54091 c 0.82399,3.92069 1.4126,7.88738 1.7626,11.87874 0.4234,4.82846 0.42341,12.70724 10e-6,17.5357 -0.31671,3.6118 -0.82884,7.20385 -1.53415,10.76031 -0.92943,4.68658 1.30847,6.46831 5.44756,4.07875 l 8.78623,-5.07241 a 226183.95,226183.95 149.99924 0 0 15.78977,-9.11651 l 9.67765,-5.58809 a 5.2634256,5.2634256 89.998346 0 0 -2.6e-4,-9.11639 l -9.91419,-5.7239 a 1153838.2,1153838.2 29.999328 0 0 -15.31587,-8.84238 l -8.94831,-5.16608 c -4.47177,-2.58166 -6.81263,-0.67902 -5.75104,4.37226 z" transform="scale(0.26458333)"/>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+            <h3 class="name" id="0_name"></h3>
+        </div>
+    </template>
+    <!-- Scripts -->
+    <script src="https://unpkg.com/peerjs@1.2.0/dist/peerjs.min.js"></script>
+    <script src="https://cdn.socket.io/3.1.3/socket.io.min.js" integrity="sha384-cPwlPLvBTa3sKAgddT6krw0cJat7egBga3DJepJyrLl4Q9/5WLra3rrnMcyTyOnh" crossorigin="anonymous"></script>
+    <script src="js/main.js" type="module"></script>
+</body>
 </html>

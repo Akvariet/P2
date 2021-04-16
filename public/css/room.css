@@ -1,0 +1,125 @@
+body{
+    margin: 0px;
+    background-color: rgb(255, 221, 203);
+    overflow: hidden;
+}
+
+#space{
+    position: absolute;
+    left:0px; top:0px;
+}
+
+.user-container{
+    visibility: hidden;
+    position: absolute;
+    width: calc(70px + 22.5px + 22.5px + 98px);
+    height: calc(70px + 22.5px + 22.5px + 20px);
+}
+
+.body{
+    visibility: visible;
+    top: 22.5px;
+    left: calc(22.5px + 49px);
+    border-radius: 100%;
+    width: 70px;
+    height: 70px;
+    position: absolute;
+    font-weight: bold;
+    text-align: center;
+}
+
+.speaking{
+    width: 62px;
+    height: 62px;
+    border: 4px solid;
+    border-color: #424242;
+}
+
+.arrow {
+    position: relative;
+    top: -35%;
+    transform:rotate(-90deg);
+    visibility: visible;
+}
+
+div.speaking > svg {
+    top: -46%;
+}
+
+.name{
+    font-family: 'Darker Grotesque', sans-serif;
+    visibility: visible;
+    position: relative;
+    color: black;
+    top: calc(70px + 22.5px + 22.5px);
+    margin: auto;
+    text-align: center;
+    user-select: none;
+}
+
+.spinner {
+    position: absolute;
+    left: 750px;
+    top: 500px;
+    height: 65.132px;
+    width: calc(34px + 93.436px);
+    transform: rotate(0deg);
+}
+
+#spinner {
+    position: absolute;
+    left: calc(34px);
+}
+
+.menuPopUp {
+    position: absolute;
+    z-index: 8;
+    display: none;
+    height: 110px;
+}
+  
+#menuBody {
+    display: block;
+    position: relative;
+    
+    /* makes the image non-draggable or selectable*/
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+#microphone {
+    display: block;
+    position: relative;
+    width: 50px;
+    height: 50px;
+    left: 11.5px;
+    top: -165px;
+    outline: none;
+
+    /* makes the image non-draggable or selectable*/
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+#speakers {
+    display: block;
+    position: relative;
+    width: 50px;
+    height: 50px;
+    left: 11.5px;
+    top: -145px;
+    outline: none;
+
+    /* makes the image non-draggable or selectable*/
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}

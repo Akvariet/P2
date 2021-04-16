@@ -61,6 +61,7 @@ export function makeInteractable(id){
             const cameramoveAllowed = new CustomEvent('cameramove', {detail: false});
             containerElement.dispatchEvent(cameramoveAllowed);
 
+            // updates user coordinates and camera coordinates
             userCoordinates.x = containerElement.style.left, userCoordinates.y = containerElement.style.top;
             cameraCoordinates.x = space.style.left, cameraCoordinates.y =  space.style.top;
         }
@@ -82,7 +83,7 @@ export function makeInteractable(id){
             const userMoved = new CustomEvent('moved', {detail: {top:top, left:left}});
             containerElement.dispatchEvent(userMoved);
 
-            // hides popupmenu upon moving
+            // hides popupmenu upon moving user
             const popup = document.getElementById("menuPopUp");
             popup.style.display = "none";
         }

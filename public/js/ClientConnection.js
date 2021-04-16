@@ -89,7 +89,11 @@ export class ClientConnection{
         myAvatar.addEventListener('moved',  e => this.emit('moved', e.detail));
         myAvatar.addEventListener('turned', e => this.emit('turned', e.detail));
         myAvatar.addEventListener('cameramove', e => this.emit('cameramove', e.detail));
-        this.socket.on('updatecameramove', allowed => getcameramove(allowed))
+        this.socket.on('updatecameramove', allowed => getcameramove(allowed));
+    }
+
+    loginRejected(reason){
+        // Do something...
     }
 
     move(id, position){

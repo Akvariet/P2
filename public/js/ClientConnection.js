@@ -61,17 +61,17 @@ export class ClientConnection{
 
     login(myId, users){
         if(myId && users){
-        this.myID = myId;
-        // Connect to the peer server and peers for voice chat
-        const peerConnection = new PeerVoiceConnection(config('PeerVoiceConnection'), myId, users);
+            this.myID = myId;
+            // Connect to the peer server and peers for voice chat
+            const peerConnection = new PeerVoiceConnection(config('PeerVoiceConnection'), myId, users);
 
-        // Enter the room.
-        const avatar = enterRoom(myId, users);
+            // Enter the room.
+            const avatar = enterRoom(myId, users);
 
-        // Make my own user interactable.
-        this.handleClientEvents(myId, avatar);
+            // Make my own user interactable.
+            this.handleClientEvents(myId, avatar);
 
-        this.handleServerEvents();
+            this.handleServerEvents();
         } else this.loginRejected(`myId: ${myId}, users: ${users}`);
     }
 

@@ -9,8 +9,6 @@ export class UserProperties{
         color:    {}
     }
 
-    _previousID = 0;
-    _freeIDs = [];
     _initialPosition = {top:10, left:10};
     _initialRotation = 0;
 
@@ -29,11 +27,10 @@ export class UserProperties{
 
     // Creates a new user and adds it to the collection.
     create(name, color){
-        const id = this.nextID() || this._freeIDs.pop();
+        const id = uuidv4();
         return this.add(id, name, color, this._initialPosition, this._initialRotation);
     }
 
-    nextID = () => uuidv4();
 
     // Adds a user to collection, Returns the id.
     add = (id, name, color, position, rotation) => {
@@ -87,7 +84,6 @@ export class UserProperties{
         if(this.exists(id)){
             Object.keys(this.userProperties).forEach(prop => delete this.userProperties[prop][id]);
             delete this.users[id];
-            this._freeIDs.push(id);
         }
 
         else console.warn(`user with id ${id} did not exist and could not be deleted!`);

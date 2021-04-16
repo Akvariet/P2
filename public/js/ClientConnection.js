@@ -60,6 +60,7 @@ export class ClientConnection{
     }
 
     login(myId, users){
+        if(myId && users){
         this.myID = myId;
         // Connect to the peer server and peers for voice chat
         const peerConnection = new PeerVoiceConnection(config('PeerVoiceConnection'), myId, users);
@@ -71,6 +72,12 @@ export class ClientConnection{
         this.handleClientEvents(myId, avatar);
 
         this.handleServerEvents();
+        } else this.loginRejected(`myId: ${myId}, users: ${users}`);
+    }
+
+    loginRejected(reason){
+        console.error(reason);
+        location.reload
     }
 
     newConnection(user){
@@ -83,10 +90,6 @@ export class ClientConnection{
         myAvatar.addEventListener('turned', e => this.emit('turned', e.detail));
         myAvatar.addEventListener('cameramove', e => this.emit('cameramove', e.detail));
         this.socket.on('updatecameramove', allowed => getcameramove(allowed))
-    }
-
-    loginRejected(reason){
-        // Do something...
     }
 
     move(id, position){

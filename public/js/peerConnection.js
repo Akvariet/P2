@@ -2,13 +2,26 @@ import { config } from './clientConfig.js';
 import {beginProxiChat, proxiChat} from './proxi.js';
 import {analyzeVoice} from './voiceAnalysis.js';
 
+
+// holds connected peers peer object which has the same options as your own peer.
 export const peers = {};
+
+// Your micrphone audio
 export let myStream;
+
+// The peer server that the webbrowser connects to 
 const options = config('peerConnection');
+
+// Your peer, this holds all your connection information that the peer server returns.
 let peer;
 
+// Sets up a connection to the peer server
 export function peerConnection(id, users){
+
+    // Gets your microphone audio
     const getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+
+    // The devices the webbrowser gets information from
     const media = {video: false, audio: true};
 
     getUserMedia(media, stream => streamVoice(stream, users, id));
@@ -16,22 +29,33 @@ export function peerConnection(id, users){
 
 function streamVoice(stream, users, id){
     myStream = stream;
+
+    // connects you to the peer server
     peer = new Peer(id, options);
+
+    // When you get connected to the peer server, do this.
     peer.on('open', id => ConnectToAllUsers(stream, id, users));
+
+    // When someone calls you, do this.
     peer.on('call', call => answerCall(stream, call));
+
+    // If there is a error do this
     peer.on('error', err => console.error(err));
 
     analyzeVoice(stream);
 }
 
+// Connects to all users in the users object
 function ConnectToAllUsers(stream, myID, users){
     beginProxiChat(myID);
          
+    // Connects to all users
     Object.values(users).forEach(user=>{
         if(myID !== user.id) connectToUser(stream, user.id)
     });    
 }
 
+// Answers call 
 function answerCall(stream, call){
     call.answer(stream);
 
@@ -39,26 +63,27 @@ function answerCall(stream, call){
 
     proxiChat(audio, call.peer);
 
-    //when there is a incoming call adds a stream
+    //When there is a incoming call adds a stream
     call.on('stream', remoteStream => startRemoteStream(remoteStream, audio));
 }
 
+// Adds other users audio stream to a audio object so the program can modify their audio 
 function startRemoteStream(remoteStream, audio){
     audio.srcObject = remoteStream;
     audio.addEventListener('loadedmetadata', () => audio.play());
 }
 
-//calls a user
+// Calls a user 
 function connectToUser(stream, newUserID){
     let call = peer.call(newUserID, stream);
 
     const audio = document.createElement('audio');
     proxiChat(audio, newUserID);
 
-    //when there is a incoming call adds a stream
+    //When there is a incoming call adds a stream
     call.on('stream', remoteStream => startRemoteStream(remoteStream, audio));
     call.on('close', ()=> audio.remove());
 
-    //stores call in object
+    //Stores call in object
     peers[newUserID] = call;
 }

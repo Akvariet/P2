@@ -7,14 +7,48 @@ import {getcameramove} from './cameraMove.js';
 import {displayUserSpeak} from "./voiceAnalysis.js";
 import {config} from './clientConfig.js';
 
-export class ClientConnection{
-    socket;
-    myID;
+const socket = io(options);
+let myID;
 
+
+
+
+export const clientConnection = {
     constructor(options) {
-        this.socket = io(options)
+        socket = io(options)
         this.establishConnection();
+    },
+
+    onReceivedUserPosition;
+    onReceivedUserRotation;
+    onReceivedNewUser;
+    onReceivedUserDisconnect;
+    onReceivedDisconnect;
+    onReceivedGameResult;
+    onReceivedUserSpeaking;
+
+    onUserPositionChanged;
+    onUserRotationChanged;
+
+
+    ReceiveSocketEvent(){
+        this.socket.onAny((event, ...args)=>{
+            (function(event) {
+                switch (event) {
+                    case 'moved'             : return receiveUserPosition;
+                    case 'turned'            : return receiveUserRotation;
+                    case 'disconnect'        : return receiveUser;
+                    case 'user-speaking'     : return receiveUserPosition;
+                    case 'spinner-result'    : return receiveUserPosition;
+                    case 'user-disconnected' : return receiveUserPosition;
+                    case 'new-user-connected': return receiveUserPosition;
+                }
+            }()).call(...args);
+
+        })
     }
+
+
 
     establishConnection(){
         // Open the websocket.
@@ -31,17 +65,17 @@ export class ClientConnection{
 
     handleServerEvents() {
         // A new user has connected.
-        this.socket.on('new-user-connected', user => this.newConnection(user));
+        this.socket.on('new-user-connected', this.onReceivedNewUser);
 
         // If a user disconnected.
-        this.socket.on('user-disconnected', id => removeDeadUser(id));
+        this.socket.on('user-disconnected', this.onReceivedUserDisconnect);
 
         // If a user moves or turns.
-        this.socket.on('moved', (id, position) => this.move(id, position));
-        this.socket.on('turned', (id, position) => this.turn(id, position));
+        this.socket.on('moved', this.onReceivedUserPosition);
+        this.socket.on('turned', this.onReceivedUserRotation);
 
         // If the client is disconnected. (If I am disconnected.)
-        this.socket.on('disconnect', reason => this.disconnect(reason));
+        this.socket.on('disconnect', this.onReceivedDisconnect);
 
         // If the client starts the spinner
         this.socket.on('spinner-result', spinBottle);
@@ -85,6 +119,7 @@ export class ClientConnection{
         drawUser(user);
     }
 
+
     handleClientEvents(myId, myAvatar) {
         myAvatar.addEventListener('moved',  e => this.emit('moved', e.detail));
         myAvatar.addEventListener('turned', e => this.emit('turned', e.detail));
@@ -114,3 +149,19 @@ export function startSpinner() {
 export function login(name, color){
     connection.attemptLogin(name, color);
 }
+
+
+function receiveUserPosition(...args){
+    this.onReceivedUserPosition();
+    this.onUserPositionChanged();
+}
+
+function receiveUserRotation(...args){
+    this.onReceivedUserRotation();
+    this.onUserRotationChanged();
+}
+
+function changeUserRotation(...args){}
+function userDisconnected(...args){}
+function changeUserPosition(...args){}
+function changeUserPosition(...args){}

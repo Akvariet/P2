@@ -1,68 +1,64 @@
+import { config } from './clientConfig.js';
 import {beginProxiChat, proxiChat} from './proxi.js';
 import {analyzeVoice} from './voiceAnalysis.js';
 
 export const peers = {};
 export let myStream;
+const options = config('peerConnection');
+let peer;
 
-export class PeerVoiceConnection{
-    getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-    media = {video: false, audio: true};
-    peer;
-    myID;
+export function peerConnection(id, users){
+    const getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+    const media = {video: false, audio: true};
 
-    constructor(options, id, users){
-        this.myID = id;
-        this.getUserMedia(this.media, stream => this.streamVoice(stream, options, users));
-    }
+    getUserMedia(media, stream => streamVoice(stream, users, id));
+}
 
-    streamVoice(stream, options, users){
-        myStream = stream;
-        this.peer = new Peer(this.myID, options);
-        this.peer.on('open', id => this.ConnectToAllUsers(stream, id, users));
-        this.peer.on('call', call => this.answerCall(stream, call));
-        this.peer.on('error', err => console.error(err));
+function streamVoice(stream, users, id){
+    myStream = stream;
+    peer = new Peer(id, options);
+    peer.on('open', id => ConnectToAllUsers(stream, id, users));
+    peer.on('call', call => answerCall(stream, call));
+    peer.on('error', err => console.error(err));
 
-        analyzeVoice(stream);
-    }
+    analyzeVoice(stream);
+}
 
-    //calls every user already connected to server
-    ConnectToAllUsers(stream, myID, users){
-        beginProxiChat(myID);
-             
-        Object.values(users).forEach(user=>{
-            if(myID !== user.id) this.connectToUser(stream, user.id)
-        });    
-    }
+function ConnectToAllUsers(stream, myID, users){
+    beginProxiChat(myID);
+         
+    Object.values(users).forEach(user=>{
+        if(myID !== user.id) connectToUser(stream, user.id)
+    });    
+}
 
-    answerCall(stream, call){
-        call.answer(stream);
+function answerCall(stream, call){
+    call.answer(stream);
 
-        const audio = document.createElement('audio');
+    const audio = document.createElement('audio');
 
-        proxiChat(audio, call.peer);
+    proxiChat(audio, call.peer);
 
-        //when there is a incoming call adds a stream
-        call.on('stream', remoteStream => this.startRemoteStream(remoteStream, audio));
-    }
+    //when there is a incoming call adds a stream
+    call.on('stream', remoteStream => startRemoteStream(remoteStream, audio));
+}
 
+function startRemoteStream(remoteStream, audio){
+    audio.srcObject = remoteStream;
+    audio.addEventListener('loadedmetadata', () => audio.play());
+}
 
-    startRemoteStream(remoteStream, audio){
-        audio.srcObject = remoteStream;
-        audio.addEventListener('loadedmetadata', () => audio.play());
-    }
+//calls a user
+function connectToUser(stream, newUserID){
+    let call = peer.call(newUserID, stream);
 
-    //calls a user
-    connectToUser(stream, newUserID){
-        let call = this.peer.call(newUserID, stream);
+    const audio = document.createElement('audio');
+    proxiChat(audio, newUserID);
 
-        const audio = document.createElement('audio');
-        proxiChat(audio, newUserID);
+    //when there is a incoming call adds a stream
+    call.on('stream', remoteStream => startRemoteStream(remoteStream, audio));
+    call.on('close', ()=> audio.remove());
 
-        //when there is a incoming call adds a stream
-        call.on('stream', remoteStream => this.startRemoteStream(remoteStream, audio));
-        call.on('close', ()=> audio.remove());
-
-        //stores call in object
-        peers[newUserID] = call;
-    }
+    //stores call in object
+    peers[newUserID] = call;
 }

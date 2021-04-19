@@ -2,7 +2,7 @@ import {moveUser, removeDeadUser, turnUser} from './interaction.js';
 import {drawUser} from './login.js';
 import {enterRoom} from './client.js';
 import {spinBottle} from "./frontend-spinner.js";
-import {PeerVoiceConnection} from './PeerConnection.js';
+import {peerConnection} from './peerConnection.js';
 import {getcameramove} from './cameraMove.js';
 import {displayUserSpeak} from "./voiceAnalysis.js";
 import {config} from './clientConfig.js';
@@ -66,7 +66,7 @@ export class ClientConnection{
         if(myId && users){
             this.myID = myId;
             // Connect to the peer server and peers for voice chat
-            const peerConnection = new PeerVoiceConnection(config('PeerVoiceConnection'), myId, users);
+            peerConnection(myId, users);
 
             // Enter the room.
             const avatar = enterRoom(myId, users);

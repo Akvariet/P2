@@ -1,6 +1,6 @@
 import {useCameraMove, updateMouseCoordinates} from './cameraMove.js';
 import {usePopUpMenu, userCoordinates, cameraCoordinates} from './popUpMenu.js';
-import {peers} from './PeerConnection.js';
+import {peers} from './peerConnection.js';
 import {clickSpinner} from "./frontend-spinner.js";
 
 export function moveUser(id, position){

@@ -1,7 +1,6 @@
 import {useCameraMove, updateMouseCoordinates} from './cameraMove.js';
 import {usePopUpMenu, userCoordinates, cameraCoordinates} from './popUpMenu.js';
 import {peers} from './PeerConnection.js';
-import {clickSpinner} from "./frontend-spinner.js";
 
 export function moveUser(id, position){
     const containerElement = document.getElementById(id);
@@ -38,7 +37,6 @@ export function makeInteractable(id){
 
     userMove();
     userRotate();
-    clickSpinner();
     usePopUpMenu(id);
     useCameraMove();
 

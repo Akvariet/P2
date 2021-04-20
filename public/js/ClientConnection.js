@@ -1,7 +1,7 @@
 import {moveUser, removeDeadUser, turnUser} from './interaction.js';
 import {drawUser} from './login.js';
 import {enterRoom} from './client.js';
-import {spinBottle} from "./frontend-spinner.js";
+import {spinBottle} from "./frontendSpinner.js";
 import {PeerVoiceConnection} from './PeerConnection.js';
 import {getcameramove} from './cameraMove.js';
 import {displayUserSpeak} from "./voiceAnalysis.js";
@@ -98,10 +98,6 @@ export class ClientConnection{
 
     turn(id, position){
         turnUser(id, position)
-    }
-
-    startSpinner(){
-        this.emit('start-spinner', this.myID);
     }
 }
 

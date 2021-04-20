@@ -1,7 +1,7 @@
 import {UserProperties} from "./user.js";
 import * as socket_io from "socket.io";
 import {ConnectionTable} from "./connection.js";
-import {Spinner} from './backend-spinner.js';
+import {Spinner, getRelUserPos} from './backendSpinner.js';
 import {ColorPicker} from "./ColorPicker.js";
 
 // AkvarioServer controls all real time connection with users all users.
@@ -106,7 +106,7 @@ export class AkvarioServer{
     startSpinner(id) {
 
         // gets the users relative position to the spinner
-        const relPos = this.spinner.getRelUserPos((this.userProperties.positions), this.spinner.pos);
+        const relPos = getRelUserPos((this.userProperties.positions), this.spinner.pos);
 
         // finds the user who clicked on the spinner
         const userPos = relPos[id];

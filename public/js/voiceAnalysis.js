@@ -22,9 +22,6 @@ export function analyzeVoice(stream) {
     // Creates a new array based on the amount of data points and the data type (in this case it is 8-bit unsigned integers)
     let dataArray = new Uint8Array(bufferLength);
 
-    // A function that returns the larges element in array
-    let max = (array) => Math.max(...array);
-
     // sets the range of sounds that we want to get. sounds < -40 is 0 in the data array, and sounds > -10 is 255 (max value)
     analyser.maxDecibels = -10;
     analyser.minDecibels = -50;
@@ -35,14 +32,7 @@ export function analyzeVoice(stream) {
         // The timout can be adjusted.
         newAnalysis = setTimeout(analyse, 25);
 
-        // Gets the sound data of the analyser and puts it into the dataArray
-        analyser.getByteFrequencyData(dataArray);
-
-        //find the highest value in the data array
-        let max_data = max(dataArray);
-
-        //If there is a sound in the range
-        if (max_data){
+        if (analyseIncomingVoice(analyser, dataArray)){
             if (speaking === false){
                 speaking = true;
                 userElement.classList.add('speaking'); // So the user can see that he/she is speaking
@@ -54,8 +44,21 @@ export function analyzeVoice(stream) {
             userElement.classList.remove('speaking'); // So the user can see that he/she stopped speaking
             connection.emit("user-speaking", speaking, connection.myID);
         }
+
+        //If there is a sound in the range
+
     }
     analyse();
+}
+
+function analyseIncomingVoice(analyser, dataArray){
+    // Gets the sound data of the analyser and puts it into the dataArray
+    analyser.getByteFrequencyData(dataArray);
+
+    //find the highest value in the data array
+    let max_data = Math.max(...dataArray);
+
+    return Boolean(max_data);
 }
 
 export function displayUserSpeak(speaking, id) {

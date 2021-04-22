@@ -8,6 +8,24 @@ const gameID = {
     next () { return this._current++; }
 }
 
+export function exportUsers(){
+    const allUsers = {};
+    for (const userKey in users) {
+        const id = users[userKey].gameID;
+
+        allUsers[id] = users[userKey];
+    }
+    return allUsers;
+}
+
+export function changeID(newID, oldID){
+    if(users.hasOwnProperty(oldID)){
+        Object.assign(users, {[newID]:users[oldID]})
+        delete users[oldID];
+    }
+    else console.log('User did not exist')
+}
+
 export function get(cid){
     if (users.hasOwnProperty(cid))
         return users[cid];
@@ -16,24 +34,35 @@ export function get(cid){
 
 // Takes a name and a color and attempts to create a new user. If the name or the color is invalid, it returns undefined.
 export function create(name, color){
-    if (!(validateName(name) && validateColor(color))) return undefined;
+    if (!(validateName(name) || !validateColor(color))) return undefined;
 
     const cid = uuidv4();
+    const id = gameID.next();
+
     users[cid] = {
-        gameID: gameID.next(),
+        gameID: id,
         name: name,
         color: color,
-    }
+        position: {top: 0, left: 0},
+        rotation: 1
+    };
+
+    return cid;
 }
 
 export function remove(cid){
-    users.delete(cid);
+    if (users.hasOwnProperty(cid)){
+        users.delete(cid);
+        console.log('user ' + cid + ' removed');
+    }
+    else console.log('user ' + cid + ' did not exist!');
 }
 
 // If the name is available, return true, else return false.
 function validateName(name){
-    for (const id of users) {
-        if (get(id).name === name)
+    for (const id of Object.keys(users)) {
+        const user = get(id);
+        if (user && user.name === name)
             return false;
     }
     return true;

@@ -1,11 +1,18 @@
-export class ConnectionTable {
-    connections = {}
 
-    newConnection(socketID, gameID){
-        this.connections[socketID] = gameID;
+export const clients = {
+    cid: {
+        gameID: 'gameid',
+        socketID: 'socketid'
+    },
+    addID(client, type, id){
+        this[client][type] = id;
     }
+}
 
-    gameID(socketID){
-        return this.connections[socketID];
-    }
+export function newConnection(cID, gameID){
+    clients[cID] = gameID;
+}
+
+export function gameID(cID){
+    return clients[cID];
 }

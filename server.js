@@ -8,23 +8,25 @@ import * as user from './users.js'
 
 const server = express();
 const HTTPServer = createServer(server);
-const akvarioServer = new AkvarioServer(HTTPServer);
+new AkvarioServer(HTTPServer);
 
 server.use(bodyParser.json());
 server.use(express.static('public'));
 server.use(router);
 
 export function attemptLogin(name, color){
-    // Validate login information.
+
+    if(!name)  throw 'No name specified.'
+    if(!color) throw 'No color specified.'
 
     // Create user.
-    const newUser = user.create(name, color);
-
-    if(newUser)
-    // Return user ID and the user collection.
-    if (name === 'hej')
+    const cid = user.create(name, color);
+    if(cid === undefined)
         return undefined;
-    else return {id: 1, users: users}
+    const id = user.users[cid].gameID;
+
+    // Return user ID and the user collection.
+    return {id: id, cid: cid, users: user.exportUsers()}
 }
 
 

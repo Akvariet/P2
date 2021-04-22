@@ -60,7 +60,6 @@ function receiveUserPosition(id, position){
 
 function receiveUserRotation(id, position){
 
-    console.log(id);
     // Turn the user.
     const user = users[id];
     turn(user, position);

@@ -5,7 +5,7 @@ export const users = {};
 
 const gameID = {
     _current: 0,
-    next () { return this._current++; }
+    next () { return uuidv4(); }
 }
 
 export function exportUsers(){

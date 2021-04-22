@@ -1,3 +1,4 @@
+import {peerConnection, removePeer} from './peerConnection.js';
 
 let socket;
 let myID;
@@ -14,6 +15,7 @@ export function awake(id, cid, allUsers){
     for (const user of Object.keys(allUsers))
         users[user] = drawUser(allUsers[user]);
 
+    peerConnection(myID, allUsers);
     enableInteraction(socket);
 
     // Receive socket events and call the associated function with args.
@@ -86,6 +88,8 @@ function receiveUserDisconnected(id){
         users[id].remove();
         users.delete(id);
     }
+
+    removePeer(id);
 }
 
 /**

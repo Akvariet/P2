@@ -13,7 +13,7 @@ export function config(func){
     if(production){
         switch(func){
 
-            case 'PeerVoiceConnection': return {host: "audp2p.herokuapp.com", port: 443, secure: true};
+            case 'peerConnection': return {host: "audp2p.herokuapp.com", port: 443, secure: true};
             case 'ClientConnection':    return {autoConnect: false, path:'/node0/socket.io', transports: ["polling"]};
 
             //login.js
@@ -22,7 +22,7 @@ export function config(func){
     } else {
         switch (func){
 
-            case 'PeerVoiceConnection': return {host: "audp2p.herokuapp.com", port: 443, secure: true, debug: 2};
+            case 'peerConnection': return {host: "audp2p.herokuapp.com", port: 443, secure: true, debug: 2};
             case 'ClientConnection':    return {autoConnect: false};
 
             //login.js

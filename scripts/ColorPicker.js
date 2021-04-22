@@ -44,5 +44,5 @@ export function extractColors(){
     for (const color in colors){
         colorCodes.push(colorPicker.previewShade(colors[color]));
     }
-    return {colors: colors, colorCodes:colorCodes};
+    return {colors: colors, colorCodes: colorCodes};
 }

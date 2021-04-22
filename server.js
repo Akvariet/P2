@@ -6,6 +6,7 @@ import {AkvarioServer} from "./scripts/AkvarioServer.js";
 import {port} from './scripts/serverConfig.js'
 import * as user from './users.js'
 
+
 const server = express();
 const HTTPServer = createServer(server);
 new AkvarioServer(HTTPServer);
@@ -28,8 +29,6 @@ export function attemptLogin(name, color){
     // Return user ID and the user collection.
     return {id: id, cid: cid, users: user.exportUsers()}
 }
-
-
 
 
 //listens to PORT set in /scripts/serverConfig.

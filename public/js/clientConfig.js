@@ -17,7 +17,7 @@ export function config(func){
             case 'ClientConnection':    return {autoConnect: false, path:'/node0/socket.io', transports: ["polling"]};
 
             //login.js
-            case 'getJson':             return '/node0/colors';
+            case 'getColors':             return '/node0/colors';
         }
     } else {
         switch (func){
@@ -26,7 +26,7 @@ export function config(func){
             case 'ClientConnection':    return {autoConnect: false};
 
             //login.js
-            case 'getJson':             return '/colors';
+            case 'getColors':             return '/colors';
         }
     }
 }

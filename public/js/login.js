@@ -1,7 +1,13 @@
+import {awake} from './main.js';
+import {config} from './clientConfig.js';
 
 const colorSelector = document.querySelector('.color-picker-items');
 const inputField = document.getElementById('username');
 const nameTag = document.getElementById('0_name');
+
+//Fail messages for the client if an error occurs
+const FailMessageColors = 'The extraction of colors was rejected. Reload and try again';
+const FailMessageLogin = 'The login attempt was rejected by the server. Try again.';
 
 const displayedUser = {
     body : document.querySelector('.body-displayed'),
@@ -10,44 +16,63 @@ const displayedUser = {
 }
 
 const colorPicker = {
-    previewColors: ['red', 'brown', 'orange','pink', 'yellow', 'green', 'blue', 'magenta'],
+    previewColors: [],
+    colorCodes: [],
     selectedColor: undefined,
     activeColorPreview: undefined,
 };
-colorPicker.selectedColor = colorPicker.previewColors[0];
 
+async function displayColors() {
+//Gets the colors send from the servers and displays them on the login screen and adds the color picking functionality
+    //Fetch the colors from the server
+    fetch(config('getColors'))
+        //If the fetch was successful convert the data to json
+        .then(res => res.json(),
+              //Else send fail message to try again
+              reason => retry(reason, FailMessageColors))
+        .then(res => {
+            //Save the received colors and color codes in the color object
+            colorPicker.previewColors = res.colors;
+            colorPicker.colorCodes = res.colorCodes;
+            colorPicker.selectedColor = res.colors[0];
+
+            // Render the available colors in the preview.
+            colorPicker.previewColors.forEach((color, i) => {
+                // Create a new color element.
+                const newColor = document.createElement("div");
+                newColor.setAttribute("class", "coloritem");
+                newColor.setAttribute("id", color);
+                newColor.style.backgroundColor = colorPicker.colorCodes[i];
+
+                // When the user clicks the color it should update the user preview.
+                newColor.addEventListener('click', () => {
+                    colorPicker.selectedColor = newColor.getAttribute("id");
+
+                    //If a color is active remove this and set the chosen color to be the active color.
+                    if (colorPicker.activeColorPreview)
+                        colorPicker.activeColorPreview
+                            .classList.remove("color-item-active");
+
+                    newColor.classList.add("color-item-active");
+                    colorPicker.activeColorPreview = newColor;
+
+                    //Change the user color to the chosen.
+                    displayedUser.arrow.style.fill = colorPicker.colorCodes[i];
+                    displayedUser.body.style.backgroundColor = colorPicker.colorCodes[i];
+                });
+                // Add the new color element to the HTML page
+                colorSelector.appendChild(newColor);
+            });
+        },
+        // If failed send fail message
+        reason => retry(reason, FailMessageColors))
+}
+
+displayColors();
 
 //When the user enters their name, the name tag should update in real time.
 inputField.addEventListener('input',
     () => nameTag.textContent = inputField.value);
-
-// Render the available colors in the preview.
-colorPicker.previewColors.forEach(color => {
-    // Create a new color element.
-    const newColor = document.createElement("div");
-    newColor.setAttribute("class", "coloritem");
-    newColor.setAttribute("id", color);
-    newColor.style.backgroundColor = color;
-
-    // When the user clicks the color it should update the user preview.
-    newColor.addEventListener('click', e => {
-        colorPicker.selectedColor = newColor.getAttribute("id");
-
-        //If a color is active remove this and set the chosen color to be the active color.
-        if (colorPicker.activeColorPreview)
-            colorPicker.activeColorPreview
-                .classList.remove("color-item-active");
-
-        newColor.classList.add("color-item-active");
-        colorPicker.activeColorPreview = newColor;
-
-        //Change the user color to the chosen.
-        displayedUser.arrow.style.fill = color;
-        displayedUser.body.style.backgroundColor = color;
-    });
-
-    colorSelector.appendChild(newColor);
-});
 
 // When the user submits the form the program attempts to log in.
 document.getElementById('user-form')
@@ -120,10 +145,10 @@ function enterRoom(response){
     awake(response.id, response.cid, response.users);
 }
 
-function retry(reason) {
+function retry(reason, message) {
     // The login attempt was rejected. Try again.
     console.log(reason);
-    console.log('The login attempt was rejected by the server. Try again.');
+    console.log(message);
 }
 
 

@@ -15,6 +15,7 @@ spinnerElement.addEventListener('click', () => {
 // starts the game when a user clicks on the spinner
 export function spinBottle(userColors, spinner) {
     let currentAngle = {value : 0};
+    console.log(spinner);
     const userAngles = spinner.result.userAngles;
     const rotationAngle = spinner.rotationAngle;
     const refine = spinner.refine;
@@ -36,7 +37,8 @@ export function spinBottle(userColors, spinner) {
             setTimeout((angle, userAngles, userColors) => {
                 rotate(angle);
                 highlightUser(angle, userAngles, userColors);
-            }, (v*timer), currentAngle.value, userAngles, userColors);
+            }, (toRadians(timer)/(v/1000)), currentAngle.value, userAngles, userColors);
+            console.log((toRadians(timer)/(v/1000)));
             timer++;
         }
     }
@@ -154,7 +156,7 @@ function flash(winnerElement, winnerColor, originalColor, time){
 }
 
 // sets the color of the user at a given interval for 2,5 seconds
-function blink(element, color, time) {
+function blink(element, color, time, blinkTime) {
     let switchColor = setInterval(setColor, time, element, color);
     setTimeout(() => clearInterval(switchColor), 2500);
 }

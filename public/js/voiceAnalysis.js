@@ -44,9 +44,6 @@ export function analyzeVoice(stream) {
             userElement.classList.remove('speaking'); // So the user can see that he/she stopped speaking
             connection.emit("user-speaking", speaking, connection.myID);
         }
-
-        //If there is a sound in the range
-
     }
     analyse();
 }

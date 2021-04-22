@@ -10,12 +10,13 @@ export class Spinner {
     range = 250;
     // The spinners position in the space
     pos = {top : 750, left: 1000};
+    // Velocities are the angular velocity on the spinner in [rad/s]
     velocity = {
         // The maximum velocity
         max : 0,
         // The lowest velocity
         min : 0,
-        // The different velocities in the different sessions
+        // The different velocities in the different spin sessions
         sessions : [],
         // The velocity when the spinner is repositioning
         repositioning : 0
@@ -34,7 +35,7 @@ export class Spinner {
 
     // Starts a new spinner game
     newGame(userProperties) {
-        // Finds the rotationAngle, winner and the users angles to the spinner.
+        // Finds the rotationAngle, id on the winner and the users angles to the spinner.
         this.result = spin(userProperties.positions, this.pos, this.range);
         this.rotationAngle = this.result.rotationAngle;
 
@@ -147,10 +148,16 @@ function calcRotationTime(rotationAngle) {
 function calcVelocity(rotationAngle, rotationTime, refine) {
     let vMax = (2 * toRadians(rotationAngle)) / (rotationTime);
     let vMin = vMax/refine;
-    let spinSessions = [vMin];
+    const deceleration = (0-vMax)/rotationTime;
+    let spinSessions = [vMax];
+
+    console.log(rotationAngle);
+    console.log(toRadians(rotationAngle));
+    console.log(2* toRadians(rotationAngle));
+    console.log(vMax);
 
     for (let i = 1; i < refine; i++)
-        spinSessions.push(spinSessions[i-1] + vMin);
+        spinSessions.push(deceleration * (rotationTime * i/refine) + vMax);
 
     return {
         max : vMax,
@@ -167,15 +174,15 @@ function toRadians(angle) {
 
 // calculates the different wait times for the setTimeouts in the spinner.
 function calcWaitTimes (velocity, refine, rotationAngle, stillTime) {
-    let v = velocity.min;
+    let v = velocity.max;
     let spinSessions = [0];
 
     for (let i = 1; i < refine; i++) {
-        spinSessions.push(spinSessions[i-1] + v * Math.floor(rotationAngle * (1 / refine)));
-        v += velocity.min;
+        spinSessions.push(spinSessions[i-1] + toRadians(Math.floor(rotationAngle * (1 / refine))) / (v/1000));
+        v -= velocity.min;
     }
 
-    let repositioning = stillTime + spinSessions[refine-1] + velocity.max * Math.floor(rotationAngle * (1 / refine));
+    let repositioning = stillTime + spinSessions[refine-1] + toRadians(Math.floor(rotationAngle * (1 / refine))) / (velocity.min/1000);
     let reset = 2600;
 
     return {sessions : spinSessions, repositioning : repositioning, reset : reset, total : repositioning + reset};

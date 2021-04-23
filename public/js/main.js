@@ -1,9 +1,15 @@
 import {peerConnection, removePeer} from './peerConnection.js';
+import {displayUserSpeak} from './voiceAnalysis.js';
+
+const TICKRATE = 15;
 
 let socket;
 let myID;
 
 export const users = {};
+
+const gameData = {};
+const oldData = {};
 
 // When the game starts, this function runs once for initial setup.
 export function awake(id, cid, allUsers){
@@ -16,7 +22,17 @@ export function awake(id, cid, allUsers){
         users[user] = drawUser(allUsers[user]);
 
     peerConnection(myID, allUsers);
-    enableInteraction(socket);
+    enableInteraction();
+
+    // Send updates to server each tick
+    let tick = setInterval(() => {
+        Object.keys(gameData).forEach(event => {
+            if(gameData[event] !== oldData[event]){
+                socket.emit(event, gameData[event]);
+                oldData[event] = gameData[event];
+            }
+        })
+    }, 1/TICKRATE);
 
     // Receive socket events and call the associated function with args.
     socket.onAny((event, ...args)=> {
@@ -34,6 +50,10 @@ export function awake(id, cid, allUsers){
     });
 }
 
+export function updateData(event, data){
+    gameData[event] = data;
+}
+
 // The main game loop. Will be paused if the window is not in focus.
 function main(){
     const nextFrame = requestAnimationFrame(main);
@@ -46,8 +66,6 @@ function main(){
 
 
 }
-
-
 
 // Receives a user object from the server and proceeds to draw the user on the page.
 function receiveNewUser(user) {
@@ -72,8 +90,8 @@ function receiveDisconnected() {
     window.location.reload();
 }
 
-function receiveUserSpeaking(id){
-
+function receiveUserSpeaking(speaking, id){
+    displayUserSpeak(speaking, id);
 }
 
 
@@ -95,7 +113,7 @@ function receiveUserDisconnected(id){
 /**
  * @summary Enables the user to move their own avatar.
  * */
-function enableInteraction(socket) {
+function enableInteraction() {
     const containerElement = document.getElementById(myID);
     const userElement = document.getElementById(`${myID}_body`);
 
@@ -126,7 +144,7 @@ function enableInteraction(socket) {
             left: (containerElement.offsetLeft - pos1)
         }
 
-        socket.emit('moved', position);
+        updateData('moved', position);
         move(containerElement, position);
     }
 
@@ -149,7 +167,7 @@ function enableInteraction(socket) {
         // Calculate user rotation.
         let rotation = -1 * Math.atan2(userY, userX);
 
-        socket.emit('turned', rotation);
+        updateData('turned', rotation);
         turn(containerElement, rotation);
     }
 

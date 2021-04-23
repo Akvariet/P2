@@ -1,6 +1,6 @@
 import { config } from './clientConfig.js';
-//import {beginProxiChat, proxiChat} from './proxi.js';
-//import {analyzeVoice} from './voiceAnalysis.js';
+import {beginProxiChat, proxiChat} from './proxi.js';
+import {analyzeVoice} from './voiceAnalysis.js';
 
 
 // holds connected peers peer object which has the same options as your own peer.
@@ -46,15 +46,15 @@ function streamVoice(stream, users, id){
     // If there is a error do this
     peer.on('error', err => console.error(err));
 
-    //analyzeVoice(stream);
+    analyzeVoice(stream, id);
 }
 
 // Connects to all users in the users object
 function ConnectToAllUsers(stream, myID, users){
-    //beginProxiChat(myID);
+    beginProxiChat(myID);
 
     // Connects to all users
-    Object.values(users).forEach(user=>{
+    Object.values(users).forEach(user => {
         if(myID !== user.gameID) connectToUser(stream, user.gameID)
     });    
 }
@@ -65,7 +65,7 @@ function answerCall(stream, call){
 
     const audio = document.createElement('audio');
 
-    //proxiChat(audio, call.peer);
+    proxiChat(audio, call.peer);
 
     //When there is a incoming call adds a stream
     call.on('stream', remoteStream => startRemoteStream(remoteStream, audio));
@@ -82,11 +82,11 @@ function connectToUser(stream, newUserID){
     let call = peer.call(newUserID, stream);
 
     const audio = document.createElement('audio');
-    //proxiChat(audio, newUserID);
+    proxiChat(audio, newUserID);
 
     //When there is a incoming call adds a stream
     call.on('stream', remoteStream => startRemoteStream(remoteStream, audio));
-    call.on('close', ()=> audio.remove());
+    call.on('close', () => audio.remove());
 
     //Stores call in object
     peers[newUserID] = call;

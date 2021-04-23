@@ -24,6 +24,7 @@ export function AkvarioServer(HTTPServer){
                         case 'turned'            : return turn;     // A user turned.
                         case 'disconnect'        : return disconnect;     // You have been disconnected.
                         case 'user-disconnected' : return disconnect; // A user has disconnected.
+                        case 'user-speaking'     : return speak;
                     }
                 })(event)(socket, ...args);
             });
@@ -48,4 +49,8 @@ function turn(socket, rotation){
     const client = user.get(socket.id);
     client.rotation = rotation;
     socket.broadcast.emit('turned', client.gameID, rotation);
+}
+
+function speak(socket, speaking, id){
+    socket.broadcast.emit('user-speaking', speaking, id);
 }

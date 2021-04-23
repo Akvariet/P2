@@ -1,22 +1,14 @@
+import {users} from './main.js';
 
 export const audioPlayers = {};
 let myID;
 
 export function distance(myPosition, position){
-    return dist(relativePos(myPosition, position))
-}
+    const left = position.left - myPosition.left
+    const top  = position.top  - myPosition.top
 
-// Returns distance given a relative position.
-function dist(relPos){
-    return Math.sqrt((relPos.left * relPos.left) + (relPos.top * relPos.top));
-}
-
-// Returns the position of pos2 relative to pos1
-function relativePos(pos1, pos2){
-    const pos = {};
-    pos['top']  = pos2.top  - pos1.top;
-    pos['left'] = pos2.left - pos1.left;
-    return pos;
+    // Return the distance between myPosition and position.
+    return Math.sqrt((left * left) + (top * top));
 }
 
 // Contains all of the functions that control how voice volume change according to distance.
@@ -43,7 +35,7 @@ export class VolumeFunctions {
 
 export function beginProxiChat(id){
     myID = id;
-    const myElement = document.getElementById(myID);
+    const myElement = users[myID];
     myElement.addEventListener('moved', (e)=>{
 
         for (const audioPlayer in audioPlayers) {
@@ -53,9 +45,8 @@ export function beginProxiChat(id){
 }
 
 export function proxiChat(audio, userID){
-
-    const userContainer = document.getElementById(userID);
-    const myElement = document.getElementById(myID);
+    const userContainer = users[userID];
+    const myElement = users[myID];
     userContainer.append(audio);
     audioPlayers[userID] = {audio: audio, position: getPos(userContainer)};
 
@@ -71,12 +62,14 @@ export function proxiChat(audio, userID){
 
 const volFunc = new VolumeFunctions();
 
-export function adjustVolume(audio, myPosition, position){
+function adjustVolume(audio, myPosition, position){
     const d = distance(myPosition, position);
     audio.volume = volFunc.linearDecrease(d);
 }
 
-export function getPos(HTMLElement){
-    return {top:  Number(HTMLElement.style.top.slice(0, -2)),
-        left: Number(HTMLElement.style.left.slice(0, -2)) };
+function getPos(HTMLElement){
+    return {
+        top:  Number(HTMLElement.style.top.slice(0, -2)),
+        left: Number(HTMLElement.style.left.slice(0, -2))
+    };
 }

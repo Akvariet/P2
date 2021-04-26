@@ -40,18 +40,20 @@ export function spinBottle(userColors, spinner) {
         while(currentAngle.value < Math.floor(rotationAngle * part)) {
             currentAngle.value++;
 
-            // Calls a function that rotates the spinner and hightlights the closest user.
+            // Calls a function that rotates the spinner and highlights the closest user.
             setTimeout((angle, userAngles, userColors) => {
                 rotate(angle);
                 highlightUser(angle, userAngles, userColors);
             }, (toRadians(timer)/(v/1000)), currentAngle.value, userAngles, userColors);
+
+            console.log(toRadians(timer)/(v/1000));
 
             timer++;
         }
     }
 
     // When the spinner stops, announce the winner (in the console atm) and reset the spinner's position
-    setTimeout(announceWinner, spinner.waitTime.repositioning, spinner.winner, userColors);
+    setTimeout(announceWinner, spinner.waitTime.repositioning, spinner.result.winner, userColors);
     setTimeout(repositionSpinner, spinner.waitTime.repositioning, currentAngle, userAngles, spinner);
 }
 
@@ -150,9 +152,9 @@ function resetSpinnerAndUsersColor(userColors){
 
 // announces the winner
 function announceWinner(winner, userColors) {
-    const originalColor = userColors[winner.id];
+    const originalColor = userColors[winner];
     const winnerColor = 'hsl(116, 100%, 60%)';
-    const winnerElement = document.getElementById(winner.id + "_body");
+    const winnerElement = document.getElementById(winner + "_body");
 
     flash(winnerElement, winnerColor, originalColor, 200);
 }

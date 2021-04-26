@@ -6,7 +6,7 @@ import {analyzeVoice} from './voiceAnalysis.js';
 // holds connected peers peer object which has the same options as your own peer.
 export const peers = {};
 
-// Your micrphone audio
+// Your microphone audio
 export let myStream;
 
 // The peer server that the webbrowser connects to 

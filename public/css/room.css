@@ -59,11 +59,21 @@ div.speaking > svg {
 
 .spinner {
     position: absolute;
-    left: 750px;
-    top: 500px;
+    left: calc(250px - 65.132px);
+    top: calc(250px - 32.566px);
     height: 65.132px;
     width: calc(34px + 93.436px);
     transform: rotate(0deg);
+}
+.game-area {
+    position: absolute;
+    border-radius: 100%;
+    height: 500px;
+    width: 500px;
+    border: 4px solid;
+    border-color: #424242;
+    left: 750px;
+    top: 500px;
 }
 
 #spinner {

@@ -1,102 +1,86 @@
-let cameramoveAllowed = true, movingCamera = false;
+import {isCameraMoving} from './popUpMenu.js';
+
+let cameramoveAllowed = true;
 let posLeft=0, posTop=0;
 const mouseCoordinates = {x: 0, y: 0};
 
 export function updateMouseCoordinates(e){
-    mouseCoordinates.x = e.clientX, mouseCoordinates.y = e.clientY;
+    mouseCoordinates.x = e.clientX;
+    mouseCoordinates.y = e.clientY;
 }
 
 export function getcameramove(value){
     cameramoveAllowed = value;
 }
 
-export function checkMouseOutsideWindow(){
-    cameramoveAllowed = false;
-}
-
-export function checkMouseInsideWindow(){
-    cameramoveAllowed = true;
-}
-
 export function useCameraMove() {
-    window.main = () => {
-        window.requestAnimationFrame(main);
-        cameraMove();
-    }
-
     document.onmousemove = updateMouseCoordinates;
-    document.onmouseleave = checkMouseOutsideWindow;
-    document.onmouseenter = checkMouseInsideWindow;
-    window.main();
+    document.onmouseout = () => cameramoveAllowed = false; // if mouse leaves window, denies cameramove
+    document.onmouseover = () => cameramoveAllowed = true; // if mouse enters window, allows cameramove
+
 }
 
-function cameraMove(){
-  if (cameramoveAllowed){
-    const cameraVelocity = 6.12; // px
-    
-    let space = document.getElementById("space");
-    
-    // defines border size according to the window size
-    let boarderSize = 100; // px
-    let w = window.innerWidth, h = window.innerHeight;
-    let wBorderLeft = boarderSize, wBorderRight = w - boarderSize;
-    let hBorderTop = boarderSize, hBorderBottom = h - boarderSize;
+export function moveCamera(){
+    if (cameramoveAllowed){
+        let space = document.getElementById("space");
 
-    // defines position of element in comparison with the viewport
-    let bodyRect = document.body.getBoundingClientRect();
+        const cameraVelocity = 6.12; // px
+        const boarderSize = 30; // px
 
-    // finds midpoint of screen
-    let origoX = (window.innerWidth / 2) - bodyRect.left;
-    let origoY = (window.innerHeight / 2) - bodyRect.top;
+        // finds midpoint of screen
+        let origoX = window.innerWidth / 2;
+        let origoY = window.innerHeight / 2;
 
-    // creates relative position of mouse on midpoint of screen
-    let mouseX = -(origoX - mouseCoordinates.x + bodyRect.left);
-    let mouseY = origoY - mouseCoordinates.y + bodyRect.top;
+        // creates relative position of mouse on midpoint of screen
+        let mouseX = origoX - mouseCoordinates.x;
+        let mouseY = origoY - mouseCoordinates.y;
 
-    // gives the angle in radians (is negative value past pi)
-    let angle = Math.atan2(mouseY,mouseX); 
-    
-    let a = Math.cos(angle);
-    let giveX = -((a / Math.cos(0.698132))*cameraVelocity) // 40 degrees in radians is 0.698132
+        // percentage from midpoint to -minX and +maxX
+        let percX = mouseX / origoX;
+        let percY = mouseY / origoY;
 
-    let b = Math.sin(angle);
-    let giveY = ((b / Math.sin(0.698132))*cameraVelocity)
+        // relative camera velocity scaled with %x or %y
+        let giveX = percX * cameraVelocity;
+        let giveY = percY * cameraVelocity;
 
-    if (mouseCoordinates.x < wBorderLeft){
-        posLeft += cameraVelocity;
-        posTop += bodyRect.top + giveY;
+        if (mouseOnCorner()){
+            // move camera with full cameraVelocity
+            posLeft += giveVelocityCamera(giveX);
+            posTop += giveVelocityCamera(giveY);
+        }
+        else if (mouseOnBorder()){
+            /* move camera with full cameraVelocity in either x and y, while the other 
+               value varies according to its relative camera velocity, giveX or giveY */
+            posLeft += (Math.abs(giveX) > Math.abs(giveY)) ? giveVelocityCamera(giveX) : giveX;
+            posTop += (Math.abs(giveY) > Math.abs(giveX)) ? giveVelocityCamera(giveY) : giveY;
+        }
 
-        movingCamera = true;
-    }
-    else if (mouseCoordinates.x > wBorderRight){
-        posLeft -= cameraVelocity;
-        posTop += bodyRect.top + giveY;
-
-        movingCamera = true;
-    }
-    else if (mouseCoordinates.y < hBorderTop){
-        posLeft += bodyRect.left + giveX;
-        posTop += cameraVelocity;
-
-        movingCamera = true;
-    }
-    else if (mouseCoordinates.y > hBorderBottom){
-        posLeft += bodyRect.left + giveX;
-        posTop -= cameraVelocity;
-
-        movingCamera = true;
-    }
-    
-    if (movingCamera){
+        // moves camera to new position, if updated
         space.style.left = posLeft + "px";
         space.style.top = posTop + "px";
-        
-        movingCamera = false;
-        
-        // Popupmenu: hides popupmenu upon moving camera
-        const popup = document.getElementById("menuPopUp");
-        popup.style.display = "none";
-    }
-  }
-}
 
+        if (isCameraMoving()){
+            // hides popupmenu upon camera moving;
+            const popup = document.getElementById("menuPopUp");
+            popup.style.display = "none";
+        }
+
+
+        function giveVelocityCamera(giveCoordinate){
+            // gives positive or negative cameraVelocity, depending on the coordinate being positive or negative
+            return (giveCoordinate >= 0) ? cameraVelocity : -cameraVelocity;
+        }
+
+        function mouseOnBorder(){
+            return mouseCoordinates.y < boarderSize || mouseCoordinates.y > window.innerHeight - boarderSize
+                || mouseCoordinates.x < boarderSize || mouseCoordinates.x > window.innerWidth - boarderSize;
+        }
+
+        function mouseOnCorner(){
+            return mouseCoordinates.x <= boarderSize && mouseCoordinates.y <= boarderSize || // top left corner
+                mouseCoordinates.x >= window.innerWidth - boarderSize && mouseCoordinates.y <= boarderSize || // top right corner
+                mouseCoordinates.x <= boarderSize && mouseCoordinates.y >= window.innerHeight - boarderSize || // bottom left corner
+                mouseCoordinates.x >= window.innerWidth - boarderSize && mouseCoordinates.y >= window.innerHeight - boarderSize;
+        }
+    }
+}

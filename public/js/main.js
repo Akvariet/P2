@@ -1,5 +1,8 @@
 import {peerConnection, removePeer} from './peerConnection.js';
 import {displayUserSpeak} from './voiceAnalysis.js';
+import {usePopUpMenu} from './popUpMenu.js';
+import {moveCamera, useCameraMove} from './cameraMove.js';
+import {setupSpinner, spinBottle} from './frontendSpinner.js';
 
 const TICKRATE = 15;
 
@@ -23,17 +26,21 @@ export function awake(id, cid, allUsers){
 
     peerConnection(myID, allUsers);
     enableInteraction();
+    usePopUpMenu(id);
+    useCameraMove();
+    setupSpinner();
 
     // Send updates to server each tick
     let tick = setInterval(() => {
         Object.keys(gameData).forEach(event => {
             if(gameData[event] !== oldData[event]){
-                socket.emit(event, gameData[event]);
+                socket.emit(event, ...gameData[event]);
                 oldData[event] = gameData[event];
             }
         })
     }, 1/TICKRATE);
 
+    socket.on('disconnect', receiveDisconnected);
     // Receive socket events and call the associated function with args.
     socket.onAny((event, ...args)=> {
         (event => {
@@ -42,15 +49,16 @@ export function awake(id, cid, allUsers){
                 case 'turned'            : return receiveUserRotation;     // A user turned.
                 case 'disconnect'        : return receiveDisconnected;     // You have been disconnected.
                 case 'user-speaking'     : return receiveUserSpeaking;     // Someone is speaking.
-                case 'spinner-result'    : return receiveGameResult;       // A game result was evaluated by the server.
+                case 'start-spinner'    : return spinBottle;       // A game result was evaluated by the server.
                 case 'user-disconnected' : return receiveUserDisconnected; // A user has disconnected.
                 case 'new-user-connected': return receiveNewUser;          // A user has connected.
             }
         })(event)(...args);
     });
+    main();
 }
 
-export function updateData(event, data){
+export function updateData(event, ...data){
     gameData[event] = data;
 }
 
@@ -58,6 +66,7 @@ export function updateData(event, data){
 function main(){
     const nextFrame = requestAnimationFrame(main);
 
+    moveCamera();
     // Update the position and rotation of the users.
 
     // Update their voice indicators.

@@ -31,6 +31,25 @@ export function get(cid){
         return users[cid];
     else return undefined;
 }
+export function cid(gameID){
+    Object.keys(users).forEach((id) => {
+        if (users[id].gameID === gameID)
+            return id;
+    });
+}
+
+export function positions(){
+    const result = {};
+    Object.keys(users)
+        .forEach(id => result[users[id].gameID] = users[id].position);
+    return result;
+}
+export function colors(){
+    const result = {};
+    Object.keys(users)
+        .forEach(id => result[users[id].gameID] = users[id].color);
+    return result;
+}
 
 // Takes a name and a color and attempts to create a new user. If the name or the color is invalid, it returns undefined.
 export function create(name, color){
@@ -52,7 +71,7 @@ export function create(name, color){
 
 export function remove(cid){
     if (users.hasOwnProperty(cid)){
-        users.delete(cid);
+        delete users[cid];
         console.log('user ' + cid + ' removed');
     }
     else console.log('user ' + cid + ' did not exist!');

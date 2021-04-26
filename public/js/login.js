@@ -125,7 +125,12 @@ function enterRoom(response){
                         d="M 34.803252,65.13249 C 15.581947,65.13249 0,50.552086 0,32.566248 0,14.580406 15.581947,4.8542449e-7 34.803252,0 c 16.915728,4.8542449e-7 50.208497,25.257473 57.95199,31.316697 0.907946,0.710463 0.906961,1.878831 -0.0021,2.58823 C 85.005598,39.950273 51.717508,65.13249 34.803371,65.13249 Z"
                 />
             </svg>`;
-    space.appendChild(spinner);
+
+
+    const gameArea = document.createElement('div');
+    gameArea.setAttribute('class', 'game-area');
+    gameArea.appendChild(spinner);
+    space.appendChild(gameArea);
 
     //Adds the space with the spinner to the empty HTML side
     document.body.append(space);

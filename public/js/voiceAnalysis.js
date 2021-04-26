@@ -59,7 +59,7 @@ function analyseIncomingVoice(analyser, dataArray){
 }
 
 export function displayUserSpeak(speaking, id) {
-    const userElement = document.getElementById(id + '_body');
+    const userElement = users[id].querySelector('.body');
 
     //If the user started speaking, add the class, if the user stopped speaking, remove the class.
     if (speaking) userElement.classList.add('speaking');

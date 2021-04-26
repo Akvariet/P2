@@ -1,4 +1,6 @@
 import {v4 as uuidv4} from 'uuid';
+import {colorPicker} from './scripts/ColorPicker.js'
+
 
 // users is an associative array containing all users with their credential id being the key.
 export const users = {};
@@ -61,7 +63,7 @@ export function create(name, color){
     users[cid] = {
         gameID: id,
         name: name,
-        color: color,
+        color: colorPicker.getShade(color),
         position: {top: 0, left: 0},
         rotation: 1
     };

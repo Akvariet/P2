@@ -36,7 +36,7 @@ export class ColorPicker {
     }
 }
 
-const colorPicker = new ColorPicker();
+export const colorPicker = new ColorPicker();
 
 export function extractColors(){
     const colors = colorPicker.colorsForLoginScreen;

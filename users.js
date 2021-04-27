@@ -33,12 +33,6 @@ export function get(cid){
         return users[cid];
     else return undefined;
 }
-export function cid(gameID){
-    Object.keys(users).forEach((id) => {
-        if (users[id].gameID === gameID)
-            return id;
-    });
-}
 
 export function positions(){
     const result = {};

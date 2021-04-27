@@ -53,7 +53,7 @@ export function awake(id, cid, allUsers){
                 case 'turned'            : return receiveUserRotation;     // A user turned.
                 case 'disconnect'        : return receiveDisconnected;     // You have been disconnected.
                 case 'user-speaking'     : return receiveUserSpeaking;     // Someone is speaking.
-                case 'start-spinner'    : return spinBottle;       // A game result was evaluated by the server.
+                case 'start-spinner'     : return spinBottle;       // A game result was evaluated by the server.
                 case 'user-disconnected' : return receiveUserDisconnected; // A user has disconnected.
                 case 'new-user-connected': return receiveNewUser;          // A user has connected.
             }

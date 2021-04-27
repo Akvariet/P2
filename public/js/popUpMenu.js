@@ -1,5 +1,5 @@
 import {audioPlayers} from './proxi.js';
-import {myStream} from './PeerConnection.js';
+import {myStream} from './peerConnection.js';
 import {updateData, users} from './main.js';
 
 let muted = false, deafened = false, isPopUp;

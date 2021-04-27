@@ -1,9 +1,9 @@
-import {cid, colors, get, positions} from '../users.js';
+import {colors, get, positions} from '../users.js';
 import {emit} from './AkvarioServer.js'
 
 export class Spinner {
     // The smoothness of the spinners rotation
-    refine = 20;
+    refine = 50;
     // The difference in degrees between the rotationAngle and the spinners start position
     repositioningAngle = 0;
     // The amount of ms the spinner will be still before repositioning
@@ -40,15 +40,13 @@ export class Spinner {
         // Finds the rotationAngle, id on the winner and the users angles to the spinner.
         this.result = spin(this.pos, this.range);
         this.rotationAngle = this.result.rotationAngle;
-
-        // Gets the properties of the winner of the game
-        this.winner = get(this.result.winner);
+        delete this.result.rotationAngle;
 
         //Finds the rotationTime for this game
         this.rotationTime = calcRotationTime(this.rotationAngle);
 
         // Finds the repositioningAngle for this game
-        this.repositioningAngle = (360 - (this.result.rotationAngle % 360));
+        this.repositioningAngle = (360 - (this.rotationAngle % 360));
 
         // Finds the different velocities for the spinner game
         this.velocity = calcVelocity(this.rotationAngle, this.rotationTime, this.refine);
@@ -76,8 +74,7 @@ function spin(s_pos, range){
         rot = Math.random() * 360*5;
     while(minRounds >= Math.floor(rot/360)) // spinner rotates minimum 2 rounds
 
-    console.log(players)
-    const result = cid(closestUser(players, rot, userAngles));
+    const result = closestUser(players, rot, userAngles);
 
     //return the result of the spin and the rotation of the spinner. Players should not move before the game is done.
     return {winner: result, rotationAngle: rot, userAngles: userAngles};
@@ -120,7 +117,6 @@ function closestUser(players, rotDeg, userAngles){
 export function getRelUserPos(userPos, s_pos) {
     const relativeAngles = {};
 
-    console.log(userPos)
     Object.keys(userPos).forEach(id => relativeAngles[id] = {
         top:  userPos[id].top  - s_pos.top + 57.5,
         left: userPos[id].left - s_pos.left + 106.5
@@ -210,7 +206,6 @@ export function startSpinner(socket) {
 
             // sends back the rotation of the spinner and the result of the game
             emit('start-spinner', colors(), spinner);
-            console.log(colors())
 
             setTimeout(() => allowReq = true, spinner.waitTime.total);
         }

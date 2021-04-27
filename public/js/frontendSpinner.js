@@ -20,8 +20,6 @@ export function setupSpinner(){
 
 // starts the game when a user clicks on the spinner
 export function spinBottle(userColors, spinner) {
-
-    console.log(spinner)
     let currentAngle = {value : 0};
     const userAngles = spinner.result.userAngles;
     const rotationAngle = spinner.rotationAngle;
@@ -45,14 +43,11 @@ export function spinBottle(userColors, spinner) {
                 rotate(angle);
                 highlightUser(angle, userAngles, userColors);
             }, (toRadians(timer)/(v/1000)), currentAngle.value, userAngles, userColors);
-
-            console.log(toRadians(timer)/(v/1000));
-
             timer++;
         }
     }
 
-    // When the spinner stops, announce the winner (in the console atm) and reset the spinner's position
+    // When the spinner stops, announce the winner and reset the spinner's position
     setTimeout(announceWinner, spinner.waitTime.repositioning, spinner.result.winner, userColors);
     setTimeout(repositionSpinner, spinner.waitTime.repositioning, currentAngle, userAngles, spinner);
 }
@@ -90,7 +85,6 @@ function highlightUser(angle, userAngles, userColors){
     const closestUser = ids[closestUserIndex];
     const userElement = document.getElementById(closestUser + "_body");
 
-    console.log(closestUser);
     // sets the color on the selected user to the highlight color
     setColor(userElement, highlightColor);
 

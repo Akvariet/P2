@@ -117,7 +117,6 @@ function closestUser(players, rotDeg, userAngles){
 export function getRelUserPos(userPos, s_pos) {
     const relativeAngles = {};
 
-    console.log(userPos)
     Object.keys(userPos).forEach(id => relativeAngles[id] = {
         top:  userPos[id].top  - s_pos.top + 57.5,
         left: userPos[id].left - s_pos.left + 106.5

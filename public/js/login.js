@@ -152,8 +152,7 @@ function enterRoom(response){
 
 function retry(reason, message) {
     // The login attempt was rejected. Try again.
-    console.log(reason);
-    console.log(message);
+    window.alert('Someone has already picked this name or the server is offline')
 }
 
 

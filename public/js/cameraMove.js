@@ -1,19 +1,23 @@
 import {isCameraMoving} from './popUpMenu.js';
+import {getPos, mousePosition, users} from './main.js';
 
 let cameramoveAllowed = true;
 let posLeft=0, posTop=0;
 const mouseCoordinates = {x: 0, y: 0};
+let myUser;
+let target = {
+    left: window.innerWidth / 2,
+    top: window.innerHeight / 2
+};
+
 
 export function updateMouseCoordinates(e){
     mouseCoordinates.x = e.clientX;
     mouseCoordinates.y = e.clientY;
 }
 
-export function getcameramove(value){
-    cameramoveAllowed = value;
-}
-
-export function useCameraMove() {
+export function useCameraMove(id) {
+    myUser = users[id];
     document.onmousemove = updateMouseCoordinates;
     document.onmouseout = () => cameramoveAllowed = false; // if mouse leaves window, denies cameramove
     document.onmouseover = () => cameramoveAllowed = true; // if mouse enters window, allows cameramove
@@ -23,9 +27,6 @@ export function useCameraMove() {
 export function moveCamera(){
     if (cameramoveAllowed){
         let space = document.getElementById("space");
-
-        const cameraVelocity = 6.12; // px
-        const boarderSize = 30; // px
 
         // finds midpoint of screen
         let origoX = window.innerWidth / 2;
@@ -39,25 +40,26 @@ export function moveCamera(){
         let percX = mouseX / origoX;
         let percY = mouseY / origoY;
 
-        // relative camera velocity scaled with %x or %y
-        let giveX = percX * cameraVelocity;
-        let giveY = percY * cameraVelocity;
+        const dist = Math.sqrt(percX * percX + percY * percY);
+        const myPos = getPos(myUser);
+        myPos.left = origoX - myPos.left;
+        myPos.top  = origoY - myPos.top;
 
-        if (mouseOnCorner()){
-            // move camera with full cameraVelocity
-            posLeft += giveVelocityCamera(giveX);
-            posTop += giveVelocityCamera(giveY);
-        }
-        else if (mouseOnBorder()){
-            /* move camera with full cameraVelocity in either x and y, while the other 
-               value varies according to its relative camera velocity, giveX or giveY */
-            posLeft += (Math.abs(giveX) > Math.abs(giveY)) ? giveVelocityCamera(giveX) : giveX;
-            posTop += (Math.abs(giveY) > Math.abs(giveX)) ? giveVelocityCamera(giveY) : giveY;
-        }
+        if( dist > 0.5)
+            target = {
+                left: target.left + (mouseX * 0.01),
+                top:  target.top  + (mouseY * 0.01)
+            };
+
+
+        posLeft += (target.left - posLeft) * 0.1;
+        posTop  += (target.top - posTop) * 0.1;
 
         // moves camera to new position, if updated
         space.style.left = posLeft + "px";
         space.style.top = posTop + "px";
+
+        document.dispatchEvent(new CustomEvent('cameramove'));
 
         if (isCameraMoving()){
             // hides popupmenu upon camera moving;
@@ -65,22 +67,5 @@ export function moveCamera(){
             popup.style.display = "none";
         }
 
-
-        function giveVelocityCamera(giveCoordinate){
-            // gives positive or negative cameraVelocity, depending on the coordinate being positive or negative
-            return (giveCoordinate >= 0) ? cameraVelocity : -cameraVelocity;
-        }
-
-        function mouseOnBorder(){
-            return mouseCoordinates.y < boarderSize || mouseCoordinates.y > window.innerHeight - boarderSize
-                || mouseCoordinates.x < boarderSize || mouseCoordinates.x > window.innerWidth - boarderSize;
-        }
-
-        function mouseOnCorner(){
-            return mouseCoordinates.x <= boarderSize && mouseCoordinates.y <= boarderSize || // top left corner
-                mouseCoordinates.x >= window.innerWidth - boarderSize && mouseCoordinates.y <= boarderSize || // top right corner
-                mouseCoordinates.x <= boarderSize && mouseCoordinates.y >= window.innerHeight - boarderSize || // bottom left corner
-                mouseCoordinates.x >= window.innerWidth - boarderSize && mouseCoordinates.y >= window.innerHeight - boarderSize;
-        }
     }
 }

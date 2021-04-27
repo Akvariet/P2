@@ -10,6 +10,10 @@ let socket;
 let myID;
 
 export const users = {};
+export const mousePosition = {
+    x: 0,
+    y: 0
+}
 
 const gameData = {};
 const oldData = {};
@@ -27,7 +31,7 @@ export function awake(id, cid, allUsers){
     peerConnection(myID, allUsers);
     enableInteraction();
     usePopUpMenu(id);
-    useCameraMove();
+    useCameraMove(myID);
     setupSpinner();
 
     // Send updates to server each tick
@@ -134,8 +138,9 @@ function enableInteraction() {
     function dragMouseDown(e) {
         e.preventDefault();
 
-        pos3 = e.clientX;
-        pos4 = e.clientY;
+        pos3 = mousePosition.x;
+        pos4 = mousePosition.y;
+        document.addEventListener('cameramove', userDrag)
         document.addEventListener('mouseup', closeDragUser);
         document.addEventListener('mousemove', userDrag);
     }
@@ -143,10 +148,11 @@ function enableInteraction() {
     function userDrag(e) {
         e.preventDefault();
 
-        pos1 = pos3 - e.clientX;
-        pos2 = pos4 - e.clientY;
-        pos3 = e.clientX;
-        pos4 = e.clientY;
+        console.log('move')
+        pos1 = pos3 - mousePosition.x;
+        pos2 = pos4 - mousePosition.y;
+        pos3 = mousePosition.x;
+        pos4 = mousePosition.y;
 
         const position ={
             top : (containerElement.offsetTop  - pos2),
@@ -158,6 +164,7 @@ function enableInteraction() {
     }
 
     function closeDragUser() {
+        document.removeEventListener('cameramove', userDrag)
         document.removeEventListener('mouseup', closeDragUser);
         document.removeEventListener('mousemove', userDrag);
     }
@@ -166,12 +173,12 @@ function enableInteraction() {
     // User rotates when the mouse moves.
     function lookAtMouse(e){
         // Updates the mouse pos relative to the space div.
-        let mouseX = e.clientX - space.offsetLeft;
-        let mouseY = e.clientY - space.offsetTop;
+        mousePosition.x = e.clientX - space.offsetLeft;
+        mousePosition.y = e.clientY - space.offsetTop;
 
         // Updates user pos from middle.
-        let userX = containerElement.offsetTop - mouseY + (115/2);
-        let userY = containerElement.offsetLeft - mouseX + ((115+98)/2);
+        let userX = containerElement.offsetTop  - mousePosition.y + (115/2);
+        let userY = containerElement.offsetLeft - mousePosition.x + ((115+98)/2);
 
         // Calculate user rotation.
         let rotation = -1 * Math.atan2(userY, userX);
@@ -179,7 +186,6 @@ function enableInteraction() {
         updateData('turned', rotation);
         turn(containerElement, rotation);
     }
-
 }
 
 /** @summary Moves a user to a given location.
@@ -259,4 +265,11 @@ function drawUser(user){
 
         return userContainer;
     }
+}
+
+export function getPos(HTMLElement){
+    return {
+        top:  Number(HTMLElement.style.top.slice(0, -2)),
+        left: Number(HTMLElement.style.left.slice(0, -2))
+    };
 }

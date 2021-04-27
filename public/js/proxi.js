@@ -1,4 +1,4 @@
-import {users} from './main.js';
+import {getPos, users} from './main.js';
 
 export const audioPlayers = {};
 let myID;
@@ -67,9 +67,3 @@ function adjustVolume(audio, myPosition, position){
     audio.volume = volFunc.linearDecrease(d);
 }
 
-function getPos(HTMLElement){
-    return {
-        top:  Number(HTMLElement.style.top.slice(0, -2)),
-        left: Number(HTMLElement.style.left.slice(0, -2))
-    };
-}

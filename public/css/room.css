@@ -28,6 +28,19 @@ body{
     text-align: center;
 }
 
+.body-display{
+    visibility: visible;
+    top: 22.5px;
+    left: calc(22.5px + 49px);
+    border-radius: 50%;
+    width: 70px;
+    height: 70px;
+    position: absolute;
+    background-repeat: no-repeat;
+    background-size: 65%;
+    background-position: center;
+}
+
 .speaking{
     width: 62px;
     height: 62px;

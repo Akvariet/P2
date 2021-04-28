@@ -1,5 +1,4 @@
 import * as socket_io from "socket.io";
-import * as connection from './connection.js'
 import * as user from '../users.js';
 import {startSpinner} from './backendSpinner.js';
 
@@ -36,7 +35,7 @@ export function AkvarioServer(HTTPServer){
 
 function disconnect(socket){
     console.log(socket.id + ' disconnected.')
-    socket.broadcast.emit('user-disconnected', socket.id);
+    socket.broadcast.emit('user-disconnected', user.get(socket.id).gameID);
     user.remove(socket.id);
 }
 

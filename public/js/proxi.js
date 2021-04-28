@@ -1,8 +1,10 @@
-import {getPos, users} from './main.js';
-
 export const audioPlayers = {};
-let myID;
 
+/**
+ * Calculates the distance from myPosition to position.
+ * @param {object} myPosition
+ * @param {object} position
+ * */
 export function distance(myPosition, position){
     const left = position.left - myPosition.left
     const top  = position.top  - myPosition.top
@@ -33,10 +35,13 @@ export class VolumeFunctions {
     }
 }
 
-export function beginProxiChat(id){
-    myID = id;
-    const myElement = users[myID];
-    myElement.addEventListener('moved', (e)=>{
+
+/**
+ * @summary If myUser moves, the distance to all other users is recalculated.
+ * @param {HTMLElement} myUser
+ * */
+export function beginProxiChat(myUser){
+    myUser.addEventListener('moved', (e)=>{
 
         for (const audioPlayer in audioPlayers) {
             adjustVolume(audioPlayers[audioPlayer].audio, e.detail, audioPlayers[audioPlayer].position);
@@ -44,15 +49,21 @@ export function beginProxiChat(id){
     });
 }
 
-export function proxiChat(audio, userID){
-    const userContainer = users[userID];
-    const myElement = users[myID];
-    userContainer.append(audio);
-    audioPlayers[userID] = {audio: audio, position: getPos(userContainer)};
 
-    userContainer.addEventListener('moved', () => {
-        const pos1 = getPos(myElement);
-        const pos2 = getPos(userContainer);
+/**
+ * @summary Initiates proximity chat between myUser and otherUser. If the other user moves, the distance is calculated.
+ * @param {HTMLAudioElement} audio - The audio element from which to play the audio.
+ * @param {HTMLElement} myUser
+ * @param {HTMLElement} otherUser
+ * */
+export function proxiChat(audio, myUser, otherUser){
+    const userID = otherUser.getAttribute('id');
+    otherUser.append(audio);
+    audioPlayers[userID] = {audio: audio, position: {top: otherUser.offsetTop, left: otherUser.offsetLeft}};
+
+    otherUser.addEventListener('moved', () => {
+        const pos1 = {top: myUser.offsetTop, left: myUser.offsetLeft};
+        const pos2 = {top: otherUser.offsetTop, left: otherUser.offsetLeft};
 
         audioPlayers[userID].position = pos2;
 

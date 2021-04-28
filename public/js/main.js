@@ -28,7 +28,7 @@ export function awake(id, cid, allUsers){
     for (const user of Object.keys(allUsers))
         users[user] = drawUser(allUsers[user]);
 
-    peerConnection(myID, allUsers);
+    peerConnection(users[myID], users);
     enableInteraction();
     usePopUpMenu(id);
     useCameraMove(myID);

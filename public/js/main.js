@@ -53,7 +53,7 @@ export function awake(id, cid, allUsers){
                 case 'turned'            : return receiveUserRotation;     // A user turned.
                 case 'disconnect'        : return receiveDisconnected;     // You have been disconnected.
                 case 'user-speaking'     : return receiveUserSpeaking;     // Someone is speaking.
-                case 'start-spinner'     : return spinBottle;       // A game result was evaluated by the server.
+                case 'start-spinner'     : return spinBottle;              // A game result was evaluated by the server.
                 case 'user-disconnected' : return receiveUserDisconnected; // A user has disconnected.
                 case 'new-user-connected': return receiveNewUser;          // A user has connected.
             }
@@ -71,13 +71,6 @@ function main(){
     const nextFrame = requestAnimationFrame(main);
 
     moveCamera();
-    // Update the position and rotation of the users.
-
-    // Update their voice indicators.
-
-    // Send my new position and rotation.
-
-
 }
 
 // Receives a user object from the server and proceeds to draw the user on the page.
@@ -92,7 +85,6 @@ function receiveUserPosition(id, position){
 }
 
 function receiveUserRotation(id, position){
-
     // Turn the user.
     const user = users[id];
     turn(user, position);
@@ -107,17 +99,10 @@ function receiveUserSpeaking(speaking, id){
     displayUserSpeak(speaking, id);
 }
 
-
-
-function receiveGameResult(result){
-
-}
-
 function receiveUserDisconnected(id){
-    console.log(id + 'disconnected');
     if (users.hasOwnProperty(id)){
         users[id].remove();
-        users.delete(id);
+        delete users[id];
     }
 
     removePeer(id);
@@ -148,7 +133,6 @@ function enableInteraction() {
     function userDrag(e) {
         e.preventDefault();
 
-        console.log('move')
         pos1 = pos3 - mousePosition.x;
         pos2 = pos4 - mousePosition.y;
         pos3 = mousePosition.x;

@@ -142,15 +142,15 @@ function doStateDeafen(id){
 }
 
 function toggleSpeakers(){
-  for (const audioPlayer in audioPlayers){
-    audioPlayers[audioPlayer].audio.muted = deafened;
-  }
+    for (const audioPlayer in audioPlayers){
+      audioPlayers[audioPlayer].audio.muted = deafened;
+    }
 }
 
 function displayState(id, elm, state, backgroundIMG){
-  const containerElement = document.getElementById(id);
-  const userDisplayElement = containerElement.querySelector(".body-display");
+    const containerElement = document.getElementById(id);
+    const userDisplayElement = containerElement.querySelector(".body-display");
 
-  userDisplayElement.style.backgroundImage = backgroundIMG;
-  updateData('sound-controls', elm, state, id)
+    userDisplayElement.style.backgroundImage = backgroundIMG;
+    updateData('sound-controls', elm, state, id)
 }

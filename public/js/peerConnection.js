@@ -35,7 +35,25 @@ export function peerConnection(myUser, users){
         peer = new Peer(id, options);
 
         // When you get connected to the peer server, do this.
-        peer.on('open', () => ConnectToAllUsers(stream, myUser, users));
+        peer.on('open', () => {
+            beginProxiChat(myUser);
+
+            // Connects to all users
+            Object.values(users).forEach(user => {
+                if (user === myUser) return;
+
+                const id = user.getAttribute('id');
+                const call = peer.call(id, stream);
+                const audio = document.createElement('audio');
+
+                proxiChat(audio, myUser, user);
+
+                call.on('stream', remoteStream => startRemoteStream(remoteStream, audio));
+                call.on('close', () => audio.remove());
+
+                peers[id] = call;
+            });
+        });
 
         // When someone calls you, answer
         peer.on('call', call => {
@@ -56,36 +74,10 @@ export function peerConnection(myUser, users){
     });
 }
 
-
-function ConnectToAllUsers(stream, myUser, users){
-    beginProxiChat(myUser);
-
-    // Connects to all users
-    Object.values(users).forEach(user => {
-        if(user !== myUser) connectToUser(stream, myUser, user)
-    });    
-}
-
 // Adds other users audio stream to a audio object so the program can modify their audio
 function startRemoteStream(remoteStream, audio){
     audio.srcObject = remoteStream;
     audio.addEventListener('loadedmetadata', () => audio.play());
-}
-
-// Calls a user
-function connectToUser(stream, myUser, otherUser){
-    const id = otherUser.getAttribute('id');
-    let call = peer.call(id, stream);
-
-    const audio = document.createElement('audio');
-    proxiChat(audio, myUser, otherUser);
-
-    //When there is a incoming call adds a stream
-    call.on('stream', remoteStream => startRemoteStream(remoteStream, audio));
-    call.on('close', () => audio.remove());
-
-    //Stores call in object
-    peers[id] = call;
 }
 
 export function removePeer(id){

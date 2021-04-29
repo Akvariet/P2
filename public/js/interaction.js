@@ -10,10 +10,12 @@ export const mousePosition = {
  * */
 export function enableInteraction(myUser) {
     const userBody = myUser.querySelector('.body');
+    const arrow = myUser.querySelector(".arrow");
 
     let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
 
     userBody.addEventListener('mousedown', dragMouseDown);
+    arrow.addEventListener('mousedown', dragMouseDown);
     document.addEventListener('mousemove', lookAtMouse);
 
     function dragMouseDown(e) {
@@ -118,6 +120,10 @@ export function drawUser(user){
                 </g>
             </svg>`;
         userContainer.appendChild(userBody);
+
+        const bodyDisplay = document.createElement('div');
+        bodyDisplay.setAttribute('class', 'body-display');
+        userContainer.appendChild(bodyDisplay);
 
         //Crates a text field for the users name and adds it to the userContainer
         const userName = document.createElement('h3');

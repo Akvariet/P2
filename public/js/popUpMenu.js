@@ -31,7 +31,7 @@ export function isCameraMoving(){
 }
 
 export function usePopUpMenu(myUser){
-  const userDisplayElement = myUser.querySelector(".body");
+  const userDisplayElement = myUser.querySelector(".body-display");
   enableUserState(myUser);
   userDisplayElement.onclick = (e) => menuPopUp(e, myUser);
 }

@@ -1,4 +1,4 @@
-import {awake} from './main.js';
+import {main} from './main.js';
 import {config} from './clientConfig.js';
 
 const colorSelector = document.querySelector('.color-picker-items');
@@ -148,7 +148,7 @@ function enterRoom(response){
     document.body.append(menuPopUp);
 
     //SIMONS STUFF
-    awake(response.id, response.cid, response.users);
+    main(response.id, response.cid, response.users);
 }
 
 function retry(reason) {

@@ -113,11 +113,13 @@ function receiveUserDisconnected(id){
  * */
 function enableInteraction() {
     const containerElement = document.getElementById(myID);
-    const userElement = document.getElementById(`${myID}_body`);
+    const userElement = containerElement.querySelector('.body-display');
+    const arrow = containerElement.querySelector(".arrow");
 
     let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
 
     userElement.addEventListener('mousedown', dragMouseDown);
+    arrow.addEventListener('mousedown', dragMouseDown);
     document.addEventListener('mousemove', lookAtMouse);
 
     function dragMouseDown(e) {
@@ -222,6 +224,10 @@ function drawUser(user){
                 </g>
             </svg>`;
         userContainer.appendChild(userBody);
+
+        const bodyDisplay = document.createElement('div');
+        bodyDisplay.setAttribute('class', 'body-display');  
+        userContainer.appendChild(bodyDisplay);
 
         //Crates a text field for the users name and adds it to the userContainer
         const userName = document.createElement('h3');

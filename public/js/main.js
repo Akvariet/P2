@@ -28,7 +28,7 @@ export function awake(id, cid, allUsers){
     for (const user of Object.keys(allUsers))
         users[user] = drawUser(allUsers[user]);
 
-    peerConnection(myID, allUsers);
+    peerConnection(users[myID], users);
     enableInteraction();
     usePopUpMenu(id);
     useCameraMove(myID);
@@ -42,7 +42,7 @@ export function awake(id, cid, allUsers){
                 oldData[event] = gameData[event];
             }
         })
-    }, 1/TICKRATE);
+    }, 1000/TICKRATE);
 
     socket.on('disconnect', receiveDisconnected);
     // Receive socket events and call the associated function with args.

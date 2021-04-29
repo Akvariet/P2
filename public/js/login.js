@@ -5,10 +5,6 @@ const colorSelector = document.querySelector('.color-picker-items');
 const inputField = document.getElementById('username');
 const nameTag = document.getElementById('0_name');
 
-//Fail messages for the client if an error occurs
-const FailMessageColors = 'The extraction of colors was rejected. Reload and try again';
-const FailMessageLogin = 'The login attempt was rejected by the server. Try again.';
-
 const displayedUser = {
     body : document.querySelector('.body-displayed'),
     arrow: document.querySelector('.arrow-displayed'),
@@ -29,12 +25,17 @@ async function displayColors() {
         //If the fetch was successful convert the data to json
         .then(res => res.json(),
               //Else send fail message to try again
-              reason => retry(reason, FailMessageColors))
+              reason => retry(reason))
         .then(res => {
             //Save the received colors and color codes in the color object
             colorPicker.previewColors = res.colors;
             colorPicker.colorCodes = res.colorCodes;
             colorPicker.selectedColor = res.colors[0];
+
+            //Set the users start color
+            const selectedColorIndex = colorPicker.previewColors.indexOf(colorPicker.selectedColor);
+            displayedUser.arrow.style.fill = colorPicker.colorCodes[selectedColorIndex];
+            displayedUser.body.style.backgroundColor = colorPicker.colorCodes[selectedColorIndex];
 
             // Render the available colors in the preview.
             colorPicker.previewColors.forEach((color, i) => {
@@ -65,7 +66,7 @@ async function displayColors() {
             });
         },
         // If failed send fail message
-        reason => retry(reason, FailMessageColors))
+        reason => retry(reason))
 }
 
 displayColors();
@@ -97,10 +98,10 @@ document.getElementById('user-form')
         })
         .then(
             response => response.json(),                      // If the login was successful, parse the response.
-            reason   => retry(reason, FailMessageLogin))      // Else, handle make the user try again.
+            reason   => retry(reason))      // Else, handle make the user try again.
         .then(
             response => enterRoom(response),
-            reason =>  retry(reason, FailMessageLogin)
+            reason =>  retry(reason)
         )
 });
 
@@ -150,7 +151,7 @@ function enterRoom(response){
     awake(response.id, response.cid, response.users);
 }
 
-function retry(reason, message) {
+function retry(reason) {
     // The login attempt was rejected. Try again.
     window.alert('Someone has already picked this name or the server is offline')
 }

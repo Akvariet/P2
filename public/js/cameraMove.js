@@ -1,27 +1,22 @@
 import {isCameraMoving} from './popUpMenu.js';
-import {getPos, mousePosition, users} from './main.js';
 
 let cameramoveAllowed = true;
 let posLeft=0, posTop=0;
 const mouseCoordinates = {x: 0, y: 0};
-let myUser;
 let target = {
     left: window.innerWidth / 2,
     top: window.innerHeight / 2
 };
-
 
 export function updateMouseCoordinates(e){
     mouseCoordinates.x = e.clientX;
     mouseCoordinates.y = e.clientY;
 }
 
-export function useCameraMove(id) {
-    myUser = users[id];
+export function useCameraMove() {
     document.onmousemove = updateMouseCoordinates;
     document.onmouseout = () => cameramoveAllowed = false; // if mouse leaves window, denies cameramove
     document.onmouseover = () => cameramoveAllowed = true; // if mouse enters window, allows cameramove
-
 }
 
 export function moveCamera(){
@@ -41,9 +36,6 @@ export function moveCamera(){
         let percY = mouseY / origoY;
 
         const dist = Math.sqrt(percX * percX + percY * percY);
-        const myPos = getPos(myUser);
-        myPos.left = origoX - myPos.left;
-        myPos.top  = origoY - myPos.top;
 
         if( dist > 0.5)
             target = {
@@ -66,6 +58,5 @@ export function moveCamera(){
             const popup = document.getElementById("menuPopUp");
             popup.style.display = "none";
         }
-
     }
 }

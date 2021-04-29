@@ -1,21 +1,20 @@
 import {audioPlayers} from './proxi.js';
 import {myStream} from './peerConnection.js';
-import {updateData, users} from './main.js';
+import {updateData} from './connection.js';
 
 let muted = false, deafened = false, isPopUp;
 export const userCoordinates = {x: 0, y: 0};
 export const cameraCoordinates = {x: 0, y: 0};
 
 
-function isUserMoving(id){
-  const containerElement = document.getElementById(id);
+function isUserMoving(myUser){
 
   // if same coordinates as last time it, user moved
-  if (containerElement.style.left === userCoordinates.x && containerElement.style.top === userCoordinates.y) {
+  if (myUser.style.left === userCoordinates.x && containerElement.style.top === userCoordinates.y) {
     return false;
   }
-  userCoordinates.x = containerElement.style.left;
-  userCoordinates.y = containerElement.style.top;
+  userCoordinates.x = myUser.style.left;
+  userCoordinates.y = myUser.style.top;
   return true;
 }
 
@@ -31,25 +30,24 @@ export function isCameraMoving(){
   return true;
 }
 
-export function usePopUpMenu(id){
-  const userDisplayElement = users[id].querySelector(".body-display");
-  enableUserState(id);
-  userDisplayElement.onclick = (e) => menuPopUp(e, id);
+export function usePopUpMenu(myUser){
+  const userDisplayElement = myUser.querySelector(".body-display");
+  enableUserState(myUser);
+  userDisplayElement.onclick = (e) => menuPopUp(e, myUser);
 }
 
-function enableUserState(id) {
+function enableUserState(myUser) {
   const muteBtn = document.getElementById("microphone");
   const spksBtn = document.getElementById("speakers");
 
-  muteBtn.onclick = () => doStateMute(id);
-  spksBtn.onclick = () => doStateDeafen(id);
+  muteBtn.onclick = () => doStateMute(myUser);
+  spksBtn.onclick = () => doStateDeafen(myUser);
 }
 
-function menuPopUp(e, id){
+function menuPopUp(e, myUser){
   e.preventDefault();
 
-  const containerElement = document.getElementById(id);
-  let userRect = containerElement.getBoundingClientRect();
+  let userRect = myUser.getBoundingClientRect();
   const popup = document.getElementById("menuPopUp");
 
   if (isPopUp){
@@ -59,7 +57,7 @@ function menuPopUp(e, id){
     popup.style.left = (userCenter.x - 35) + "px";
     popup.style.top = (userCenter.y - 255) + "px";
 
-    if (!isUserMoving(id) && !isCameraMoving()) {
+    if (!isUserMoving(myUser) && !isCameraMoving()) {
       popup.style.display = "block";
       isPopUp = false;
     }
@@ -70,7 +68,7 @@ function menuPopUp(e, id){
   }
 }
 
-function doStateMute(id){
+function doStateMute(myUser){
   const img = document.getElementById("microphone");
   const SpeakerImage = document.getElementById("speakers");
 
@@ -88,7 +86,7 @@ function doStateMute(id){
       deafened = false;
     }
 
-    displayState(id, 'mic', muted, "none");
+    displayState(myUser, 'mic', muted, "none");
   }
   else{
     img.src="./resources/mic-mute-fill.svg";
@@ -96,7 +94,7 @@ function doStateMute(id){
 
     // unmutes the user
     toggleMic();
-    displayState(id, 'mic', muted, "url(../resources/mic-mute-fill.svg)");
+    displayState(myUser, 'mic', muted, "url(../resources/mic-mute-fill.svg)");
   }
 }
 
@@ -104,7 +102,7 @@ function toggleMic() {
   myStream.getTracks().forEach(track => track.enabled = !track.enabled);
 }
 
-function doStateDeafen(id){
+function doStateDeafen(myUser){
   const img = document.getElementById("speakers");
   const micImage = document.getElementById("microphone");
 
@@ -137,7 +135,7 @@ function doStateDeafen(id){
       muted = true;
     }
 
-    displayState(id, 'speaker', deafened, "url(../resources/volume-mute-fill.svg)");
+    displayState(myUser, 'speaker', deafened, "url(../resources/volume-mute-fill.svg)");
   }
 }
 
@@ -147,10 +145,9 @@ function toggleSpeakers(){
     }
 }
 
-function displayState(id, elm, state, backgroundIMG){
-    const containerElement = document.getElementById(id);
-    const userDisplayElement = containerElement.querySelector(".body-display");
-
+function displayState(myUser, elm, state, backgroundIMG){
+    const userDisplayElement = myUser.querySelector(".body-display");
     userDisplayElement.style.backgroundImage = backgroundIMG;
+
     updateData('sound-controls', elm, state, id)
 }

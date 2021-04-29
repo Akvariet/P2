@@ -43,7 +43,7 @@ export function peerConnection(myUser, users){
         // If there is a error do this
         peer.on('error', err => console.error(err));
 
-        analyzeVoice(stream, id);
+        analyzeVoice(stream, myUser);
     });
 
     // Connects to all users

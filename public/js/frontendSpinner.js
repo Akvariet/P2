@@ -1,4 +1,4 @@
-import {updateData} from './main.js';
+import {updateData} from './connection.js';
 
 let spinner;
 let spinnerElement;

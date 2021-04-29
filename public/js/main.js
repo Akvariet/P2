@@ -3,10 +3,8 @@ import {displayUserSpeak} from './voiceAnalysis.js';
 import {usePopUpMenu} from './popUpMenu.js';
 import {moveCamera, useCameraMove} from './cameraMove.js';
 import {setupSpinner, spinBottle} from './frontendSpinner.js';
+import * as connection from './connection.js';
 
-const TICKRATE = 15;
-
-let socket;
 let myID;
 
 export const users = {};
@@ -15,12 +13,9 @@ export const mousePosition = {
     y: 0
 }
 
-const gameData = {};
-const oldData = {};
-
 // When the game starts, this function runs once for initial setup.
 export function awake(id, cid, allUsers){
-    socket = io({auth:{token: cid}});
+    connection.connectSocket(io({auth:{token: cid}}));
 
     myID = allUsers[id].gameID;
 
@@ -34,37 +29,18 @@ export function awake(id, cid, allUsers){
     useCameraMove(myID);
     setupSpinner();
 
-    // Send updates to server each tick
-    let tick = setInterval(() => {
-        Object.keys(gameData).forEach(event => {
-            if(gameData[event] !== oldData[event]){
-                socket.emit(event, ...gameData[event]);
-                oldData[event] = gameData[event];
-            }
-        })
-    }, 1/TICKRATE);
-
-    socket.on('disconnect', receiveDisconnected);
     // Receive socket events and call the associated function with args.
-    socket.onAny((event, ...args)=> {
-        (event => {
-            switch (event) {
-                case 'moved'             : return receiveUserPosition;     // A user moved.
-                case 'turned'            : return receiveUserRotation;     // A user turned.
-                case 'disconnect'        : return receiveDisconnected;     // You have been disconnected.
-                case 'user-speaking'     : return receiveUserSpeaking;     // Someone is speaking.
-                case 'start-spinner'     : return spinBottle;              // A game result was evaluated by the server.
-                case 'user-disconnected' : return receiveUserDisconnected; // A user has disconnected.
-                case 'new-user-connected': return receiveNewUser;          // A user has connected.
-            }
-        })(event)(...args);
-    });
+    connection.on('moved', receiveUserPosition);
+    connection.on('turned', receiveUserRotation);
+    connection.on('disconnect', receiveDisconnected);
+    connection.on('start-spinner', spinBottle);
+    connection.on('user-speaking', receiveUserSpeaking);
+    connection.on('user-disconnected', receiveUserDisconnected);
+    connection.on('new-user-connected', receiveNewUser);
     main();
 }
 
-export function updateData(event, ...data){
-    gameData[event] = data;
-}
+
 
 // The main game loop. Will be paused if the window is not in focus.
 function main(){
@@ -96,7 +72,7 @@ function receiveDisconnected() {
 }
 
 function receiveUserSpeaking(speaking, id){
-    displayUserSpeak(speaking, id);
+    displayUserSpeak(speaking, users[id]);
 }
 
 function receiveUserDisconnected(id){
@@ -143,7 +119,7 @@ function enableInteraction() {
             left: (containerElement.offsetLeft - pos1)
         }
 
-        updateData('moved', position);
+        connection.updateData('moved', position);
         move(containerElement, position);
     }
 
@@ -167,7 +143,7 @@ function enableInteraction() {
         // Calculate user rotation.
         let rotation = -1 * Math.atan2(userY, userX);
 
-        updateData('turned', rotation);
+        connection.updateData('turned', rotation);
         turn(containerElement, rotation);
     }
 }

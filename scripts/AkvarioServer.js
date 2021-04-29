@@ -51,8 +51,8 @@ function turn(socket, rotation){
     socket.broadcast.emit('turned', client.gameID, rotation);
 }
 
-function speak(socket, speaking, id){
-    socket.broadcast.emit('user-speaking', speaking, id);
+function speak(socket, speaking){
+    socket.broadcast.emit('user-speaking', speaking, user.get(socket.id).gameID);
 }
 
 function soundControls(socket, elm, state, id){

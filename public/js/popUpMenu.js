@@ -1,6 +1,7 @@
 import {audioPlayers} from './proxi.js';
 import {myStream} from './peerConnection.js';
-import {updateData, users} from './main.js';
+import {users} from './main.js';
+import {updateData} from './connection.js';
 
 let muted = false, deafened = false, isPopUp;
 export const userCoordinates = {x: 0, y: 0};

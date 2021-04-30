@@ -59,9 +59,8 @@ export class Spinner {
 const spinner = new Spinner();
 
 // Simulates a spin game
-export function spin(userPos, spinnerPos, range){
+export function spin(userPos, spinnerPos, range, rot){
     const minRounds = 2;
-    let rot;
     const userAngles = {};
 
     // gets the users relative position to the spinner
@@ -70,9 +69,11 @@ export function spin(userPos, spinnerPos, range){
     // finds the players who inside the game area, and gets relative position from relPos
     const players = findPlayers(relPos, range);
 
-    do
-        rot = Math.random() * 360*5;
-    while(minRounds >= Math.floor(rot/360)) // spinner rotates minimum 2 rounds
+    if (rot === undefined) {
+        do
+            rot = Math.random() * 360*5;
+        while(minRounds >= Math.floor(rot/360)) // spinner rotates minimum 2 rounds
+    }
 
     const result = closestUser(players, rot, userAngles);
 

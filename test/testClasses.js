@@ -37,23 +37,37 @@ export class TestSuite{
         this.tests.push(() => this.test(func, input, output));
     }
 
-    test(func, input, output)
-    {
-        if (typeof output === 'object')
-            this.warnings.push(`Warning: Expected output of ${func.name} is of type object. The test will check if the objects are reference equal.`);
+    test(func, input, output) {
+        if (typeof output === 'object') {
+            const outputObj = output[0];
+            for (const key in outputObj) {
+                const outputValue = func(...input)[key];
 
-        // Test the function, if the test fails it will throw an assertion error.
-        try {
-            this.evaluate(func(...input), output)
-        } catch (err) {
-            if (!(err instanceof assert.AssertionError)) console.error(err);
+                if (Array.isArray(outputValue))
+                    for (let i = 0; i < outputValue.length; i++)
+                        this.evaluate(outputValue[i], outputObj[key][i]);
 
-            // If e is an assertion error, the test has failed.
-            this.fails.push(
-                testFailed(func.name,this.suiteName, input, err.actual, output)
-            );
+                else if (typeof outputValue === 'object')
+                    for (const prop in outputValue)
+                        this.evaluate(outputValue[prop], outputObj[key][prop]);
 
+                else this.evaluate(outputValue, outputObj[key]);//this.warnings.push(`Warning: Expected output of ${func.name} is of type object. The test will check if the objects are reference equal.`);
+            }
         }
+
+        else
+            // Test the function, if the test fails it will throw an assertion error.
+            try {
+                this.evaluate(func(...input), output)
+            } catch (err) {
+                if (!(err instanceof assert.AssertionError)) console.error(err);
+
+                // If e is an assertion error, the test has failed.
+                this.fails.push(
+                    testFailed(func.name,this.suiteName, input, err.actual, output)
+                );
+
+            }
     }
 
     evaluate(result, expectedOutput){

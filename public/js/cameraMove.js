@@ -1,5 +1,3 @@
-import {isCameraMoving} from './popUpMenu.js';
-
 let cameramoveAllowed = true;
 let posLeft=0, posTop=0;
 const mouseCoordinates = {x: 0, y: 0};
@@ -43,20 +41,24 @@ export function moveCamera(){
                 top:  target.top  + (mouseY * 0.01)
             };
 
+        
+        let appendLeft = ((target.left - posLeft) * 0.1);
+        let appendTop = (target.top - posTop) * 0.1;
 
-        posLeft += (target.left - posLeft) * 0.1;
-        posTop  += (target.top - posTop) * 0.1;
+        // sets the appends to 0 if below 0.5
+        appendLeft = (Math.abs(appendLeft) > 0.5) ? appendLeft : 0
+        appendTop = (Math.abs(appendTop) > 0.5) ? appendTop : 0;
+
+        // appends the values to camera position values.
+        posLeft += appendLeft;
+        posTop  += appendTop;
 
         // moves camera to new position, if updated
         space.style.left = posLeft + "px";
         space.style.top = posTop + "px";
 
-        document.dispatchEvent(new CustomEvent('cameramove'));
-
-        if (isCameraMoving()){
-            // hides popupmenu upon camera moving;
-            const popup = document.getElementById("menuPopUp");
-            popup.style.display = "none";
+        if (appendLeft != 0 && appendTop != 0){
+            document.dispatchEvent(new CustomEvent('cameramove'));
         }
     }
 }

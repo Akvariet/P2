@@ -9,7 +9,7 @@ export const mousePosition = {
  * @summary Enables the user to move their own avatar.
  * */
 export function enableInteraction(myUser) {
-    const userBody = myUser.querySelector('.body');
+    const userBody = myUser.querySelector('.body-display');
     const arrow = myUser.querySelector(".arrow");
 
     let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;

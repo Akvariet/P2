@@ -1,4 +1,4 @@
-import {awake} from './main.js';
+import {main} from './main.js';
 import {config} from './clientConfig.js';
 
 const colorSelector = document.querySelector('.color-picker-items');
@@ -101,7 +101,7 @@ document.getElementById('user-form')
             reason   => retry(reason))      // Else, handle make the user try again.
         .then(
             response => enterRoom(response),
-            reason =>  retry(reason)
+            reason =>  retry(reason, FailMessageLogin)
         )
 });
 
@@ -148,7 +148,7 @@ function enterRoom(response){
     document.body.append(menuPopUp);
 
     //SIMONS STUFF
-    awake(response.id, response.cid, response.users);
+    main(response.id, response.cid, response.users);
 }
 
 function retry(reason) {

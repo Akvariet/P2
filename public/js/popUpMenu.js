@@ -11,8 +11,8 @@ export function usePopUpMenu(myUser){
     const spksBtn = document.getElementById("speakers");
     
     userDisplayElement.onclick = (e) => menuPopUp(e, myUser);
-    muteBtn.onclick = () => doStateMute(myUser);
-    spksBtn.onclick = () => doStateDeafen(myUser);
+    muteBtn.onclick = () => muteUser(myUser);
+    spksBtn.onclick = () => deafenUser(myUser);
 
     document.addEventListener('cameramove', () => {
         popup.style.display = "none";
@@ -47,7 +47,7 @@ function menuPopUp(e, myUser){
   }
 }
 
-function doStateMute(myUser){
+function muteUser(myUser){
   const img = document.getElementById("microphone");
   const SpeakerImage = document.getElementById("speakers");
 
@@ -65,7 +65,7 @@ function doStateMute(myUser){
       deafened = false;
     }
 
-    displayState(myUser, 'mic', muted, "none");
+    changeState(myUser, "unmuted");
   }
   else{
     img.src="./resources/mic-mute-fill.svg";
@@ -73,7 +73,7 @@ function doStateMute(myUser){
 
     // unmutes the user
     toggleMic();
-    displayState(myUser, 'mic', muted, "url(../resources/mic-mute-fill.svg)");
+    changeState(myUser, "muted");
   }
 }
 
@@ -81,7 +81,7 @@ function toggleMic() {
     myStream.getTracks().forEach(track => track.enabled = !track.enabled);
 }
 
-function doStateDeafen(myUser){
+function deafenUser(myUser){
   const img = document.getElementById("speakers");
   const micImage = document.getElementById("microphone");
 
@@ -99,7 +99,7 @@ function doStateDeafen(myUser){
       muted = false;
     }
 
-    displayState(myUser, 'speaker', deafened, "none");
+    changeState(myUser, "undeafened");
   }
   else{
     img.src="./resources/volume-mute-fill.svg";
@@ -114,7 +114,7 @@ function doStateDeafen(myUser){
       muted = true;
     }
 
-    displayState(myUser, 'speaker', deafened, "url(../resources/volume-mute-fill.svg)");
+    changeState(myUser, "deafened");
   }
 }
 
@@ -124,9 +124,20 @@ function toggleSpeakers(){
     }
 }
 
-function displayState(myUser, elm, state, backgroundIMG){
+export function displayState(myUser, state){
     const userDisplayElement = myUser.querySelector(".body-display");
-    userDisplayElement.style.backgroundImage = backgroundIMG;
+    let backgroundIMG;
 
-    updateData('sound-controls', elm, state, myUser);
+    switch(state){
+        case "muted": backgroundIMG = "url(../resources/mic-mute-fill.svg)"; break;
+        case "unmuted": backgroundIMG = "none"; break;
+        case "deafened": backgroundIMG = "url(../resources/volume-mute-fill.svg)"; break;
+        case "undeafened": backgroundIMG = "none"; break;
+    }
+    userDisplayElement.style.backgroundImage = backgroundIMG;    
+}
+
+function changeState(myUser, state){
+    displayState(myUser, state);
+    updateData('sound-controls', state, myUser.getAttribute("id"));
 }

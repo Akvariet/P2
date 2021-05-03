@@ -14,19 +14,33 @@ export function config(func){
         switch(func){
 
             case 'peerConnection': return {host: "audp2p.herokuapp.com", port: 443, secure: true};
-            case 'ClientConnection':    return {autoConnect: false, path:'/node0/socket.io', transports: ["polling"]};
+            case 'main':           return {auth:{token: cid}, path:'/node0/socket.io', transports: ["polling"]};
 
             //login.js
-            case 'getColors':             return '/node0/colors';
+            case 'getColors':      return '/node0/colors';
+            case 'login':          return '/node0/login';  
+
+            //popUpMenu.js
+            case 'notMute':        return '/node0/resources/mic-fill.svg';
+            case 'mute':           return '/node0/resources/mic-mute-fill.svg';
+            case 'notDeaf':        return '/node0/resources/volume-up-fill.svg';
+            case 'deaf':           return '/node0/resources/volume-mute-fill.svg';
         }
     } else {
         switch (func){
 
             case 'peerConnection': return {host: "audp2p.herokuapp.com", port: 443, secure: true, debug: 2};
-            case 'ClientConnection':    return {autoConnect: false};
+            case 'main':           return {auth:{token: cid}};
 
             //login.js
-            case 'getColors':             return '/colors';
+            case 'getColors':      return '/colors';
+            case 'login':          return '/login';   
+            
+            //popUpMenu.js
+            case 'notMute':         return '/resources/mic-fill.svg';
+            case 'mute':           return '/resources/mic-mute-fill.svg';
+            case 'notDeaf':        return '/resources/volume-up-fill.svg';
+            case 'deaf':           return '/resources/volume-mute-fill.svg';
         }
     }
 }

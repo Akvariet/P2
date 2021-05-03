@@ -1,8 +1,14 @@
 import {audioPlayers} from './proxi.js';
 import {myStream} from './peerConnection.js';
 import {updateData} from './connection.js';
+import {config} from './clientConfig.js';
 
 let muted = false, deafened = false, isPopUp = false, userMoved = false;
+
+const muteIMG    = config('mute');
+const unMuteIMG  = config('notMute');
+const deafIMG    = config('deaf');
+const notDeafIMG = config('notDeaf');
 
 export function usePopUpMenu(myUser){
     const userDisplayElement = myUser.querySelector(".body-display");
@@ -53,8 +59,8 @@ function muteUser(myUser){
 
   // changes microphone picture through search path of image and mutes the user upon change of state
   if (muted){
-    img.src="./resources/mic-fill.svg";
-    SpeakerImage.src = "./resources/volume-up-fill.svg";
+    img.src= unMuteIMG;
+    SpeakerImage.src = notDeafIMG;
     muted = false;
 
     // mutes the user
@@ -68,7 +74,7 @@ function muteUser(myUser){
     changeState(myUser, "unmuted");
   }
   else{
-    img.src="./resources/mic-mute-fill.svg";
+    img.src= muteIMG;
     muted = true;
 
     // unmutes the user
@@ -87,8 +93,8 @@ function deafenUser(myUser){
 
   // changes deafen picture through search path of image and deafens user upon change of state
   if (deafened){
-    img.src="./resources/volume-up-fill.svg";
-    micImage.src="./resources/mic-fill.svg"
+    img.src= notDeafIMG;
+    micImage.src= unMuteIMG;
     deafened = false;
 
     // undeafens the user and therefore unmutes all other users
@@ -102,8 +108,8 @@ function deafenUser(myUser){
     changeState(myUser, "undeafened");
   }
   else{
-    img.src="./resources/volume-mute-fill.svg";
-    micImage.src="./resources/mic-mute-fill.svg"
+    img.src= deafIMG;
+    micImage.src= muteIMG;
     deafened = true;
 
     // deafens the user such that every other user is muted
@@ -129,9 +135,9 @@ export function displayState(myUser, state){
     let backgroundIMG;
 
     switch(state){
-        case "muted": backgroundIMG = "url(../resources/mic-mute-fill.svg)"; break;
+        case "muted": backgroundIMG = `url(${muteIMG})`; break;
         case "unmuted": backgroundIMG = "none"; break;
-        case "deafened": backgroundIMG = "url(../resources/volume-mute-fill.svg)"; break;
+        case "deafened": backgroundIMG = `url(${deafIMG})`; break;
         case "undeafened": backgroundIMG = "none"; break;
     }
     userDisplayElement.style.backgroundImage = backgroundIMG;    

@@ -3,7 +3,7 @@ import {emit} from './AkvarioServer.js'
 
 export class Spinner {
     // The smoothness of the spinners rotation
-    refine = 50;
+    refine = 20;
     // The difference in degrees between the rotationAngle and the spinners start position
     repositioningAngle = 0;
     // The amount of ms the spinner will be still before repositioning
@@ -38,7 +38,7 @@ export class Spinner {
     // Starts a new spinner game
     newGame() {
         // Finds the rotationAngle, id on the winner and the users angles to the spinner.
-        this.result = spin(this.pos, this.range);
+        this.result = spin(positions(), this.pos, this.range);
         this.rotationAngle = this.result.rotationAngle;
         delete this.result.rotationAngle;
 
@@ -59,20 +59,21 @@ export class Spinner {
 const spinner = new Spinner();
 
 // Simulates a spin game
-function spin(s_pos, range){
+export function spin(userPos, spinnerPos, range, rot){
     const minRounds = 2;
-    let rot;
     const userAngles = {};
 
     // gets the users relative position to the spinner
-    const relPos = getRelUserPos(positions(), s_pos);
+    const relPos = getRelUserPos(userPos, spinnerPos);
 
     // finds the players who inside the game area, and gets relative position from relPos
     const players = findPlayers(relPos, range);
 
-    do
-        rot = Math.random() * 360*5;
-    while(minRounds >= Math.floor(rot/360)) // spinner rotates minimum 2 rounds
+    if (rot === undefined) {
+        do
+            rot = Math.random() * 360*5;
+        while(minRounds >= Math.floor(rot/360)) // spinner rotates minimum 2 rounds
+    }
 
     const result = closestUser(players, rot, userAngles);
 
@@ -147,7 +148,7 @@ function calcRotationTime(rotationAngle) {
 }
 
 // calculates the different velocities of the spinner
-function calcVelocity(rotationAngle, rotationTime, refine) {
+export function calcVelocity(rotationAngle, rotationTime, refine) {
     let vMax = (2 * toRadians(rotationAngle)) / (rotationTime);
     let vMin = vMax/refine;
     const deceleration = (0-vMax)/rotationTime;
@@ -170,14 +171,11 @@ function toRadians(angle) {
 }
 
 // calculates the different wait times for the setTimeouts in the spinner.
-function calcWaitTimes (velocity, refine, rotationAngle, stillTime) {
-    let v = velocity.max;
+export function calcWaitTimes (velocity, refine, rotationAngle, stillTime) {
     let spinSessions = [0];
 
-    for (let i = 1; i < refine; i++) {
-        spinSessions.push(spinSessions[i-1] + toRadians(Math.floor(rotationAngle * (1 / refine))) / (v/1000));
-        v -= velocity.min;
-    }
+    for (let i = 1; i < refine; i++)
+        spinSessions.push(spinSessions[i-1] + toRadians(Math.floor(rotationAngle * (1 / refine))) / (velocity.sessions[i-1]/1000));
 
     let repositioning = stillTime + spinSessions[refine-1] + toRadians(Math.floor(rotationAngle * (1 / refine))) / (velocity.min/1000);
     let reset = 2600;

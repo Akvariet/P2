@@ -12,7 +12,7 @@ export function usePopUpMenu(myUser){
     
     userDisplayElement.onclick = (e) => menuPopUp(e, myUser);
     muteBtn.onclick = () => muteUser(myUser);
-    spksBtn.onclick = () => doStateDeafen(myUser);
+    spksBtn.onclick = () => deafenUser(myUser);
 
     document.addEventListener('cameramove', () => {
         popup.style.display = "none";
@@ -81,7 +81,7 @@ function toggleMic() {
     myStream.getTracks().forEach(track => track.enabled = !track.enabled);
 }
 
-function doStateDeafen(myUser){
+function deafenUser(myUser){
   const img = document.getElementById("speakers");
   const micImage = document.getElementById("microphone");
 

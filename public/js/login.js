@@ -84,7 +84,7 @@ document.getElementById('user-form')
         const color = colorPicker.selectedColor;
 
         // Send a login request to the server.
-        fetch('/login', {
+        fetch(config('login'), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

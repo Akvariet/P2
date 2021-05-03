@@ -1,6 +1,6 @@
 import {peerConnection, removePeer} from './peerConnection.js';
 import {displayUserSpeak} from './voiceAnalysis.js';
-import {usePopUpMenu} from './popUpMenu.js';
+import {usePopUpMenu, displayState} from './popUpMenu.js';
 import {moveCamera, useCameraMove} from './cameraMove.js';
 import {setupSpinner, spinBottle} from './frontendSpinner.js';
 import * as connection from './connection.js';
@@ -29,6 +29,7 @@ export function main(myID, cid, allUsers){
     connection.on('disconnect', reloadPage);
     connection.on('start-spinner', spinBottle);
     connection.on('user-speaking', receiveSpeaking);
+    connection.on('sound-controls', receiveSoundControls);
     connection.on('user-disconnected', remove);
     connection.on('new-user-connected', receiveNewUser);
 
@@ -77,4 +78,8 @@ function remove(id){
     }
 
     removePeer(id);
+}
+
+function receiveSoundControls(state, id){
+    displayState(users[id], state);
 }

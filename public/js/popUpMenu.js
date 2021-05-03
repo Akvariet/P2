@@ -2,46 +2,25 @@ import {audioPlayers} from './proxi.js';
 import {myStream} from './peerConnection.js';
 import {updateData} from './connection.js';
 
-let muted = false, deafened = false, isPopUp;
-export const userCoordinates = {x: 0, y: 0};
-export const cameraCoordinates = {x: 0, y: 0};
-
-
-function isUserMoving(myUser){
-
-  // if same coordinates as last time it, user moved
-  if (myUser.style.left === userCoordinates.x && containerElement.style.top === userCoordinates.y) {
-    return false;
-  }
-  userCoordinates.x = myUser.style.left;
-  userCoordinates.y = myUser.style.top;
-  return true;
-}
-
-export function isCameraMoving(){
-  const space = document.getElementById("space");
-
-  // if same coordinates as last time, camera moved
-  if (space.style.left === cameraCoordinates.x && space.style.top === cameraCoordinates.y){
-    return false;
-  }
-  cameraCoordinates.x = space.style.left;
-  cameraCoordinates.y = space.style.top;
-  return true;
-}
+let muted = false, deafened = false, isPopUp = false, userMoved = false;
 
 export function usePopUpMenu(myUser){
-  const userDisplayElement = myUser.querySelector(".body-display");
-  enableUserState(myUser);
-  userDisplayElement.onclick = (e) => menuPopUp(e, myUser);
-}
+    const userDisplayElement = myUser.querySelector(".body-display");
+    const popup = document.getElementById("menuPopUp");
+    const muteBtn = document.getElementById("microphone");
+    const spksBtn = document.getElementById("speakers");
+    
+    userDisplayElement.onclick = (e) => menuPopUp(e, myUser);
+    muteBtn.onclick = () => muteUser(myUser);
+    spksBtn.onclick = () => doStateDeafen(myUser);
 
-function enableUserState(myUser) {
-  const muteBtn = document.getElementById("microphone");
-  const spksBtn = document.getElementById("speakers");
-
-  muteBtn.onclick = () => doStateMute(myUser);
-  spksBtn.onclick = () => doStateDeafen(myUser);
+    document.addEventListener('cameramove', () => {
+        popup.style.display = "none";
+    })
+    myUser.addEventListener('moved', () => {
+        popup.style.display = "none";
+        userMoved = true;
+    });
 }
 
 function menuPopUp(e, myUser){
@@ -50,25 +29,25 @@ function menuPopUp(e, myUser){
   let userRect = myUser.getBoundingClientRect();
   const popup = document.getElementById("menuPopUp");
 
-  if (isPopUp){
-
+  if (!isPopUp){
     // calculates midpoint of container element and uses relative integers to place popupmenu above user
-    let userCenter = {x: (userRect.right + userRect.left)/2, y: (userRect.top + userRect.bottom)/2}
-    popup.style.left = (userCenter.x - 35) + "px";
-    popup.style.top = (userCenter.y - 255) + "px";
+    let userCenter = {x: ((userRect.right + userRect.left)/2) - 35, y: ((userRect.top + userRect.bottom)/2) - 255}
+    popup.style.left = userCenter.x + "px";
+    popup.style.top = userCenter.y + "px";
 
-    if (!isUserMoving(myUser) && !isCameraMoving()) {
-      popup.style.display = "block";
-      isPopUp = false;
+    if(userMoved){userMoved = !userMoved} // stops popupmenu to popup when moving user
+    else{
+        popup.style.display = "block"; 
+        isPopUp = true;
     }
   }
   else{
     popup.style.display = "none";
-    isPopUp = true;
+    isPopUp = false;
   }
 }
 
-function doStateMute(myUser){
+function muteUser(myUser){
   const img = document.getElementById("microphone");
   const SpeakerImage = document.getElementById("speakers");
 
@@ -86,7 +65,7 @@ function doStateMute(myUser){
       deafened = false;
     }
 
-    displayState(myUser, 'mic', muted, "none");
+    changeState(myUser, "unmuted");
   }
   else{
     img.src="./resources/mic-mute-fill.svg";
@@ -94,12 +73,12 @@ function doStateMute(myUser){
 
     // unmutes the user
     toggleMic();
-    displayState(myUser, 'mic', muted, "url(../resources/mic-mute-fill.svg)");
+    changeState(myUser, "muted");
   }
 }
 
 function toggleMic() {
-  myStream.getTracks().forEach(track => track.enabled = !track.enabled);
+    myStream.getTracks().forEach(track => track.enabled = !track.enabled);
 }
 
 function doStateDeafen(myUser){
@@ -120,7 +99,7 @@ function doStateDeafen(myUser){
       muted = false;
     }
 
-    displayState(id, 'speaker', deafened, "none");
+    changeState(myUser, "undeafened");
   }
   else{
     img.src="./resources/volume-mute-fill.svg";
@@ -135,7 +114,7 @@ function doStateDeafen(myUser){
       muted = true;
     }
 
-    displayState(myUser, 'speaker', deafened, "url(../resources/volume-mute-fill.svg)");
+    changeState(myUser, "deafened");
   }
 }
 
@@ -145,9 +124,20 @@ function toggleSpeakers(){
     }
 }
 
-function displayState(myUser, elm, state, backgroundIMG){
+export function displayState(myUser, state){
     const userDisplayElement = myUser.querySelector(".body-display");
-    userDisplayElement.style.backgroundImage = backgroundIMG;
+    let backgroundIMG;
 
-    updateData('sound-controls', elm, state, id)
+    switch(state){
+        case "muted": backgroundIMG = "url(../resources/mic-mute-fill.svg)"; break;
+        case "unmuted": backgroundIMG = "none"; break;
+        case "deafened": backgroundIMG = "url(../resources/volume-mute-fill.svg)"; break;
+        case "undeafened": backgroundIMG = "none"; break;
+    }
+    userDisplayElement.style.backgroundImage = backgroundIMG;    
+}
+
+function changeState(myUser, state){
+    displayState(myUser, state);
+    updateData('sound-controls', state, myUser.getAttribute("id"));
 }

@@ -7,7 +7,7 @@
 * the function name in the case                 *
 ************************************************/
 
-export function config(func){
+export function config(func, cid){
     const production = false;
 
     if(production){

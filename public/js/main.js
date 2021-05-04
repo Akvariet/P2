@@ -5,12 +5,12 @@ import {moveCamera, useCameraMove} from './cameraMove.js';
 import {setupSpinner, spinBottle} from './frontendSpinner.js';
 import * as connection from './connection.js';
 import {drawUser, enableInteraction, move, turn} from './interaction.js';
-
+import {config} from './clientConfig.js';
 const users = {};
 
 // When the game starts, this function runs once for initial setup.
 export function main(myID, cid, allUsers){
-    connection.connectSocket(io({auth:{token: cid}}));
+    connection.connectSocket(io(config('main', cid)));
 
 
     // Draw all users that were already connected on the screen.

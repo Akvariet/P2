@@ -3,6 +3,7 @@ import * as user from '../users.js';
 import {startSpinner} from './backendSpinner.js';
 
 let io;
+let counter = 0;
 /**
  * AkvarioServer controls all real time connection with users all users.
  * AkvarioServer sets up a socket server and handles emits sent by clients.
@@ -28,6 +29,9 @@ export function AkvarioServer(HTTPServer){
                     }
                 })(event)(socket, ...args);
             });
+            counter++;
+            console.log(`Current user count: ${counter}`);
+            io.emit('update-user-count', counter)
         }
         else socket.disconnect();
     });
@@ -37,6 +41,9 @@ function disconnect(socket){
     console.log(socket.id + ' disconnected.')
     socket.broadcast.emit('user-disconnected', user.get(socket.id).gameID);
     user.remove(socket.id);
+    counter--;
+    socket.broadcast.emit('update-user-count', counter);
+    console.log(`Current user count: ${counter}`);
 }
 
 function move(socket, position){

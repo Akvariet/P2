@@ -84,7 +84,7 @@ document.getElementById('user-form')
         const color = colorPicker.selectedColor;
 
         // Send a login request to the server.
-        fetch('/login', {
+        fetch(config('login'), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -101,7 +101,7 @@ document.getElementById('user-form')
             reason   => retry(reason))      // Else, handle make the user try again.
         .then(
             response => enterRoom(response),
-            reason =>  retry(reason, FailMessageLogin)
+            reason =>  retry(reason)
         )
 });
 
@@ -153,7 +153,7 @@ function enterRoom(response){
 
 function retry(reason) {
     // The login attempt was rejected. Try again.
-    window.alert('Someone has already picked this name or the server is offline')
+    window.alert('Someone has already picked this name');
 }
 
 

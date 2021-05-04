@@ -59,7 +59,7 @@ export function create(name, color){
         name: name,
         color: colorPicker.getShade(color),
         position: {
-            top:  Math.random() * 300,
+            top: Math.random() * 300, 
             left: Math.random() * 300
         },
         rotation: 1

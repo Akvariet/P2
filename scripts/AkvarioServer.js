@@ -16,18 +16,12 @@ export function AkvarioServer(HTTPServer){
             user.changeID(socket.id, token);
 
             socket.broadcast.emit('new-user-connected', user.get(socket.id));
-            socket.on('disconnect', () => disconnect(socket));
-            socket.onAny((event, ...args) => {
-                (event => {
-                    switch (event) {
-                        case 'moved'             : return move;     // A user moved.
-                        case 'turned'            : return turn;     // A user turned.
-                        case 'user-speaking'     : return speak;
-                        case 'sound-controls'    : return soundControls;
-                        case 'start-spinner'     : return startSpinner;
-                    }
-                })(event)(socket, ...args);
-            });
+            socket.on('moved',  position => move(socket, position));
+            socket.on('turned', rotation => turn(socket, rotation));
+            socket.on('disconnect',   () => disconnect(socket));
+            socket.on('user-speaking',  speaking => speak(socket, speaking));
+            socket.on('start-spinner',  socket => startSpinner(socket));
+            socket.on('sound-controls', (state, id) => soundControls(socket, state, id));
         }
         else socket.disconnect();
     });
@@ -55,8 +49,8 @@ function speak(socket, speaking){
     socket.broadcast.emit('user-speaking', speaking, user.get(socket.id).gameID);
 }
 
-function soundControls(socket, elm, state, id){
-    socket.broadcast.emit('sound-controls', elm, state, id);
+function soundControls(socket, state, id){
+    socket.broadcast.emit('sound-controls', state, id);
 }
 
 export function emit(event, ...args){

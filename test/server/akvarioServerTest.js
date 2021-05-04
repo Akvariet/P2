@@ -1,35 +1,31 @@
 import {AkvarioServer} from '../../scripts/AkvarioServer.js';
-import {startServer} from '../../server.js';
 import {TestSuite} from '../testClasses.js';
 import {test} from '../AkvarioTest.js';
+import {createServer} from 'http';
+import express from 'express';
+import * as ioClient from 'socket.io-client'
 
-const testServer = new AkvarioServer()
+const server = express();
+const HTTPServer = createServer(server)
 
-const HTTPServer = startServer(testServer);
-const testSocket = {
-    id: 'testSocket',
-    silent: false,
-    emits: [],
+const testServer = new AkvarioServer(HTTPServer)
 
-    emit(event,...args){
-        const emit = {};
-        emit[event] = args;
-        this.emits.push(emit);
-    },
-    broadcast:{
-        broadcasts: [],
+// Perform login test.
+function loginTest(){
+    fetch('localhost:3200/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
 
-        emit(event, ...args) {
-            const broadcasts = {};
-            broadcasts[event] = args;
-            this.broadcasts.push(broadcasts);
-        }
-    },
+        // The request contains the name and color selected by the player.
+        body: JSON.stringify({
+            'Name': 'name',
+            'color': 'red',
+        })
+    });
 
-    on(event, callbackFunc){
-        console.log(event);
-    }
-}
+const testSocket = ioClient.io({auth:{token: cid}})
 
 function login(socket, name, color){
     testServer.login(socket, name, color);
@@ -40,7 +36,7 @@ function login(socket, name, color){
     }
 
 function move(socket, position){
-    testServer.moveUser(socket, position);
+    testServer.move(socket, position);
     return findEmit(socket.broadcast.broadcasts, 'moved')[1];
 }
 
@@ -91,6 +87,5 @@ testSuite.addFunctionTest(turn, [
 
 
 export function akvarioServerTest(){
-    test.addTestSuite(testSuite)
-    HTTPServer.close();
+    test.addSuite(testSuite)
 }

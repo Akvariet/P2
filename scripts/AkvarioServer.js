@@ -31,6 +31,7 @@ export function AkvarioServer(HTTPServer){
             });
             counter++;
             console.log(`Current user count: ${counter}`);
+            io.emit('update-user-count', counter)
         }
         else socket.disconnect();
     });
@@ -41,6 +42,7 @@ function disconnect(socket){
     socket.broadcast.emit('user-disconnected', user.get(socket.id).gameID);
     user.remove(socket.id);
     counter--;
+    socket.broadcast.emit('update-user-count', counter);
     console.log(`Current user count: ${counter}`);
 }
 

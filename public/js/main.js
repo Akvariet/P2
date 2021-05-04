@@ -31,6 +31,7 @@ export function main(myID, cid, allUsers){
     connection.on('user-speaking', receiveSpeaking);
     connection.on('sound-controls', receiveSoundControls);
     connection.on('user-disconnected', remove);
+    connection.on('update-user-count', updateUserCount);
     connection.on('new-user-connected', receiveNewUser);
 
     update()
@@ -78,6 +79,10 @@ function remove(id){
     }
 
     removePeer(id);
+}
+
+function updateUserCount(count){
+    document.getElementById('count').innerText = count;
 }
 
 function receiveSoundControls(state, id){

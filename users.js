@@ -58,7 +58,10 @@ export function create(name, color){
         gameID: id,
         name: name,
         color: colorPicker.getShade(color),
-        position: {top: 0, left: 0},
+        position: {
+            top: Math.random() * 300, 
+            left: Math.random() * 300
+        },
         rotation: 1
     };
 

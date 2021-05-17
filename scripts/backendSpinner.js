@@ -70,9 +70,7 @@ export function spin(userPos, spinnerPos, range, rot){
     const players = findPlayers(relPos, range);
 
     if (rot === undefined) {
-        do
-            rot = Math.random() * 360*5;
-        while(minRounds >= Math.floor(rot/360)) // spinner rotates minimum 2 rounds
+        rot = (360 * minRounds) + (Math.random() * 360 * 3); // spinner rotates min 2 and max 5 rounds
     }
 
     const result = closestUser(players, rot, userAngles);

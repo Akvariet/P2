@@ -39,7 +39,7 @@ export function main(myID, cid, allUsers){
     connection.on('sound-controls', receiveSoundControls);
     connection.on('user-disconnected', remove);
     connection.on('new-user-connected', receiveNewUser);
-    alert(`INSTRUCTIONS:\nPress C to reset Camera and Avatar\nUse the mouse to move your Avatar`);
+    
     update();
 }
 

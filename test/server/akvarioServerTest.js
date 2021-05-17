@@ -1,74 +1,79 @@
 import {AkvarioServer} from '../../scripts/AkvarioServer.js';
-import {startServer} from '../../server.js';
 import {TestSuite} from '../testClasses.js';
 import {test} from '../AkvarioTest.js';
+import {createServer} from 'http';
+import express from 'express';
+import * as ioClient from 'socket.io-client'
+import fetch from 'node-fetch';
+import bodyParser from 'body-parser';
+import {router} from '../../scripts/routes.js';
 
-const testServer = new AkvarioServer()
+const server = express();
+server.use(bodyParser.json());
+server.use(express.static('public'));
+server.use(router);
 
-const HTTPServer = startServer(testServer);
-const testSocket = {
-    id: 'testSocket',
-    silent: false,
-    emits: [],
+const HTTPServer = createServer(server)
 
-    emit(event,...args){
-        const emit = {};
-        emit[event] = args;
-        this.emits.push(emit);
-    },
-    broadcast:{
-        broadcasts: [],
+const testServer = new AkvarioServer(HTTPServer)
 
-        emit(event, ...args) {
-            const broadcasts = {};
-            broadcasts[event] = args;
-            this.broadcasts.push(broadcasts);
-        }
-    },
+let testSocket;
 
-    on(event, callbackFunc){
-        console.log(event);
-    }
+HTTPServer.listen(3200)
+
+async function login(name, color){
+    return fetch('http://localhost:3200/login/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+
+        // The request contains the name and color selected by the player.
+        body: JSON.stringify({
+            name: name,
+            color: color,
+        })
+    })
+        .then(res => res.json())
+        .then(res => {
+
+            testSocket = ioClient.io({
+                auth: {
+                    token: res.cid
+                }
+            })
+
+            return res; // If the name is correct, the test is passed.
+        })
+        .catch(reason => undefined); //...Otherwise it should fail.
 }
 
-function login(socket, name, color){
-    testServer.login(socket, name, color);
-    const users = findEmit(socket.emits, 'login-successful')[1];
-    const emittedUser = findEmit(socket.broadcast.broadcasts, 'new-user-connected').pop();
-    const user = users.pop();
-    return color === user.color && color === emittedUser.color && name === user.name && name === emittedUser.name;
-    }
-
-function move(socket, position){
-    testServer.moveUser(socket, position);
-    return findEmit(socket.broadcast.broadcasts, 'moved')[1];
+// Perform login test.
+async function loginTest(name, color) {
+    const res = await login(name, color);
+    return res ? res.users[res.id].name === name : false;
 }
 
-function turn(socket, position){
-    testServer.rotateUser(socket, position);
-    return findEmit(socket.broadcast.broadcasts, 'turned')[1];
-}
-
-// Finds the latest emit of given event.
-function findEmit(a, event){
-    for (let i = a.length-1; i >= 0; i--) {
-        if (a[i].hasOwnProperty(event)){
-            return a[i][event];
-        }
-    }
+async function socketTest(name, color){
+    const res = await login(name, color);
+    testSocket = ioClient.io({auth:{token: res.cid}})
+    testSocket.emit('test');
+    return true;
 }
 
 const testSuite = new TestSuite('akvarioServer.js')
 
 // _____Test login_____
 // Test that login emits two events: login-successful or login-rejected and new-user-connected.
-testSuite.addFunctionTest(login, [[testSocket, 'Simon', 'red']],[true]);
+testSuite.addFunctionTest(loginTest,['name', 'red'],true);
+testSuite.addFunctionTest(loginTest,['name', 'red'],false);
 
-// Test that the server returns valid color.
-
-// Test that the server returns valid name.
+// _____Test socket connection_____
+//testSuite.addFunctionTest(socketTest, ['MyUserName', 'yellow'], true);
 
 // _____Test move and turn_____
+
+/*
 testSuite.addFunctionTest(move, [
     [testSocket, {top:39, left:83}],
     [testSocket, {top:584, left:1337}],
@@ -88,9 +93,8 @@ testSuite.addFunctionTest(turn, [
         5.374,
         19,
     ]);
-
+*/
 
 export function akvarioServerTest(){
-    test.addTestSuite(testSuite)
-    HTTPServer.close();
+    test.addSuite(testSuite)
 }

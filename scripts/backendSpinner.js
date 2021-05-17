@@ -70,15 +70,13 @@ export function spin(userPos, spinnerPos, range, rot){
     const players = findPlayers(relPos, range);
 
     if (rot === undefined) {
-        do
-            rot = Math.random() * 360*5;
-        while(minRounds >= Math.floor(rot/360)) // spinner rotates minimum 2 rounds
+        rot = (360 * minRounds) + (Math.random() * 360 * 3); // spinner rotates min 2 and max 5 rounds
     }
 
     const result = closestUser(players, rot, userAngles);
 
     //return the result of the spin and the rotation of the spinner. Players should not move before the game is done.
-    return {winner: result, rotationAngle: rot, userAngles: userAngles};
+    return {winner: result, rotationAngle: Number(rot.toFixed(4)), userAngles: userAngles};
 }
 
 //Find the user which is closest to being pointed at
@@ -104,10 +102,10 @@ function closestUser(players, rotDeg, userAngles){
             angFromRot = 360 - angFromRot;
 
         //adds the difference in degrees to rots.
-        rots.push(angFromRot);
+        rots.push(Number(angFromRot.toFixed(4)));
 
         //takes the angles to
-        userAngles[id] = a;
+        userAngles[id] = Number(a.toFixed(4));
     });
 
     //Return the index of the lowest angle.
@@ -149,17 +147,17 @@ function calcRotationTime(rotationAngle) {
 
 // calculates the different velocities of the spinner
 export function calcVelocity(rotationAngle, rotationTime, refine) {
-    let vMax = (2 * toRadians(rotationAngle)) / (rotationTime);
+    let vMax = Number(((2 * toRadians(rotationAngle)) / (rotationTime)).toFixed(4));
     let vMin = vMax/refine;
     const deceleration = (0-vMax)/rotationTime;
     let spinSessions = [vMax];
 
     for (let i = 1; i < refine; i++)
-        spinSessions.push(deceleration * (rotationTime * i/refine) + vMax);
+        spinSessions.push(Number((deceleration * (rotationTime * i/refine) + vMax).toFixed(4)));
 
     return {
-        max : vMax,
-        min : vMin,
+        max : Number(vMax.toFixed(4)),
+        min : Number(vMin.toFixed(4)),
         repositioning : 3,
         sessions : spinSessions
     }
@@ -175,9 +173,9 @@ export function calcWaitTimes (velocity, refine, rotationAngle, stillTime) {
     let spinSessions = [0];
 
     for (let i = 1; i < refine; i++)
-        spinSessions.push(spinSessions[i-1] + toRadians(Math.floor(rotationAngle * (1 / refine))) / (velocity.sessions[i-1]/1000));
+        spinSessions.push(Number((spinSessions[i-1] + toRadians(Math.floor(rotationAngle * (1 / refine))) / (velocity.sessions[i-1]/1000)).toFixed(4)));
 
-    let repositioning = stillTime + spinSessions[refine-1] + toRadians(Math.floor(rotationAngle * (1 / refine))) / (velocity.min/1000);
+    let repositioning = Number((stillTime + spinSessions[refine-1] + toRadians(Math.floor(rotationAngle * (1 / refine))) / (velocity.min/1000)).toFixed(4));
     let reset = 2600;
 
     return {sessions : spinSessions, repositioning : repositioning, reset : reset, total : repositioning + reset};

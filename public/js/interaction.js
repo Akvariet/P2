@@ -12,7 +12,7 @@ export function enableInteraction(myUser) {
     const userBody = myUser.querySelector('.body-display');
     const arrow = myUser.querySelector(".arrow");
 
-    let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+    let userPosX = 0, userPosY = 0, mousePosX = 0, mousePosY = 0;
 
     userBody.addEventListener('mousedown', dragMouseDown);
     arrow.addEventListener('mousedown', dragMouseDown);
@@ -20,9 +20,9 @@ export function enableInteraction(myUser) {
 
     function dragMouseDown(e) {
         e.preventDefault();
-        
-        pos3 = mousePosition.x;
-        pos4 = mousePosition.y;
+
+        mousePosX = mousePosition.x;
+        mousePosY = mousePosition.y;
         document.addEventListener('cameramove', userDrag)
         document.addEventListener('mouseup', closeDragUser);
         document.addEventListener('mousemove', userDrag);
@@ -34,14 +34,14 @@ export function enableInteraction(myUser) {
     function userDrag(e) {
         e.preventDefault();
 
-        pos1 = pos3 - mousePosition.x;
-        pos2 = pos4 - mousePosition.y;
-        pos3 = mousePosition.x;
-        pos4 = mousePosition.y;
+        userPosX = mousePosX - mousePosition.x;
+        userPosY = mousePosY - mousePosition.y;
+        mousePosX = mousePosition.x;
+        mousePosY = mousePosition.y;
 
-        const position ={
-            top : (myUser.offsetTop  - pos2),
-            left: (myUser.offsetLeft - pos1)
+        const position = {
+            top : (myUser.offsetTop  - userPosY),
+            left: (myUser.offsetLeft - userPosX)
         }
 
         connection.updateData('moved', position);

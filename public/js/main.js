@@ -5,12 +5,12 @@ import {moveCamera, useCameraMove} from './cameraMove.js';
 import {setupSpinner, spinBottle} from './frontendSpinner.js';
 import * as connection from './connection.js';
 import {drawUser, enableInteraction, move, turn} from './interaction.js';
-
+import {config} from './clientConfig.js';
 const users = {};
 
 // When the game starts, this function runs once for initial setup.
 export function main(myID, cid, allUsers){
-    connection.connectSocket(io({auth:{token: cid}}));
+    connection.connectSocket(io(config('main', cid)));
 
 
     // Draw all users that were already connected on the screen.
@@ -31,6 +31,7 @@ export function main(myID, cid, allUsers){
     connection.on('user-speaking', receiveSpeaking);
     connection.on('sound-controls', receiveSoundControls);
     connection.on('user-disconnected', remove);
+    connection.on('update-user-count', updateUserCount);
     connection.on('new-user-connected', receiveNewUser);
 
     update()
@@ -78,6 +79,10 @@ function remove(id){
     }
 
     removePeer(id);
+}
+
+function updateUserCount(count){
+    document.getElementById('count').innerText = count;
 }
 
 function receiveSoundControls(state, id){

@@ -1,4 +1,8 @@
-
+#cp, #hlp{
+    font-family: 'Darker Grotesque', sans-serif;
+    user-select: none;
+    cursor: help;
+}
 
 .user-container-displayed{
     visibility: hidden;
@@ -68,7 +72,7 @@
     transform: translate(-50%,-50%);
 }
 
-.login-form       { height: 480px; width: 300px;}
+.login-form       {height: 500px; width: 300px;}
 .login-form, .login-form input{ color: #393939; }
 button{
     color:#F8F8F8;

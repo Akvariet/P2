@@ -21,7 +21,7 @@ export function AkvarioServer(HTTPServer){
             socket.on('turned', rotation => turn(socket, rotation));
             socket.on('disconnect',   () => disconnect(socket));
             socket.on('user-speaking',  speaking => speak(socket, speaking));
-            socket.on('start-spinner',  socket => startSpinner(socket));
+            socket.on('start-spinner',  () => startSpinner(socket));
             socket.on('sound-controls', (state, id) => soundControls(socket, state, id));
         }
         else socket.disconnect();

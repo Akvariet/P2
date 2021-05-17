@@ -26,6 +26,9 @@ export function enableInteraction(myUser) {
         document.addEventListener('cameramove', userDrag)
         document.addEventListener('mouseup', closeDragUser);
         document.addEventListener('mousemove', userDrag);
+
+        userBody.style.cursor = "grabbing";
+        arrow.style.cursor = "grabbing";
     }
 
     function userDrag(e) {
@@ -49,6 +52,8 @@ export function enableInteraction(myUser) {
         document.removeEventListener('cameramove', userDrag)
         document.removeEventListener('mouseup', closeDragUser);
         document.removeEventListener('mousemove', userDrag);
+        userBody.style.cursor = "grab";
+        arrow.style.cursor = "grab";
     }
 
     const space = document.getElementById('space');

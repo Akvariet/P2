@@ -3,7 +3,6 @@ import * as user from '../users.js';
 import {startSpinner} from './backendSpinner.js';
 
 let io;
-let counter = 0;
 /**
  * AkvarioServer controls all real time connection with users all users.
  * AkvarioServer sets up a socket server and handles emits sent by clients.
@@ -17,21 +16,13 @@ export function AkvarioServer(HTTPServer){
             user.changeID(socket.id, token);
 
             socket.broadcast.emit('new-user-connected', user.get(socket.id));
-            socket.on('disconnect', () => disconnect(socket));
-            socket.onAny((event, ...args) => {
-                (event => {
-                    switch (event) {
-                        case 'moved'             : return move;     // A user moved.
-                        case 'turned'            : return turn;     // A user turned.
-                        case 'user-speaking'     : return speak;
-                        case 'sound-controls'    : return soundControls;
-                        case 'start-spinner'     : return startSpinner;
-                    }
-                })(event)(socket, ...args);
-            });
-            counter++;
-            console.log(`Current user count: ${counter}`);
-            io.emit('update-user-count', counter)
+            socket.on('test', () => console.log('test'));
+            socket.on('moved',  position => move(socket, position));
+            socket.on('turned', rotation => turn(socket, rotation));
+            socket.on('disconnect',   () => disconnect(socket));
+            socket.on('user-speaking',  speaking => speak(socket, speaking));
+            socket.on('start-spinner',  () => startSpinner(socket));
+            socket.on('sound-controls', (state, id) => soundControls(socket, state, id));
         }
         else socket.disconnect();
     });
@@ -41,9 +32,6 @@ function disconnect(socket){
     console.log(socket.id + ' disconnected.')
     socket.broadcast.emit('user-disconnected', user.get(socket.id).gameID);
     user.remove(socket.id);
-    counter--;
-    socket.broadcast.emit('update-user-count', counter);
-    console.log(`Current user count: ${counter}`);
 }
 
 function move(socket, position){
@@ -62,8 +50,8 @@ function speak(socket, speaking){
     socket.broadcast.emit('user-speaking', speaking, user.get(socket.id).gameID);
 }
 
-function soundControls(socket, elm, state, id){
-    socket.broadcast.emit('sound-controls', elm, state, id);
+function soundControls(socket, state, id){
+    socket.broadcast.emit('sound-controls', state, id);
 }
 
 export function emit(event, ...args){

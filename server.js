@@ -6,7 +6,6 @@ import {AkvarioServer} from "./scripts/AkvarioServer.js";
 import {port} from './scripts/serverConfig.js'
 import * as user from './users.js'
 
-
 const server = express();
 const HTTPServer = createServer(server);
 new AkvarioServer(HTTPServer);
@@ -14,6 +13,12 @@ new AkvarioServer(HTTPServer);
 server.use(bodyParser.json());
 server.use(express.static('public'));
 server.use(router);
+
+//listens to PORT set in /scripts/serverConfig.
+HTTPServer.listen(port, () => {
+    console.log(`Welcome to Akvario @ *:${port}`);
+});
+
 
 export function attemptLogin(name, color){
 
@@ -31,7 +36,3 @@ export function attemptLogin(name, color){
 }
 
 
-//listens to PORT set in /scripts/serverConfig.
-HTTPServer.listen(port, () => {
-    console.log(`Welcome to Akvario @ *:${port}`);
-});

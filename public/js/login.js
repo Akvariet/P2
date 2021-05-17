@@ -92,8 +92,8 @@ document.getElementById('user-form')
 
             // The request contains the name and color selected by the player.
             body: JSON.stringify({
-                name,
-                color
+                name: name,
+                color: color
             })
         })
         .then(

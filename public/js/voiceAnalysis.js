@@ -37,13 +37,14 @@ export function analyzeVoice(stream, myUser) {
             if (speaking === false){
                 speaking = true;
                 userElement.classList.add('speaking'); // So the user can see that he/she is speaking
+                updateData('user-speaking', speaking);
             }
         }
         else if (speaking === true) {
             speaking = false;
             userElement.classList.remove('speaking'); // So the user can see that he/she stopped speaking
+            updateData('user-speaking', speaking);
         }
-        updateData('user-speaking', speaking);
     }
     analyse();
 }

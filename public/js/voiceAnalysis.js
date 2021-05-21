@@ -1,9 +1,9 @@
-import {updateData, users} from './main.js';
+import {updateData} from './connection.js';
 
-export function analyzeVoice(stream, id) {
+export function analyzeVoice(stream, myUser) {
     let newAnalysis;
     let speaking = false;
-    const userElement = users[id].querySelector('.body');
+    const userElement = myUser.querySelector('.body');
 
     //Creating a analyzerNode
     let audioCtx = new(window.AudioContext || window.webkitAudioContext)();
@@ -37,13 +37,14 @@ export function analyzeVoice(stream, id) {
             if (speaking === false){
                 speaking = true;
                 userElement.classList.add('speaking'); // So the user can see that he/she is speaking
+                updateData('user-speaking', speaking);
             }
         }
         else if (speaking === true) {
             speaking = false;
             userElement.classList.remove('speaking'); // So the user can see that he/she stopped speaking
+            updateData('user-speaking', speaking);
         }
-        updateData('user-speaking', speaking, id);
     }
     analyse();
 }
@@ -58,8 +59,8 @@ function analyseIncomingVoice(analyser, dataArray){
     return Boolean(max_data);
 }
 
-export function displayUserSpeak(speaking, id) {
-    const userElement = users[id].querySelector('.body');
+export function displayUserSpeak(speaking, user) {
+    const userElement = user.querySelector('.body');
 
     //If the user started speaking, add the class, if the user stopped speaking, remove the class.
     if (speaking) userElement.classList.add('speaking');

@@ -22,9 +22,9 @@ export class Test {
 export class TestSuite{
     // How many decimals of precision is needed?
     precision = 4;
+    fails = [];
     suiteName;
     tests = [];
-    fails = [];
     warnings = [];
 
     constructor(name) {
@@ -37,67 +37,33 @@ export class TestSuite{
         this.tests.push(() => this.test(func, input, output));
     }
 
-    test(func, input, output)
-    {
-        if (typeof output === 'object')
-            this.warnings.push(`Warning: Expected output of ${func.name} is of type object. The test will check if the objects are reference equal.`);
-
+    async test(func, input, output) {
         // Test the function, if the test fails it will throw an assertion error.
-        try {
-            this.evaluate(func(...input), output)
-        } catch (err) {
-            if (!(err instanceof assert.AssertionError)) console.error(err);
+        Promise.resolve(func(...input))
+            .then(result => {
+                if(typeof result === 'number' && typeof output === 'number'){
+                    result = Number(result.toFixed(this.precision));
+                    output = Number(output.toFixed(this.precision))
+                }
 
-            // If e is an assertion error, the test has failed.
-            this.fails.push(
-                testFailed(func.name,this.suiteName, input, err.actual, output)
-            );
-
-        }
-    }
-
-    evaluate(result, expectedOutput){
-        if(typeof result === 'number' && typeof expectedOutput === 'number'){
-            result = Number(result.toFixed(this.precision));
-            expectedOutput = Number(expectedOutput.toFixed(this.precision))
-        }
-        assert.strictEqual(result, expectedOutput);
+                try {
+                    assert.deepStrictEqual(result, output);
+                }
+                catch (err){
+                    throw testFailed(func.name, this.suiteName, input, err.actual, output)
+                }
+            })
     }
 
     run(){
-        this.fails = [];
-        this.tests.forEach(test => test())
-        this.showResults();
+        this.tests.forEach(test => test());
     }
 
-    showResults() {
-        const tests = this.tests.length;
-        const fails = this.fails.length;
-        const warnings = this.warnings.length;
-        const statusStr = status(this.suiteName, tests,fails, warnings);
-
-        console.log(statusStr);
-
-        if (fails) console.log('**** Fails ****')
-        for (const fail of this.fails) {
-            console.warn(fail);
-        }
-        if(warnings) console.log('**** Warnings ****')
-        for (const warning of this.warnings) {
-            console.warn(warning)
-        }
-    }
 }
 
 function testFailed(functionName, suiteName, input, output, expected){
     return functionName + ' has failed in ' + suiteName + '!\n' +
-        'Received input : ' + JSON.stringify(input) + '\n' +
-        'Got output     : ' + JSON.stringify(expected) + '\n' +
-        'Expected output: ' + JSON.stringify(output);
-}
-
-function status(suiteName, tests, fails, warnings) {
-    return 'Completed ' + tests + ` test${tests === 1 ? '' : 's'} in ` + suiteName + ' with ' +
-        fails + ` error${fails === 1 ? '' : 's'} and ` +
-        warnings + ` warning${warnings === 1 ? '' : 's'}${fails + warnings ? '!' : '.'}`;
+        'Received input : ' + JSON.stringify(input)  + '\n' +
+        'Got output     : ' + JSON.stringify(output) + '\n' +
+        'Expected output: ' + JSON.stringify(expected);
 }

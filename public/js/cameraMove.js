@@ -1,30 +1,23 @@
-import {isCameraMoving} from './popUpMenu.js';
-import {getPos, mousePosition, users} from './main.js';
-
-let cameramoveAllowed = true;
+let cameramoveAllowed = false;
 let posLeft=0, posTop=0;
 const mouseCoordinates = {x: 0, y: 0};
-let myUser;
 let target = {
-    left: window.innerWidth / 2,
-    top: window.innerHeight / 2
+    left: 0,
+    top:  0
 };
 
-
-export function updateMouseCoordinates(e){
+function updateMouseCoordinates(e){
     mouseCoordinates.x = e.clientX;
     mouseCoordinates.y = e.clientY;
 }
 
-export function useCameraMove(id) {
-    myUser = users[id];
+export function useCameraMove() {
     document.onmousemove = updateMouseCoordinates;
     document.onmouseout = () => cameramoveAllowed = false; // if mouse leaves window, denies cameramove
-    document.onmouseover = () => cameramoveAllowed = true; // if mouse enters window, allows cameramove
-
 }
 
 export function moveCamera(){
+    document.onmouseover = () => cameramoveAllowed = true; // if mouse enters window, allows cameramove
     if (cameramoveAllowed){
         let space = document.getElementById("space");
 
@@ -41,9 +34,6 @@ export function moveCamera(){
         let percY = mouseY / origoY;
 
         const dist = Math.sqrt(percX * percX + percY * percY);
-        const myPos = getPos(myUser);
-        myPos.left = origoX - myPos.left;
-        myPos.top  = origoY - myPos.top;
 
         if( dist > 0.5)
             target = {
@@ -51,21 +41,37 @@ export function moveCamera(){
                 top:  target.top  + (mouseY * 0.01)
             };
 
+        
+        let appendLeft = ((target.left - posLeft) * 0.1);
+        let appendTop = (target.top - posTop) * 0.1;
 
-        posLeft += (target.left - posLeft) * 0.1;
-        posTop  += (target.top - posTop) * 0.1;
+        // sets the appends to 0 if below 0.5
+        appendLeft = (Math.abs(appendLeft) > 0.5) ? appendLeft : 0
+        appendTop = (Math.abs(appendTop) > 0.5) ? appendTop : 0;
+
+        // appends the values to camera position values.
+        posLeft += appendLeft;
+        posTop  += appendTop;
 
         // moves camera to new position, if updated
         space.style.left = posLeft + "px";
         space.style.top = posTop + "px";
 
-        document.dispatchEvent(new CustomEvent('cameramove'));
-
-        if (isCameraMoving()){
-            // hides popupmenu upon camera moving;
-            const popup = document.getElementById("menuPopUp");
-            popup.style.display = "none";
+        if (appendLeft != 0 && appendTop != 0){
+            document.dispatchEvent(new CustomEvent('cameramove'));
         }
 
     }
+}
+
+export function centerMe(){
+    const space = document.getElementById("space");
+    cameramoveAllowed = false;
+    mouseCoordinates.x = 0;
+    mouseCoordinates.y = 0;
+    
+    
+    space.style.left = 0; posLeft = 0; target.left = 0;
+    space.style.top = 0;  posTop = 0;  target.top = 0;
+    
 }

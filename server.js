@@ -8,7 +8,8 @@ import * as user from './users.js'
 
 const server = express();
 const HTTPServer = createServer(server);
-new AkvarioServer(HTTPServer);
+const args = process.argv.slice(2);
+new AkvarioServer(HTTPServer, args.includes('-T'));
 
 server.use(bodyParser.json());
 server.use(express.static('public'));

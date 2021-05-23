@@ -7,8 +7,9 @@ let io;
  * AkvarioServer controls all real time connection with users all users.
  * AkvarioServer sets up a socket server and handles emits sent by clients.
  * @param {any} HTTPServer - The http server.
+ * @param {boolean} testMode
  * */
-export function AkvarioServer(HTTPServer){
+export function AkvarioServer(HTTPServer, testMode){
     io = new socket_io.Server(HTTPServer);
     io.on('connection', (socket) => {
         const token = socket.handshake.auth.token
@@ -23,6 +24,7 @@ export function AkvarioServer(HTTPServer){
             socket.on('user-speaking',  speaking => speak(socket, speaking));
             socket.on('start-spinner',  () => startSpinner(socket));
             socket.on('sound-controls', (state, id) => soundControls(socket, state, id));
+            if(testMode) socket.on('stop', () => HTTPServer.close())
         }
         else socket.disconnect();
     });

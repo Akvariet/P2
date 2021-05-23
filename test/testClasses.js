@@ -37,6 +37,10 @@ export class TestSuite{
         this.tests.push(() => this.test(func, input, output));
     }
 
+    addEventTest(input, expectedOutput){
+        this.tests.push(() => this.eventTest(input, expectedOutput));
+    }
+
     async test(func, input, output) {
         // Test the function, if the test fails it will throw an assertion error.
         Promise.resolve(func(...input))
@@ -53,6 +57,19 @@ export class TestSuite{
                     throw testFailed(func.name, this.suiteName, input, err.actual, output)
                 }
             })
+    }
+
+    eventTest(input, expectedOutput){
+        const expectedEvents = Object.keys(expectedOutput);
+
+        expectedEvents.forEach(event => {
+            try{
+                assert.deepStrictEqual(input[event], expectedOutput[event]);
+            }
+            catch (err){
+                throw testFailed(event, this.suiteName, input[event], err.actual, expectedOutput[event]);
+            }
+        });
     }
 
     run(){

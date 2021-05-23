@@ -130,6 +130,11 @@ function toggleSpeakers(){
     }
 }
 
+/**
+ * 
+ * @param {HTMLElement} myUser 
+ * @param {string} state 
+ */
 export function displayState(myUser, state){
     const userDisplayElement = myUser.querySelector(".body-display");
     let backgroundIMG;
@@ -145,5 +150,5 @@ export function displayState(myUser, state){
 
 function changeState(myUser, state){
     displayState(myUser, state);
-    updateData('sound-controls', state, myUser.getAttribute("id"));
+    updateData('sound-controls', state);
 }

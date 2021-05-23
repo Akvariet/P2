@@ -22,7 +22,7 @@ export function AkvarioServer(HTTPServer){
             socket.on('disconnect',   () => disconnect(socket));
             socket.on('user-speaking',  speaking => speak(socket, speaking));
             socket.on('start-spinner',  () => startSpinner(socket));
-            socket.on('sound-controls', (state, id) => soundControls(socket, state, id));
+            socket.on('sound-controls', state => soundControls(socket, state));
         }
         else socket.disconnect();
     });
@@ -50,8 +50,8 @@ function speak(socket, speaking){
     socket.broadcast.emit('user-speaking', speaking, user.get(socket.id).gameID);
 }
 
-function soundControls(socket, state, id){
-    socket.broadcast.emit('sound-controls', state, id);
+function soundControls(socket, state){
+    socket.broadcast.emit('sound-controls', state, user.get(socket.id).gameID);
 }
 
 export function emit(event, ...args){

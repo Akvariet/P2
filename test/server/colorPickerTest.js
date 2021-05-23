@@ -1,4 +1,4 @@
-import {test} from "../AkvarioTest.js";
+import {test} from '../testServer.js';
 import {TestSuite} from "../testClasses.js";
 import {ColorPicker} from "../../scripts/ColorPicker.js";
 import shades from "../../resources/colorPalette.js"

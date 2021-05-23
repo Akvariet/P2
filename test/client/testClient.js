@@ -1,27 +1,44 @@
 import * as ioClient from "socket.io-client";
 import fetch from 'node-fetch';
-const TsPort = 3205;
 let connected = false;
 let serverSocket;
 
-const TsSocket = ioClient.io("http://localhost:" + TsPort);
+console.log("testClient.js")
 
-function terminate() {
-    serverSocket.emit("stop");
-    process.exit(0);
-}
+login(Math.random(), "red")
+    .then(res => {
+        serverSocket = ioClient.io("http://localhost:3200",{
+            auth: {
+                token: res.cid
+            }
+        });
+        TsSocket.emit("id", res.id);
+        serverSocket.on("connected", () => {
+            connected = true;
+            console.log("Connected to Akvario server");
+            serverSocket.emit("test")
+            serverSocket.onAny((evt,...args) => {
+                console.log(`Emitted event: ${evt} with ${args}`);
+                TsSocket.emit(evt,...args)
+            });
+        });
+    });
 
-TsSocket.on("test",data => {
+const TsSocket = ioClient.io("http://localhost:3205");
+
+TsSocket.on("test", data => {
+    console.log("test data recieved")
     const waitOnConnection = setInterval(() => {
         if (connected){
             clearInterval(waitOnConnection);
+            console.table(data);
             Object.keys(data).forEach(evt =>{
-                serverSocket.emit(evt, data[evt])
+                serverSocket.emit(evt, data[evt]);
             })
         }
     },50);
 });
-TsSocket.on("terminate", () => terminate());
+TsSocket.on("terminate", terminate);
 
 async function login(name, color){
     return fetch('http://localhost:3200/login/', {
@@ -40,17 +57,9 @@ async function login(name, color){
         .catch(() => undefined); //...Otherwise it should fail.
 }
 
-login(Math.random(), "red")
-    .then(res => {
-        let serverSocket = ioClient.io("http://localhost:3200",{
-            auth: {
-                token: res.cid
-            }
-        });
-        TsSocket.emit("id", res.id);
-        serverSocket.on("connection",() => {
-            connected = true;
-            serverSocket.emit("test")
-            serverSocket.onAny((evt,...args) => TsSocket.emit(evt,...args));
-        });
-    });
+function terminate(client) {
+    switch(client){
+        default: serverSocket.emit("stop"); 
+        case 1: process.exit(0); 
+    }  
+}

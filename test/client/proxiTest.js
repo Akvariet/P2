@@ -1,5 +1,5 @@
 import {TestSuite} from '../testClasses.js';
-import {test} from '../AkvarioTest.js';
+import {test} from '../testServer.js';
 import {distance} from '../../public/js/proxi.js';
 
 // Test Data

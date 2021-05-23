@@ -1,5 +1,5 @@
 
-import {test} from "../AkvarioTest.js";
+import {test} from '../testServer.js';
 import {TestSuite} from "../testClasses.js";
 import {spin, calcVelocity, calcWaitTimes} from "../../scripts/backendSpinner.js";
 

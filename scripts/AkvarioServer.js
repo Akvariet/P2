@@ -15,7 +15,11 @@ export function AkvarioServer(HTTPServer, testMode){
         const token = socket.handshake.auth.token
         if (user.get(token)){
             user.changeID(socket.id, token);
-
+            console.log(socket.id + ' connected.');
+            if(testMode){
+                socket.emit('connected');
+                socket.on('stop', () => HTTPServer.close());
+            }
             socket.broadcast.emit('new-user-connected', user.get(socket.id));
             socket.on('test', () => console.log('test'));
             socket.on('moved',  position => move(socket, position));
@@ -24,7 +28,6 @@ export function AkvarioServer(HTTPServer, testMode){
             socket.on('user-speaking',  speaking => speak(socket, speaking));
             socket.on('start-spinner',  () => startSpinner(socket));
             socket.on('sound-controls', state => soundControls(socket, state));
-            if(testMode) socket.on('stop', () => HTTPServer.close())
         }
         else socket.disconnect();
     });
@@ -49,11 +52,11 @@ function turn(socket, rotation){
 }
 
 function speak(socket, speaking){
-    socket.broadcast.emit('user-speaking', speaking, user.get(socket.id).gameID);
+    socket.broadcast.emit('user-speaking', user.get(socket.id).gameID, speaking);
 }
 
 function soundControls(socket, state){
-    socket.broadcast.emit('sound-controls', state, user.get(socket.id).gameID);
+    socket.broadcast.emit('sound-controls',user.get(socket.id).gameID, state);
 }
 
 export function emit(event, ...args){

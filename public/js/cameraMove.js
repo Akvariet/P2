@@ -1,9 +1,9 @@
-let cameramoveAllowed = true;
+let cameramoveAllowed = false;
 let posLeft=0, posTop=0;
 const mouseCoordinates = {x: 0, y: 0};
 let target = {
-    left: window.innerWidth / 2,
-    top: window.innerHeight / 2
+    left: 0,
+    top:  0
 };
 
 function updateMouseCoordinates(e){
@@ -14,10 +14,10 @@ function updateMouseCoordinates(e){
 export function useCameraMove() {
     document.onmousemove = updateMouseCoordinates;
     document.onmouseout = () => cameramoveAllowed = false; // if mouse leaves window, denies cameramove
-    document.onmouseover = () => cameramoveAllowed = true; // if mouse enters window, allows cameramove
 }
 
 export function moveCamera(){
+    document.onmouseover = () => cameramoveAllowed = true; // if mouse enters window, allows cameramove
     if (cameramoveAllowed){
         let space = document.getElementById("space");
 
@@ -60,5 +60,18 @@ export function moveCamera(){
         if (appendLeft != 0 && appendTop != 0){
             document.dispatchEvent(new CustomEvent('cameramove'));
         }
+
     }
+}
+
+export function centerMe(){
+    const space = document.getElementById("space");
+    cameramoveAllowed = false;
+    mouseCoordinates.x = 0;
+    mouseCoordinates.y = 0;
+    
+    
+    space.style.left = 0; posLeft = 0; target.left = 0;
+    space.style.top = 0;  posTop = 0;  target.top = 0;
+    
 }

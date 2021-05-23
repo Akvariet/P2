@@ -25,7 +25,6 @@ export function AkvarioServer(HTTPServer, testMode){
             socket.on('start-spinner',  () => startSpinner(socket));
             socket.on('sound-controls', (state, id) => soundControls(socket, state, id));
             if(testMode) socket.on('stop', () => HTTPServer.close())
-
         }
         else socket.disconnect();
     });

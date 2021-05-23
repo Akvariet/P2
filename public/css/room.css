@@ -39,6 +39,7 @@ body{
     background-repeat: no-repeat;
     background-size: 65%;
     background-position: center;
+    cursor: grab;
 }
 
 .speaking{
@@ -53,6 +54,7 @@ body{
     top: -35%;
     transform:rotate(-90deg);
     visibility: visible;
+    cursor: grab;
 }
 
 div.speaking > svg {

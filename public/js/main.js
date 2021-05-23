@@ -1,7 +1,7 @@
-import {peerConnection, removePeer} from './peerConnection.js';
+import {peerConnection, removePeer, peerReady} from './peerConnection.js';
 import {displayUserSpeak} from './voiceAnalysis.js';
 import {usePopUpMenu, displayState} from './popUpMenu.js';
-import {moveCamera, useCameraMove} from './cameraMove.js';
+import {moveCamera, useCameraMove, centerMe} from './cameraMove.js';
 import {setupSpinner, spinBottle} from './frontendSpinner.js';
 import * as connection from './connection.js';
 import {drawUser, enableInteraction, move, turn} from './interaction.js';
@@ -22,6 +22,13 @@ export function main(myID, cid, allUsers){
     usePopUpMenu(users[myID]);
     useCameraMove();
     setupSpinner();
+    document.addEventListener("keydown", e =>{
+        if(e.key === 'c'){
+            users[myID].style.top = 0;
+            users[myID].style.left = 0;
+            centerMe();
+        }
+    });
 
     // Receive socket events and call the associated function with args.
     connection.on('moved', receivePosition);
@@ -31,16 +38,15 @@ export function main(myID, cid, allUsers){
     connection.on('user-speaking', receiveSpeaking);
     connection.on('sound-controls', receiveSoundControls);
     connection.on('user-disconnected', remove);
-    connection.on('update-user-count', updateUserCount);
     connection.on('new-user-connected', receiveNewUser);
-
-    update()
+    
+    update();
 }
 
 // The main game loop. Will be paused if the window is not in focus.
 function update(){
     requestAnimationFrame(update);
-    moveCamera();
+    if(peerReady) moveCamera();
 }
 
 // Receives a user object from the server and proceeds to draw the user on the page.
@@ -79,10 +85,6 @@ function remove(id){
     }
 
     removePeer(id);
-}
-
-function updateUserCount(count){
-    document.getElementById('count').innerText = count;
 }
 
 function receiveSoundControls(state, id){

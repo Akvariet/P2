@@ -8,6 +8,8 @@ export const peers = {};
 // Your microphone audio
 export let myStream;
 
+export let peerReady = false;
+
 // The peer server that the webbrowser connects to 
 const options = config('peerConnection');
 
@@ -28,6 +30,7 @@ export function peerConnection(myUser, users){
     const media = {video: false, audio: true};
 
     getUserMedia(media, stream => {
+        peerReady = true;
         myStream = stream;
         const id = myUser.getAttribute('id');
 

@@ -67,7 +67,7 @@ export class TestSuite{
                 assert.deepStrictEqual(input[event], expectedOutput[event]);
             }
             catch (err){
-                throw testFailed(event, this.suiteName, input[event], err.actual, expectedOutput[event]);
+                throw eventTestFailed(event, this.suiteName, err.actual, expectedOutput[event]);
             }
         });
     }
@@ -82,5 +82,11 @@ function testFailed(functionName, suiteName, input, output, expected){
     return functionName + ' has failed in ' + suiteName + '!\n' +
         'Received input : ' + JSON.stringify(input)  + '\n' +
         'Got output     : ' + JSON.stringify(output) + '\n' +
+        'Expected output: ' + JSON.stringify(expected);
+}
+
+function eventTestFailed(eventName, suiteName, input, expected){
+    return eventName + ' has failed ' + suiteName + '!\n' +
+        'Received output: ' + JSON.stringify(input)  + '\n' +
         'Expected output: ' + JSON.stringify(expected);
 }

@@ -66,7 +66,7 @@ function receiveRotation(id, position){
     turn(user, position);
 }
 
-function receiveSpeaking(isSpeaking, id){
+function receiveSpeaking(id, isSpeaking){
     displayUserSpeak(isSpeaking, users[id]);
 }
 
@@ -87,6 +87,6 @@ function remove(id){
     removePeer(id);
 }
 
-function receiveSoundControls(state, id){
+function receiveSoundControls(id, state){
     displayState(users[id], state);
 }

@@ -9,27 +9,29 @@ import {backendSpinnerTest} from "./server/backendSpinnerTest.js";
 let client = []; // Client ids to choose which test client is client 1
 const port = 3205;  // Test Server Port
 const app = express();
-const resultObject = {}; // All results are stored here
+
 export const test = new Test(); // New test class
 const HTTPServer = createServer(app);
 const io = new socket_io.Server(HTTPServer); // Socket.io server
 const testSuite = new TestSuite('AkvarioEventTest'); // Akvario Event test
 
+const expectedClientEvents = {};
 const clientEvents = {
     "moved": {top: 634, left: 781},
     "turned": 0.5, 
     "user-speaking": true, 
     "sound-controls": "muted"  
-}
-
-const expectedClientEvents = {};
+} 
+const resultObject = {}; // All results are stored here
 
 // Webbrowser HTML
 app.get('/', (req, res) =>res.send('<h1>Akvario Test Server</h1>'));
 
 // Do all this when a client connects
 io.on('connection', (socket) =>{
+
     console.log("Client Connected!");
+
     client.push(socket.id); 
 
     socket.on("id", id => {
@@ -46,13 +48,12 @@ io.on('connection', (socket) =>{
 
     // Only Emit testEvents to first client.
     if(client.length >= 2){
-        console.log("Sent test data!");
+        console.log("Test data sent!");
         io.to(client[0]).emit('test', clientEvents);
     }
+    
     // When server recieves an event from the clients add it to the result object
     socket.onAny(addOutput);
-
-    //socket.on('disconnect', () => simpleID--);
 });
 
 const server = HTTPServer.listen(port, () => console.log(`Ts is running on ${port}`));
@@ -63,17 +64,21 @@ function addOutput(event, ...args){
 
         resultObject[event] = args;
 
+        // Object arrays to compare length
         const resObjArr = Object.keys(resultObject);
         const objArr = Object.keys(expectedClientEvents);
 
+        // Terminate client 1 for user-disconnected event
         if(resObjArr.length === 4)
             io.to(client[0]).emit('terminate', 1);
 
         // If the two objects length are equal, the test is ready
         if(resObjArr.length === objArr.length){
             setTimeout( () => {
+
                 io.emit('terminate');
                 runAkvarioTests();
+                
             }, 500);
         }
     }
@@ -84,6 +89,7 @@ function runAkvarioTests(){
     testSuite.addEventTest(resultObject, expectedClientEvents);
     test.addSuite(testSuite);
 
+    console.log("Result object contains:");
     console.table(resultObject);
 
     console.log("Server test ready!");

@@ -21,7 +21,6 @@ export function AkvarioServer(HTTPServer, testMode){
                 socket.on('stop', () => HTTPServer.close());
             }
             socket.broadcast.emit('new-user-connected', user.get(socket.id));
-            socket.on('test', () => console.log('test'));
             socket.on('moved',  position => move(socket, position));
             socket.on('turned', rotation => turn(socket, rotation));
             socket.on('disconnect',   () => disconnect(socket));

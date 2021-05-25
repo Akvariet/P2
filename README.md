@@ -18,6 +18,7 @@ To run the program Node.js and node package manager(npm) are required. To downlo
 You can then use the script called *start.bat* if you are on a windows machine.
 
 **If you are using Linux or MacOS, follow this.**
+- Open a terminal
 - Before starting the program, first type `npm i` to install all dependencies
 - Then type `npm run start` to start the server. 
 - After that the website can be accessed from *http://localhost:3200*

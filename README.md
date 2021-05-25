@@ -13,7 +13,7 @@ The topic of the project was "En ny corona-hverdag" (Everyday life with corona) 
 - To configure the server modify */scripts/serverConfig.js*
 
 ## Running the program
-To run the program Node.js and node package manager(npm) are required. To download Node.js and npm go to [Nodejs's](https://nodejs.org/en/download/) website. 
+To run the program, Node.js and node package manager(npm) are required. To download Node.js and npm go to [Nodejs's](https://nodejs.org/en/download/) website. 
 
 You can then use the script called *start.bat* if you are on a windows machine.
 

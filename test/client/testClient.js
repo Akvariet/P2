@@ -3,43 +3,48 @@ import fetch from 'node-fetch';
 let connected = false;
 let serverSocket;
 
-console.log("testClient.js")
-
+// Logs in to the akvario server
 login(Math.random(), "red")
     .then(res => {
+        // Connect to akvario server
         serverSocket = ioClient.io("http://localhost:3200",{
             auth: {
                 token: res.cid
             }
         });
         TsSocket.emit("id", res.id);
+        // When it is connected to the akvario server
         serverSocket.on("connected", () => {
             connected = true;
-            console.log("Connected to Akvario server");
             serverSocket.emit("test")
-            serverSocket.onAny((evt,...args) => {
-                console.log(`Emitted event: ${evt} with ${args}`);
-                TsSocket.emit(evt,...args)
-            });
+
+            // On every event recieved from the akvario emit, send it to the test server.
+            serverSocket.onAny((evt,...args) => TsSocket.emit(evt,...args));
         });
     });
 
+// Connect to test server
 const TsSocket = ioClient.io("http://localhost:3205");
 
+// When test event received from test server do this
 TsSocket.on("test", data => {
-    console.log("test data recieved")
+    // wait to do anything, to when client is connected to akvario server
     const waitOnConnection = setInterval(() => {
         if (connected){
             clearInterval(waitOnConnection);
-            console.table(data);
+
+            // emit everything from test server to server
             Object.keys(data).forEach(evt =>{
                 serverSocket.emit(evt, data[evt]);
             })
         }
     },50);
 });
+
+// When a terminate event is received, terminate.
 TsSocket.on("terminate", terminate);
 
+// Login function to akvario server.
 async function login(name, color){
     return fetch('http://localhost:3200/login/', {
         method: 'POST',
@@ -57,6 +62,7 @@ async function login(name, color){
         .catch(() => undefined); //...Otherwise it should fail.
 }
 
+// Terminate depending on which client is required to terminate
 function terminate(client) {
     switch(client){
         default: serverSocket.emit("stop"); 

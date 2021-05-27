@@ -1,6 +1,8 @@
+[//]: # (FOR BETTER FORMATTING VISIT https://github.com/Akvariet/P2)
+
 # P2 project - Akvario chat
 
-This is the P2 project of group B2-18. The project started on February first and ended on [INSERT DATE].
+This is the P2 project of group B2-18. The project started on February first and ended on 27/5.
 
 The topic of the project was "En ny corona-hverdag" (Everyday life with corona) and was about using software to aid us through the pandemic.
 
@@ -18,7 +20,18 @@ To run the program, Node.js and node package manager(npm) are required. To downl
 You can then use the script called *start.bat* if you are on a windows machine.
 
 **If you are using Linux or MacOS, follow this.**
-- Open a terminal
-- Before starting the program, first type `npm i` to install all dependencies
+- Open a terminal.
+- Before starting the program, first type `npm i` to install all dependencies.
 - Then type `npm run start` to start the server. 
 - After that the website can be accessed from *http://localhost:3200*
+
+### Testing the program
+If you are on a windows machine just run *startTest.bat* found in the root folder.
+
+**If you are using Linux or MacOS, follow this.**
+- Open 4 terminals.
+- Type `node ./test/testServer.js`
+- Then in the second terminal `node ./server.js`
+- In the third and fourth terminal `node ./test/client/testClient.js`
+
+If there is no output on the *testServer.js* terminal window, the test was successful, and you can just close the terminals.
